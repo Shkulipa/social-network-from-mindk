@@ -1,0 +1,42 @@
+.header {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10px;
+
+    &__logo {
+        width: 100%;
+        max-width: 150px;
+    }
+
+    &__nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &__avatar {
+            width: 100%;
+            max-width: 50px;
+            border-radius: 50%;
+
+            margin-left: 10px;
+        }
+    }
+
+    &__panel {
+        position: absolute;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        right: 15px;
+        top: 80px;
+
+        padding: 10px;
+        border: 2px solid #000000;
+        border-radius: 8px;
+    }
+}
