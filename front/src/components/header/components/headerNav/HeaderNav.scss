@@ -1,0 +1,13 @@
+.header__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__avatar {
+    width: 100%;
+    max-width: 50px;
+    border-radius: 50%;
+
+    margin-left: 10px;
+  }
+}
