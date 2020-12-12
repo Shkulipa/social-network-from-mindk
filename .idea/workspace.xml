@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a7d7b821-2698-48d8-86be-70349816774b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/front/src/components/header/components/addArticle/AddArticle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/header/components/headerNav/HeaderNav.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/header/components/headerNav/HeaderNav.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/header/components/logo/logo.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/header/components/logo/logo.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/header/components/tooglePanel/TogglePanel.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/header/components/tooglePanel/TogglePanel.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/container/Container.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/container/Container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/header/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/header/Header.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/header/Header.scss" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/header/Header.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/header/logo-01.svg" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/header/components/logo/logo-01.svg" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1kz4Ylo7G9EIE2tSQcJ9eNtzkS4" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/front" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="G:\Front-end\Courses\mindK-2020\social-network-from-mindk\front\src\components\header\components\add-article" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\Front-end\Courses\mindK-2020\social-network-from-mindk\front\src\components\header\components\header-nav" />
+      <recent name="G:\Front-end\Courses\mindK-2020\social-network-from-mindk\front\src\components\header\components\logo" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a7d7b821-2698-48d8-86be-70349816774b" name="Default Changelist" comment="" />
+      <created>1606690135354</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1606690135354</updated>
+      <workItem from="1606690136602" duration="1768000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="740" y="315" key="FileChooserDialogImpl" timestamp="1606691917142">
+      <screen x="0" y="40" width="1920" height="1040" />
+    </state>
+    <state x="740" y="315" key="FileChooserDialogImpl/0.40.1920.1040/-1920.40.1920.1040@0.40.1920.1040" timestamp="1606691917142" />
+    <state x="623" y="265" width="672" height="678" key="search.everywhere.popup" timestamp="1606690705168">
+      <screen x="0" y="40" width="1920" height="1040" />
+    </state>
+    <state x="623" y="265" width="672" height="678" key="search.everywhere.popup/0.40.1920.1040/-1920.40.1920.1040@0.40.1920.1040" timestamp="1606690705168" />
+  </component>
+</project>

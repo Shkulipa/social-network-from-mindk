@@ -1,7 +1,7 @@
-function AddArticle() {
+function AddArticle({setPageForHook}) {
     return (
         <>
-            <div>Add Article</div>
+            <button onClick={() => setPageForHook('Add Article')}>Add Article</button>
         </>
 
     );
