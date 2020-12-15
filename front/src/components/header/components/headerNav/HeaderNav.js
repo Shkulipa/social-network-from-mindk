@@ -1,9 +1,9 @@
 import './HeaderNav.scss';
 
-function HeaderNav({name, surname}) {
+function HeaderNav({name}) {
     return (
         <div className="header__nav">
-            {name} {surname}
+            {name}
             <img
                 className="header__nav__avatar"
                 src="https://via.placeholder.com/150"

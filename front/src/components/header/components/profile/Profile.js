@@ -1,7 +1,13 @@
-function Profile({setPageForHook}) {
+function Profile({setNameForHook}) {
     return (
         <>
-            <button onClick={() => setPageForHook('Profile')}>Profile</button>
+            <form className="content__form" onSubmit={setNameForHook}>
+                Введите ваше имя:
+                <input type="text" name={"first name"} required/>
+                Введите вашу фамилию:
+                <input type="text" name={"last name"} required/>
+                <button type="submit">Submit</button>
+            </form>
         </>
 
     );

@@ -1,23 +1,19 @@
 import Logo from './components/logo/logo';
-import AddArticle from "./components/addArticle/AddArticle";
-import Articles from "./components/article/Articles";
 import HeaderNav from "./components/headerNav/HeaderNav";
-import Profile from "./components/profile/Profile";
 
 import './Header.scss';
 
-function Header({setPageForHook, name, surname}) {
+function Header({setPageForHook, name}) {
     return (
-      <header className="header">
-        <Logo />
+        <header className="header">
+            <Logo/>
 
-        <AddArticle setPageForHook={setPageForHook}/>
-        <Articles setPageForHook={setPageForHook}/>
-        <Profile setPageForHook={setPageForHook}/>
+            <button onClick={() => setPageForHook('Add Article')}>Add Article</button>
+            <button onClick={() => setPageForHook('Articles')}>Articles</button>
+            <button onClick={() => setPageForHook('Profile')}>Profile</button>
 
-        <HeaderNav name={name}
-                   surname={surname}/>
-      </header>
+            <HeaderNav name={name}/>
+        </header>
     );
 }
 
