@@ -9,9 +9,7 @@ function Container() {
     const [page, setPage] = useState('articles');
     const [name, setName] = useState('Not authorized');
 
-    const setPageForHook = value => {
-        setPage(value);
-    }
+    const setPageForHook = value => () => setPage(value);
 
     const setNameForHook = event => {
         event.preventDefault();

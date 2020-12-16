@@ -6,10 +6,12 @@ import AddArticle from "../header/components/addArticle/AddArticle";
 
 function Content({page, setNameForHook}) {
 
+  const ProfilePage = <Profile setNameForHook={setNameForHook}/>
+
   const showSelectedPage = page => {
     switch (page) {
       case 'Profile':
-        return <Profile setNameForHook={setNameForHook}/>;
+        return ProfilePage;
         break;
       case 'Articles':
         return <Articles/>;
@@ -18,7 +20,7 @@ function Content({page, setNameForHook}) {
         return <AddArticle/>;
         break;
       default:
-        return <Profile/>;
+        return ProfilePage;
         break;
     }
   }
