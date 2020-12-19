@@ -3,20 +3,21 @@ import Profile from "../header/components/profile/Profile";
 import Articles from "../header/components/articles/Articles";
 import AddArticle from "../header/components/addArticle/AddArticle";
 
+import {caseProfile, caseArticles, caseAddArticle} from "../../variables/variables";
 
 function Content({page, setNameForHook}) {
 
-  const ProfilePage = <Profile setNameForHook={setNameForHook}/>
+  const ProfilePage = <Profile setNameForHook={setNameForHook}/>;
 
   const showSelectedPage = page => {
     switch (page) {
-      case 'Profile':
+      case caseProfile:
         return ProfilePage;
         break;
-      case 'Articles':
+      case caseArticles:
         return <Articles/>;
         break;
-      case 'Add Article':
+      case caseAddArticle:
         return <AddArticle/>;
         break;
       default:
