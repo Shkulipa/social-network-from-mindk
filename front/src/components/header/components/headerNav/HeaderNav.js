@@ -1,4 +1,5 @@
 import './HeaderNav.scss';
+import PropTypes from 'prop-types';
 
 function HeaderNav({name}) {
     return (
@@ -12,5 +13,14 @@ function HeaderNav({name}) {
         </div>
     );
 }
+
+HeaderNav.propTypes = {
+    name: PropTypes.string
+}
+
+HeaderNav.defaultProps = {
+    name: 'Not authorized'
+}
+
 
 export default HeaderNav;

@@ -2,27 +2,23 @@ import './Content.scss';
 import Profile from "../header/components/profile/Profile";
 import Articles from "../header/components/articles/Articles";
 import AddArticle from "../header/components/addArticle/AddArticle";
+import PropTypes from 'prop-types';
 
 import {caseProfile, caseArticles, caseAddArticle} from "../../variables/variables";
 
-function Content({page, setNameForHook}) {
+function Content({page, setNameForHook, userData}) {
 
-  const ProfilePage = <Profile setNameForHook={setNameForHook}/>;
+  const ProfilePage = <Profile setNameForHook={setNameForHook}
+                               userData={userData}/>;
 
   const showSelectedPage = page => {
     switch (page) {
       case caseProfile:
         return ProfilePage;
-        break;
       case caseArticles:
         return <Articles/>;
-        break;
       case caseAddArticle:
         return <AddArticle/>;
-        break;
-      default:
-        return ProfilePage;
-        break;
     }
   }
 
@@ -32,5 +28,15 @@ function Content({page, setNameForHook}) {
     </div>
   );
 }
+
+Content.propTypes = {
+  setNameForHook: PropTypes.func,
+  page: PropTypes.string
+}
+
+Content.defaultProps = {
+  page: caseProfile
+}
+
 
 export default Content;

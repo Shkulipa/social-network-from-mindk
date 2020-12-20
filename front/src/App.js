@@ -1,9 +1,12 @@
 import './App.scss';
 import Container from './components/container/Container';
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
 function App() {
   return (
-      <Container />
+      <ErrorBoundary>
+        <Container/>
+      </ErrorBoundary>
   );
 }
 
