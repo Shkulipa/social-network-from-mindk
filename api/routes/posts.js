@@ -33,8 +33,8 @@ router
 
     .post("/", async (req, res) => {
         try {
-            const { description } = req.body;
-            const newPost = await pool.query("INSERT INTO posts (description) VALUES ($1)", [description]);
+            // const { description } = req.body;
+            const newPost = await pool.query("INSERT INTO posts (description) VALUES ('нуу.. тут какая - то там статья например')");
 
             res.json(newPost);
         } catch(err) {
