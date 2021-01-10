@@ -1,19 +1,52 @@
 "use strict";
 const express = require("express");
 let router = express.Router();
+const pool = require("../db/db");
 
 router
-    .get("/", (req, res) => {
+    .get("/:id", async (req, res) => {
+        try {
+            const { id } = req.params;
+            const getPost = await pool.query("SELECT * FROM posts WHERE post_id=$1", [id]);
+
+            res.json(getPost.rows[0]);
+        } catch(err) {
+            console.error(err.message)
+        }
+    })
+
+    .get("/", async (req, res) => {
+        try {
+            const getPostAll = await pool.query("SELECT * FROM posts");
+
+            res.json(getPostAll.rows);
+        } catch(err) {
+            console.error(err.message)
+        }
+    })
+
+/*    .get("/:id", async (req, res) => {
         res.status(200).json({
             posts: [{id: 0, content: "get method"}]
         })
+    })*/
+
+    .post("/", async (req, res) => {
+        try {
+            const { description } = req.body;
+            const newPost = await pool.query("INSERT INTO posts (description) VALUES ($1)", [description]);
+
+            res.json(newPost);
+        } catch(err) {
+            console.error(err.message)
+        }
     })
 
-    .post("/", (req, res) => {
+/*    .post("/", (req, res) => {
         res.status(200).json({
             posts: [{id: 0, content: "post method"}]
         })
-    })
+    })*/
 
     .put("/:id", (req, res) => {
         res.status(200).json({
