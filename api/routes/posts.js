@@ -25,12 +25,6 @@ router
         }
     })
 
-/*    .get("/:id", async (req, res) => {
-        res.status(200).json({
-            posts: [{id: 0, content: "get method"}]
-        })
-    })*/
-
     .post("/", async (req, res) => {
         try {
             // const { description } = req.body;
@@ -41,12 +35,6 @@ router
             console.error(err.message)
         }
     })
-
-/*    .post("/", (req, res) => {
-        res.status(200).json({
-            posts: [{id: 0, content: "post method"}]
-        })
-    })*/
 
     .put("/:id", (req, res) => {
         res.status(200).json({
