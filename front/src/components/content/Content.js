@@ -19,6 +19,8 @@ function Content({page, setNameForHook, userData}) {
         return <Articles/>;
       case caseAddArticle:
         return <AddArticle/>;
+      default:
+        return ProfilePage;
     }
   }
 
