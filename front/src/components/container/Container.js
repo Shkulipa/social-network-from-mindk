@@ -1,73 +1,59 @@
 import './Container.scss';
-import Content from '../content/Content';
 import Footer from '../footer/Footer';
 import Header from "../header/Header";
 import React, {useState} from "react";
-
+import {Route, Switch, useRouteMatch} from "react-router-dom";
+import Profile from "../content/profile/Profile";
+import AddArticle from "../content/addArticle/AddArticle";
+import "../content/Content.scss";
+import Articles from "../content/articles/Articles";
+import Page404 from "../404/Page404";
+import Article from "../content/article/Article";
+import UserProfile from "../content/userProfile/UserProfile";
+import ProfileEdit from "../content/ProfileEdit/ProfileEdit";
 
 function Container() {
-    const [page, setPage] = useState();
     const [name, setName] = useState();
-
-    const userData = {
-        id: 1,
-        firstName: 'Ivan',
-        lastName: 'Ivanov',
-        age: 25,
-        avatar: {
-            fileId: 1,
-            file: {
-                id: 1,
-                name: 'photo.jpg',
-                path: '/upload/photo.jpg',
-                size: 1234
-            }
-        },
-        friends: [{}, {}, {}], //array of users
-        articles: [{
-            title: 'Article 1',
-            text: 'Some text',
-            images: [{
-                id: 1,
-                name: 'photo.jpg',
-                path: '/upload/photo.jpg',
-                size: 1234}, {
-                id: 1,
-                name: 'photo.jpg',
-                path: '/upload/photo.jpg',
-                size: 1234
-            }, {
-                id: 1,
-                name: 'photo.jpg',
-                path: '/upload/photo.jpg',
-                size: 1234
-            }], // array of files
-            createdAt: '2020-12-17 19:00:00',
-            editedAt: '2020-12-17 20:00:00',
-            likes: [
-                {userId: 2, user: {id: 2}, date: '2020-12-17 21:00:00'},
-                {userId: 3, user: {id: 3}, date: '2020-12-17 22:00:00'}
-            ]
-        }]
-    };
-
-    const setPageForHook = value => () => setPage(value);
 
     const setNameForHook = event => {
         event.preventDefault();
         setName(`${event.target[0].value} ${event.target[1].value}`);
     }
-
     return (
         <div className="container">
-            <Header setPageForHook={setPageForHook}
-                    name={name}/>
-            <Content page={page}
-                     setNameForHook={setNameForHook}
-                     userData={userData}/>
+            <Header name={name}/>
+                <div className="content">
+                <Switch>
+                    <Route exact path={`/`} render={() => {
+                        return <Articles/>
+                    }}/>
+                    <Route exact path={`/profile/:profile_user/`} render={props => {
+                        return <Profile {...props} setNameForHook={setNameForHook} name={name}/>
+                    }}/>
+                    <Route exact path={`/profile/:profile_user/:action(edit|avatar)/`} render={props => {
+                        return <ProfileEdit {...props} />
+                    }}/>
+                    <Route exact path={`/users/:view_user`} render={() => {
+                        return <UserProfile/>
+                    }}/>
+                    <Route exact path={`/add-article`} render={() => {
+                        return <AddArticle/>
+                    }}/>
+                    <Route exact path={`/articles`} render={() => {
+                         return <Articles/>
+                    }}/>
+                    <Route exact path={`/article/:article_id`} render={() => {
+                        return <Article/>
+                    }}/>
+
+                    <Route path='*' render={() => {
+                        return <Page404/>;
+                    }}/>
+                </Switch>
+            </div >
             <Footer/>
         </div>
     );
-}
+};
 
 export default Container;

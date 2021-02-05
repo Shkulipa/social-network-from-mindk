@@ -1,20 +1,26 @@
 import './Header.scss';
 import Logo from './components/logo/logo';
 import HeaderNav from "./components/headerNav/HeaderNav";
-import {caseProfile, caseArticles, caseAddArticle} from "../../variables/variables";
 import PropTypes from 'prop-types';
+import {Link} from "react-router-dom";
 
-function Header({setPageForHook, name}) {
-
+function Header({name}) {
     // throw new Error('error');
+
+    let user_link;
+    if(!name) {
+        user_link = 'not_authorized';
+    } else {
+        user_link = name.toString().replace(' ', '_');
+    }
 
     return (
         <header className="header">
             <Logo/>
 
-            <button onClick={setPageForHook(caseAddArticle)}>Add Article</button>
-            <button onClick={setPageForHook(caseArticles)}>Articles</button>
-            <button onClick={setPageForHook(caseProfile)}>Profile</button>
+            <Link to="/add-article">Add Article</Link>
+            <Link to="/articles">Articles</Link>
+            <Link to={`/profile/${user_link}`}>Profile</Link>
 
             <HeaderNav name={name}/>
         </header>

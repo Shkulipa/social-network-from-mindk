@@ -1,15 +1,32 @@
 import PropTypes from 'prop-types';
+import {Button, FormGroup, Input, Label} from 'reactstrap';
+import {
+    useParams
+} from "react-router-dom";
 
-function Profile({setNameForHook, userData}) {
+function Profile({setNameForHook, name}) {
+    let { profile_user } = useParams();
+
+    if(profile_user && !name == '') {
+        return (
+            <>
+                Welcome {name}!
+            </>
+        )
+    }
 
     return (
         <>
             <form className="content__form" onSubmit={setNameForHook}>
-                Введите ваше имя:
-                <input type="text" name={"first name"} required/>
-                Введите вашу фамилию:
-                <input type="text" name={"last name"} required/>
-                <button type="submit">Submit</button>
+                <FormGroup>
+                    <Label for="exampleEmail">Введите ваше имя:</Label>
+                    <Input type="text" name="name" id="name" placeholder="Ваше имя..." required/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="exampleEmail">Введите вашу Фамилию:</Label>
+                    <Input type="text" name="sername" id="sername" placeholder="Ваша фамиля..." required/>
+                </FormGroup>
+                <Button color="success" type="submit">Submit</Button>
             </form>
         </>
 
