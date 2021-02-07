@@ -28,6 +28,7 @@ passport.use(
 passport.use(new BearerStrategy(
     async function(token, done) {
         const user = await User.findByToken(token);
+        // console.log('111111');
         console.log('CURRENT USER:', user);
         return done(null, user);
     }

@@ -2,6 +2,8 @@
 const express = require("express");
 let router = express.Router();
 const db = require('../db/db');
+const User = require('../models/user');
+const {v4: uuidv4 } = require('uuid');
 
 router
     .get("/", async (req, res) => {
@@ -15,15 +17,16 @@ router
     .post("/", async (req, res) => {
         try {
             const name_user  = req.body.name;
-            const email_user  = req.body.email;
-            const password_user  = req.body.password;
+            const email_user  = req.body.user_email;
+            const password_user  = req.body.user_password;
 
             const check_user = await db.select().from('users').where('email_user', email_user).orderBy('user_id', 'desc');
 
             if( check_user.findIndex(el => el.email_user == email_user) > -1 ) {
                 throw new Error('такой емейл уже занят');
             } else {
-                const new_user = await db('users').insert({name_user: name_user, email_user: email_user, password_user: password_user});
+                const token = uuidv4();
+                const new_user = await db('users').insert({name_user: name_user, email_user: email_user, password_user: password_user, user_token: token});
 
                 res.send(new_user);
             }

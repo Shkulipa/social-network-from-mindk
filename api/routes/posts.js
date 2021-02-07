@@ -2,8 +2,17 @@
 const express = require("express");
 const router = express.Router();
 const db = require('../db/db');
+const checkAuth = require('../middleware/acl').checkAuthorized;
 
 router
+    .get("/checkAuth", [checkAuth, (req, res) => {
+        try {
+            res.send('List');
+        } catch(err) {
+            console.error(err.message)
+        }
+    }])
+
     .get("/:id", async (req, res) => {
         try {
             const id = req.params.id;
