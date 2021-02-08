@@ -3,6 +3,7 @@ const express = require("express");
 let router = express.Router();
 const db = require('../db/db');
 const passport = require('../services/auth/passport');
+const jwt = require('jsonwebtoken');
 const {v4: uuidv4 } = require('uuid');
 const User = require('../models/user');
 
@@ -29,9 +30,13 @@ router
                 }
 
                 // Generate token for user and actualize:
-                user.user_token = uuidv4();
-                await User.saveUser(user);
-                res.send({ user_token: user.user_token });
+                const jwtToken = jwt.sign(user, process.env.JWT_SECRET, {
+                    expiresIn: '1d',
+                    audience: process.env.HOST,
+                });
+
+
+                res.send({ user_token: jwtToken });
             },
         )(req, res),
     )
