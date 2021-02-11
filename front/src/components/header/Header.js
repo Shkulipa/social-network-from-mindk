@@ -1,17 +1,35 @@
-import Logo from './components/logo/logo';
-import AddArticle from "./components/addArticle/AddArticle";
-import HeaderNav from "./components/headerNav/HeaderNav";
-
 import './Header.scss';
+import Logo from './components/logo/logo';
+import HeaderNav from "./components/headerNav/HeaderNav";
+import PropTypes from 'prop-types';
+import {Link} from "react-router-dom";
 
-function Header() {
+function Header({name}) {
+    // throw new Error('error');
+
+    let user_link;
+    if(!name) {
+        user_link = 'not_authorized';
+    } else {
+        user_link = name.toString().replace(' ', '_');
+    }
+
     return (
-      <header className="header">
-        <Logo />
-        <AddArticle />
-        <HeaderNav />
-      </header>
+        <header className="header">
+            <Logo/>
+
+            <Link to="/add-article">Add Article</Link>
+            <Link to="/articles">Articles</Link>
+            <Link to={`/profile/${user_link}`}>Profile</Link>
+
+            <HeaderNav name={name}/>
+        </header>
     );
+}
+
+Header.propTypes = {
+    setPageForHook: PropTypes.func,
+    name: PropTypes.string
 }
 
 export default Header;

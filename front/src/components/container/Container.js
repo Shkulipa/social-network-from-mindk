@@ -1,17 +1,59 @@
 import './Container.scss';
-import Content from '../content/Content';
 import Footer from '../footer/Footer';
 import Header from "../header/Header";
-
+import React, {useState} from "react";
+import {Route, Switch, useRouteMatch} from "react-router-dom";
+import Profile from "../content/profile/Profile";
+import AddArticle from "../content/addArticle/AddArticle";
+import "../content/Content.scss";
+import Articles from "../content/articles/Articles";
+import Page404 from "../404/Page404";
+import Article from "../content/article/Article";
+import UserProfile from "../content/userProfile/UserProfile";
+import ProfileEdit from "../content/ProfileEdit/ProfileEdit";
 
 function Container() {
-  return (
-    <div className="container">
-      <Header />
-      <Content />
-      <Footer />
-    </div>
-  );
-}
+    const [name, setName] = useState();
+
+    const setNameForHook = event => {
+        event.preventDefault();
+        setName(`${event.target[0].value} ${event.target[1].value}`);
+    }
+    return (
+        <div className="container">
+            <Header name={name}/>
+                <div className="content">
+                <Switch>
+                    <Route exact path={`/`} render={() => {
+                        return <Articles/>
+                    }}/>
+                    <Route exact path={`/profile/:profile_user/`} render={props => {
+                        return <Profile {...props} setNameForHook={setNameForHook} name={name}/>
+                    }}/>
+                    <Route exact path={`/profile/:profile_user/:action(edit|avatar)/`} render={props => {
+                        return <ProfileEdit {...props} />
+                    }}/>
+                    <Route exact path={`/users/:view_user`} render={() => {
+                        return <UserProfile/>
+                    }}/>
+                    <Route exact path={`/add-article`} render={() => {
+                        return <AddArticle/>
+                    }}/>
+                    <Route exact path={`/articles`} render={() => {
+                         return <Articles/>
+                    }}/>
+                    <Route exact path={`/article/:article_id`} render={() => {
+                        return <Article/>
+                    }}/>
+
+                    <Route path='*' render={() => {
+                        return <Page404/>;
+                    }}/>
+                </Switch>
+            </div >
+            <Footer/>
+        </div>
+    );
+};
 
 export default Container;

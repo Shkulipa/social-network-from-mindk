@@ -1,7 +1,7 @@
 function AddArticle() {
     return (
         <>
-            <div>Add Article</div>
+            This page to add Article
         </>
 
     );
