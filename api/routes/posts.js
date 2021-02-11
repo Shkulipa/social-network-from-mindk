@@ -1,15 +1,22 @@
 "use strict";
 const express = require("express");
-let router = express.Router();
-const pool = require("../db/db");
+const router = express.Router();
+const db = require('../db/db');
+const checkAuth = require('../middleware/acl').checkAuthorized;
 
 router
+    .get("/checkAuth", [checkAuth, (req, res) => {
+        try {
+            res.send('List');
+        } catch(err) {
+            console.error(err.message)
+        }
+    }])
+
     .get("/:id", async (req, res) => {
         try {
-            const { id } = req.params;
-            const getPost = await pool.query("SELECT * FROM posts WHERE post_id=$1", [id]);
-
-            res.json(getPost.rows[0]);
+            const id = req.params.id;
+            res.send(await db.select().from('posts').where('post_id', id).orderBy('post_id', 'desc'));
         } catch(err) {
             console.error(err.message)
         }
@@ -17,9 +24,7 @@ router
 
     .get("/", async (req, res) => {
         try {
-            const getPostAll = await pool.query("SELECT * FROM posts");
-
-            res.json(getPostAll.rows);
+            res.send(await db.select().from('posts').orderBy('post_id', 'desc'));
         } catch(err) {
             console.error(err.message)
         }
@@ -27,24 +32,12 @@ router
 
     .post("/", async (req, res) => {
         try {
-            // const { description } = req.body;
-            const newPost = await pool.query("INSERT INTO posts (description) VALUES ('нуу.. тут какая - то там статья например')");
-
-            res.json(newPost);
+            const description = req.body.description;
+            const newPost = await db('posts').insert({description: description});
+            res.send(newPost);
         } catch(err) {
             console.error(err.message)
         }
     })
-
-    .put("/:id", (req, res) => {
-        res.status(200).json({
-            posts: [{id: 0, content: "put(update) method"}]
-        })
-    })
-    .delete("/:id", (req, res) => {
-        res.status(200).json({
-            posts: [{id: 0, content: "delete method"}]
-        })
-    });
 
 module.exports = router;
