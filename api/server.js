@@ -3,7 +3,6 @@ const host = process.env.HOST;
 const port = process.env.PORT;
 const express = require('express');
 const app = express();
-const cors = require("cors");
 
 const passport = require('./services/auth/passport');
 const authRequest = require('./middleware/request-auth');
@@ -15,7 +14,6 @@ const login = require("./routes/login");
 app.set('view-engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cors());
 app.use(express.json());
 
 app.use(passport.initialize());
