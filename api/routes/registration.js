@@ -15,7 +15,7 @@ router
     .post("/", async (req, res) => {
         try {
             const name_user  = req.body.name;
-            const email_user  = req.body.user_email;
+            const email_user  = req.body.user_email.toLowerCase();
             const password_user  = req.body.user_password;
 
             const check_user = await db.select().from('users').where('email_user', email_user).orderBy('user_id', 'desc');
