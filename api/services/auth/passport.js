@@ -32,7 +32,7 @@ passport.use(
 passport.use(
     new JwtStrategy(
         {
-            //jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('JWT'),
+            // jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('JWT'),
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: process.env.JWT_SECRET,
             audience: process.env.HOST,
