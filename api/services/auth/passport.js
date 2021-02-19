@@ -19,8 +19,7 @@ passport.use(
 
                 if (password == user.password_user) {
                     // Everything is ok, let's proceed:
-
-                    return done(null, user);
+                    return done(null, {user_id: user.user_id, name_user: user.name_user});
                 }
             }
             // Authentication failure:

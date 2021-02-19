@@ -29,16 +29,15 @@ router
                 if (err || !user) {
                     throw new Error(trace.message || 'Authentication error');
                 }
-
                 // Generate token for user and actualize:
                 const jwtToken = jwt.sign(user, process.env.JWT_SECRET, {
                     expiresIn: '1d',
                     audience: process.env.HOST,
                 });
 
-                // Дописывает токен в базу данных вместо того что бы обновить его
-                // res.send(await db('users').where({ user_id: user.user_id }).update({ user_token: jwtToken }, ['user_token']));
-                res.send({ user_token: jwtToken });
+
+                res.send(await db('users').where({ user_id: user.user_id }).update({ user_token: jwtToken }, ['user_token']));
+                // res.send({ user_token: jwtToken });
             },
         )(req, res)
     )
