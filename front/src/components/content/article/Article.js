@@ -1,16 +1,14 @@
-import {
-    useParams
-} from "react-router-dom";
-
-function Article() {
-    let { article_id } = useParams();
-
+export default function Article({post}) {
     return (
-        <div>
-            Article ID: {article_id}
-        </div>
-
+        <>
+            {post.map(({description, user_id, post_id}) => (
+                <div>
+                    Article ID: {post_id}<br/><br/>
+                    Post of user ID: {user_id}<br/><br/>
+                    Description: {description}
+                </div>
+            ))}
+        </>
     );
 }
 
-export default Article;

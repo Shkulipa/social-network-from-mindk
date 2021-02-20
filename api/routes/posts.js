@@ -8,6 +8,7 @@ const checkAuthUser = require('../middleware/acl').checkAuthUser;
 
 router
     .get("/:id", async (req, res) => {
+        res.header("Access-Control-Allow-Origin", "*");
         try {
             const id = req.params.id;
             res.send(await db.select().from('posts').where('post_id', id).orderBy('post_id', 'desc'));
@@ -17,6 +18,7 @@ router
     })
 
     .get("/", async (req, res) => {
+        res.header("Access-Control-Allow-Origin", "*");
         try {
             res.send(await db.select().from('posts').orderBy('post_id', 'desc'));
         } catch(err) {
