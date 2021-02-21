@@ -2,9 +2,8 @@
 const express = require("express");
 const router = express.Router();
 const db = require('../db/db');
-const checkAuthorizedPosts = require('../middleware/acl').checkAuthorizedPosts;
-const checkAuthPostsUpdate = require('../middleware/acl').checkAuthPostsUpdate;
-const checkAuthUser = require('../middleware/acl').checkAuthUser;
+const checkAuthPosts = require('../middleware/acl').checkAuthPosts;
+const checkAuthAddPosts = require('../middleware/acl').checkAuthAddPosts;
 
 router
     .get("/:id", async (req, res) => {
@@ -50,25 +49,43 @@ router
         }
     }])*/
 
-    .delete("/delete/:id", [checkAuthorizedPosts([
+    .delete("/delete/:id", [checkAuthPosts([
         {
             permission: 'deleteAnyPost'
         },
         {
             permission: 'deleteOwnPost',
-            checkAuthor: true
+            checkAuthor: true,
+            table: 'posts',
+            column: 'post_id',
         },
-    ])])
+    ]), async (req, res, next) => {
+        try {
+            await db('posts').where('post_id', req.params.id).del()
+            res.send('post deleted');
+        } catch(err) {
+            console.error(err.message);
+        }
+    }])
 
-    .put("/update/:id", [checkAuthPostsUpdate([
+    .put("/update/:id", [checkAuthPosts([
         {
             permission: 'UpdateAnyPost'
         },
         {
             permission: 'UpdateOwnPost',
-            checkAuthor: true
+            checkAuthor: true,
+            table: 'posts',
+            column: 'post_id',
         },
-    ])])
+    ]), async (req, res, next) => {
+        try {
+            await db('posts').where('post_id', req.params.id).update({ description: req.body.text })
+            res.send('post deleted');
+        } catch(err) {
+            console.error(err.message);
+        }
+    }])
 
     /*.put("/update/:id", [checkAuth([
         {
@@ -95,21 +112,19 @@ router
         }
     }])*/
 
-    /*.post("/",[checkAuthUser([
+    .post("/",[checkAuthAddPosts([
         {
-            permission: 'postPost'
+            permission: 'postPost',
         },
         ]), async (req, res, next) => {
         try {
             const description = req.body.description;
             const user_id = req.user.user_id;
             const newPost = await db('posts').insert({description: description, user_id: user_id});
-            res.send(newPost, next('post added'));
+            res.send('post added');
         } catch(err) {
             console.error(err.message)
         }
-    }])*/
-
-    .post("/", checkAuthUser);
+    }])
 
 module.exports = router;

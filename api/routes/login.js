@@ -35,7 +35,6 @@ router
                     audience: process.env.HOST,
                 });
 
-
                 res.send(await db('users').where({ user_id: user.user_id }).update({ user_token: jwtToken }, ['user_token']));
                 // res.send({ user_token: jwtToken });
             },
