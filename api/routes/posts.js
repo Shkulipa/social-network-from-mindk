@@ -26,32 +26,6 @@ router
         }
     })
 
-    /*.delete("/delete/:id", [checkAuth([
-        {
-            permission: 'deleteOwnPost'
-        },
-    ]), async (req, res, next) => {
-        try {
-            const req_db = await db('posts').select().from('posts').where('post_id', req.params.id);
-
-            if (req_db.length > 0) {
-                const post_user_id = req_db[0].user_id;
-                const user_id =  req.user.user_id;
-
-                if(post_user_id == user_id) {
-                    res.send(await db('posts').where('post_id', req.params.id).del(), res.json('post deleted'));
-                } else {
-                    res.json('you haven\'t access for delete this post')
-                }
-            } else {
-                res.json('post didn\'t found')
-            }
-
-        } catch(err) {
-            console.error(err.message)
-        }
-    }])*/
-
     .delete("/delete/:id", [checkAuthorizedPosts([
         {
             permission: 'deleteAnyPost'
@@ -71,6 +45,20 @@ router
             checkAuthor: true
         },
     ])])
+
+    .post("/", async (req, res) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        try {
+            const description = req.body.description;
+            const user_id = req.user.user_id;
+            await db('posts').insert({description: description, user_id: user_id});
+            res.send('post added');
+        } catch(err) {
+            console.error(err.message)
+        }
+    })
+
+    // .post("/", checkAuthUser);
 
     /*.put("/update/:id", [checkAuth([
         {
@@ -97,21 +85,8 @@ router
         }
     }])*/
 
-    /*.post("/",[checkAuthUser([
-        {
-            permission: 'postPost'
-        },
-        ]), async (req, res, next) => {
-        try {
-            const description = req.body.description;
-            const user_id = req.user.user_id;
-            const newPost = await db('posts').insert({description: description, user_id: user_id});
-            res.send(newPost, next('post added'));
-        } catch(err) {
-            console.error(err.message)
-        }
-    }])*/
 
-    .post("/", checkAuthUser);
+
+
 
 module.exports = router;

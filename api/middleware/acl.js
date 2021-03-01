@@ -1,17 +1,5 @@
 const db = require('../db/db');
 
-/*function checkAuthorized(rules){
-    return async (req, res, next) => {
-        if (req.user) {
-            if (rules.some((rule) => req.user.permission.includes(rule.permission))) {
-                return next();
-            }
-        } else {
-            next('Access denied');
-        }
-    }
-}*/
-
 function checkAuthorizedPosts(rules){
     return async (req, res, next) => {
         const isPosts =  await db.select().from('posts').where('post_id', req.params.id);

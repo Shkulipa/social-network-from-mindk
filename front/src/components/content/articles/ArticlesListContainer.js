@@ -1,22 +1,18 @@
 import ArticlesList from './ArticelesList';
 import {getPosts} from "./reqArticles/ReqArticles";
-import {useEffect, useState} from "react";
+import {
+    useQuery,
+} from 'react-query';
 
 function ArticlesListContainer() {
-    const [posts, setPosts] = useState([]);
 
-    const getData = async() => {
-        const data = await getPosts();
-        setPosts(data.data);
-    }
-
-    useEffect(getData, []);
+    const postsQuery = useQuery('posts', () => getPosts());
+    const posts = postsQuery.data?.data || [];
 
     return (
         <div>
-            <ArticlesList posts={posts}/>
+           <ArticlesList posts={posts}/>
         </div>
-
     );
 }
 

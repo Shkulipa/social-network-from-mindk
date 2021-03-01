@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 function ArticleContainer() {
+
     const id = useParams();
     const [post, setPost] = useState([]);
 
@@ -15,6 +16,7 @@ function ArticleContainer() {
         setPost(data.data);
     }
     useEffect(getData, []);
+
 
     return (
         <>

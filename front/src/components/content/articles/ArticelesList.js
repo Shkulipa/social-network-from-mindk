@@ -1,6 +1,7 @@
 import {Link} from "react-router-dom";
 
 function ArticlesListContainer({posts}) {
+    console.log(posts);
     return (
         <div>
             This page of Articles <br/>

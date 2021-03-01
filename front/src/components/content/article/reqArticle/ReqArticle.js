@@ -5,5 +5,5 @@ const getPost = async (id) => {
 }
 
 export {
-    getPost,
+    getPost
 }
