@@ -1,7 +1,7 @@
 import './AddArticleStyle.scss';
 import React from "react";
-import { useFormik, Formik, Field, Form } from 'formik';
-// import {Button, FormGroup, Input, Label, Form} from 'reactstrap';
+import { useFormik } from 'formik';
+import {Button, FormGroup, Input, Label, Form} from 'reactstrap';
 
 
 function AddArticle({onSubmit}) {
@@ -10,7 +10,7 @@ function AddArticle({onSubmit}) {
         console.log(data);
     }
 
-   /* const formik = useFormik({
+    const formik = useFormik({
         initialValues: {
             user_id: '',
             description: ''
@@ -18,13 +18,13 @@ function AddArticle({onSubmit}) {
         onSubmit: values => {
             asd(values);
         },
-    });*/
+    });
 
     return (
         <div className='AddArticle'>
             This page to add Article
 
-            {/*<Form className='Form' onSubmit={formik.handleSubmit}>
+            <Form className='Form' onSubmit={formik.handleSubmit}>
                 <FormGroup>
                     <Label htmlFor="user_id">User ID:</Label>
                     <Input id="user_id" name="user_id" type="text" placeholder="Your user id..." onChange={formik.handleChange} value={formik.values.user_id}/>
@@ -35,9 +35,9 @@ function AddArticle({onSubmit}) {
                     <Input id="description" name="description" placeholder="Description..." onChange={formik.handleChange} value={formik.values.description}/>
                 </FormGroup>
                 <Button color="primary" type="submit">Submit</Button>
-            </Form>*/}
+            </Form>
 
-            <Formik
+            {/*<Formik
                 initialValues={{
                     user_id: '',
                     description: '',
@@ -53,7 +53,7 @@ function AddArticle({onSubmit}) {
 
                     <button className='btn' type="submit">Submit</button>
                 </Form>
-            </Formik>
+            </Formik>*/}
             {/*<button
                 onClick={() => onSubmit({user_id: 4599, description: 'some text'})}
             >
