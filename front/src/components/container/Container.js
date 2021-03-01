@@ -4,14 +4,13 @@ import Header from "../header/Header";
 import React, {useState} from "react";
 import {Route, Switch, useRouteMatch} from "react-router-dom";
 import Profile from "../content/profile/Profile";
-import AddArticle from "../content/addArticle/AddArticle";
 import "../content/Content.scss";
 import ArticlesListContainer from "../content/articles/ArticlesListContainer";
 import Page404 from "../404/Page404";
-import Article from "../content/article/Article";
 import UserProfile from "../content/userProfile/UserProfile";
 import ProfileEdit from "../content/ProfileEdit/ProfileEdit";
 import ArticleContainer from "../content/article/ArticleContainer";
+import AddArticleContainer from "../content/addArticle/AddArticleContainer";
 
 function Container() {
     const [name, setName] = useState();
@@ -38,7 +37,7 @@ function Container() {
                         return <UserProfile/>
                     }}/>
                     <Route exact path={`/add-article`} render={() => {
-                        return <AddArticle/>
+                        return <AddArticleContainer/>
                     }}/>
                     <Route exact path={`/posts`} render={() => {
                          return <ArticlesListContainer/>
