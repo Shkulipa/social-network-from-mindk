@@ -3,8 +3,6 @@ import {Link} from "react-router-dom";
 
 function ArticlesListContainer({posts, loading}) {
 
-    console.log(loading);
-
     return (
         <div>
             This page of Articles <br/>
