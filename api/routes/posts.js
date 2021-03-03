@@ -6,7 +6,7 @@ const checkAuthPosts = require('../middleware/acl').checkAuthPosts;
 const checkAuthAddPosts = require('../middleware/acl').checkAuthAddPosts;
 
 router
-    .get("/:id", async (req, res) => {
+    .get("/single_post/:id", async (req, res) => {
         res.header("Access-Control-Allow-Origin", "*");
         try {
             const id = req.params.id;
@@ -16,14 +16,28 @@ router
         }
     })
 
-    .get("/", async (req, res) => {
+    .get("/limit_post/", async (req, res) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        try {
+            const limit = req.query.limit || 3;
+            const offset = (req.query.page - 1) * limit || 0;
+
+            const query = await db.select().from('posts').limit(limit).offset(offset).orderBy('post_id', 'desc');
+            res.send(query);
+        } catch(err) {
+            console.error(err.message)
+        }
+    })
+
+    //Получение сразу всех постов
+    /*.get("/", async (req, res) => {
         res.header("Access-Control-Allow-Origin", "*");
         try {
             res.send(await db.select().from('posts').orderBy('post_id', 'desc'));
         } catch(err) {
             console.error(err.message)
         }
-    })
+    })*/
 
     /*.delete("/delete/:id", [checkAuth([
         {

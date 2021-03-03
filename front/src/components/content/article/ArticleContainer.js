@@ -1,22 +1,18 @@
 import Article from "./Article";
-import {useEffect, useState} from "react";
 import {getPost} from "./reqArticle/ReqArticle";
 import React from "react";
 import {
     useParams
 } from "react-router-dom";
+import {useQuery} from "react-query";
 
 function ArticleContainer() {
 
-    const id = useParams();
-    const [post, setPost] = useState([]);
+    const { post_id } = useParams();
 
-    const getData = async() => {
-        const data = await getPost(id.post_id);
-        setPost(data.data);
-    }
-    useEffect(getData, []);
-
+    const postQuery = useQuery('posts', () => getPost(post_id));
+    console.log(postQuery);
+    const post = postQuery.data?.data || [];
 
     return (
         <>

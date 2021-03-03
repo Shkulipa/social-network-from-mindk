@@ -1,66 +1,62 @@
 import './AddArticleStyle.scss';
 import React from "react";
-import { useFormik } from 'formik';
-import {Button, FormGroup, Input, Label, Form} from 'reactstrap';
+import { Formik, Field, Form } from 'formik';
+import * as Yup from 'yup';
 
 
 function AddArticle({onSubmit}) {
-
-    const asd = (data) => {
-        console.log(data);
-    }
-
-    const formik = useFormik({
-        initialValues: {
-            user_id: '',
-            description: ''
-        },
-        onSubmit: values => {
-            asd(values);
-        },
+    const SignupSchema = Yup.object().shape({
+        user_id: Yup.string()
+            .min(1, 'Слишком короткий!')
+            .max(5, 'Слишком длинный! Максимально 5ть символов')
+            .required('Обязательное поле'),
+        description: Yup.string()
+            .min(1, 'Слишком короткий!')
+            .max(880, 'Слишком длинный! Максимально 880 символов')
+            .required('Обязательное поле'),
     });
+
 
     return (
         <div className='AddArticle'>
             This page to add Article
 
-            <Form className='Form' onSubmit={formik.handleSubmit}>
-                <FormGroup>
-                    <Label htmlFor="user_id">User ID:</Label>
-                    <Input id="user_id" name="user_id" type="text" placeholder="Your user id..." onChange={formik.handleChange} value={formik.values.user_id}/>
-                </FormGroup>
-
-                <FormGroup>
-                    <Label htmlFor="description">Description:</Label>
-                    <Input id="description" name="description" placeholder="Description..." onChange={formik.handleChange} value={formik.values.description}/>
-                </FormGroup>
-                <Button color="primary" type="submit">Submit</Button>
-            </Form>
-
-            {/*<Formik
+            <Formik
                 initialValues={{
                     user_id: '',
                     description: '',
+                    available: 'all'
                 }}
-                onSubmit={ (values) => asd(values)}
+                validationSchema={SignupSchema}
+                onSubmit={onSubmit}
             >
-                <Form className='formik'>
-                    <label htmlFor="user_id">User ID:</label>
-                    <Field id="user_id" name="user_id" placeholder="Your user id..." />
+                {({errors, touched}) => (
+                    <Form className='formik'>
+                        <label htmlFor="user_id">User ID:</label>
+                        <Field id="user_id" name="user_id" placeholder="Your user id..."/>
+                        {errors.user_id && touched.user_id ? (
+                            <div className='Error'>{errors.user_id}</div>
+                        ) : null}
 
-                    <label htmlFor="description">Description</label>
-                    <Field id="description" name="description" placeholder="Description..." />
+                        <label htmlFor="available">Available:</label>
+                        <Field as="select" id="available" name="available" placeholder="Available for...">
+                            <option value="all">All</option>
+                            <option value="friends">Friends</option>
+                            <option value="only-me">Only Me</option>
+                        </Field>
 
-                    <button className='btn' type="submit">Submit</button>
-                </Form>
-            </Formik>*/}
-            {/*<button
-                onClick={() => onSubmit({user_id: 4599, description: 'some text'})}
-            >
-                Add Post
-            </button>*/}
+                        <label htmlFor="description">Description</label>
+                        <Field className='textarea' maxLength="880" as="textarea" id="description" name="description"
+                               placeholder="Description..."/>
+                        {errors.description && touched.description ? (
+                            <div className='Error'>{errors.description}</div>
+                        ) : null}
+
+                        <button className='btn' type="submit">Submit</button>
+                    </Form>
+                )}
+            </Formik>
         </div>
-
     );
 }
 
