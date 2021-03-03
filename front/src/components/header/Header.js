@@ -19,7 +19,7 @@ function Header({name}) {
             <Logo/>
 
             <Link to="/add-article">Add Article</Link>
-            <Link to="/articles">Articles</Link>
+            <Link to="/posts">Articles</Link>
             <Link to={`/profile/${user_link}`}>Profile</Link>
 
             <HeaderNav name={name}/>

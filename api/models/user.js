@@ -1,10 +1,14 @@
 const db = require('../db/db');
 
 class User {
-  // static tableName = 'users';
-
   static async findByEmail(email_user) {
-    return db.select().from('users').where('email_user', email_user ).first();
+    // return db.select().from('users').where('email_user', '1111').first();
+    return db.select().from('users').where('email_user', String(email_user)).first();
+  }
+
+  static async UpdateUserToken(email_user, user_token) {
+    // return db.select().from('users').where('email_user', '1111').first();
+    return db('users').where('email_user', email_user).update({ user_token: user_token });
   }
 
   static async saveUser(user) {

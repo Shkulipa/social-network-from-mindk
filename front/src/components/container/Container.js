@@ -6,11 +6,12 @@ import {Route, Switch, useRouteMatch} from "react-router-dom";
 import Profile from "../content/profile/Profile";
 import AddArticle from "../content/addArticle/AddArticle";
 import "../content/Content.scss";
-import Articles from "../content/articles/Articles";
+import ArticlesListContainer from "../content/articles/ArticlesListContainer";
 import Page404 from "../404/Page404";
 import Article from "../content/article/Article";
 import UserProfile from "../content/userProfile/UserProfile";
 import ProfileEdit from "../content/ProfileEdit/ProfileEdit";
+import ArticleContainer from "../content/article/ArticleContainer";
 
 function Container() {
     const [name, setName] = useState();
@@ -25,7 +26,7 @@ function Container() {
                 <div className="content">
                 <Switch>
                     <Route exact path={`/`} render={() => {
-                        return <Articles/>
+                        return <ArticlesListContainer/>
                     }}/>
                     <Route exact path={`/profile/:profile_user/`} render={props => {
                         return <Profile {...props} setNameForHook={setNameForHook} name={name}/>
@@ -39,11 +40,11 @@ function Container() {
                     <Route exact path={`/add-article`} render={() => {
                         return <AddArticle/>
                     }}/>
-                    <Route exact path={`/articles`} render={() => {
-                         return <Articles/>
+                    <Route exact path={`/posts`} render={() => {
+                         return <ArticlesListContainer/>
                     }}/>
-                    <Route exact path={`/article/:article_id`} render={() => {
-                        return <Article/>
+                    <Route exact path={`/posts/:post_id`} render={() => {
+                        return <ArticleContainer/>
                     }}/>
 
                     <Route path='*' render={() => {

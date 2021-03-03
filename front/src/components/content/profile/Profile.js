@@ -3,9 +3,12 @@ import {Button, FormGroup, Input, Label} from 'reactstrap';
 import {
     useParams
 } from "react-router-dom";
+import SocialButton from "../react-social-login/SocialButton";
+import './Profile.scss';
+
 
 function Profile({setNameForHook, name}) {
-    let { profile_user } = useParams();
+    let { profile_user } = useParams()
 
     if(profile_user && !name == '') {
         return (
@@ -14,9 +17,33 @@ function Profile({setNameForHook, name}) {
             </>
         )
     }
+    //google
+    const handleSocialLogin = (user) => {
+        console.log(user);
+        console.log(user._token.accessToken);
+    }
+    const handleSocialLoginFailure = (err) => {
+        console.error(err)
+    }
+
+    //facebook
+    const handleSocialLoginFacebook = (user) => {
+        console.log(user);
+        console.log(user._token.accessToken);
+        console.log(user._profile.id);
+        try {
+            //somethong code
+        } catch (err) {
+            console.error(err)
+        }
+    }
+    const handleSocialLoginFailureFacebook = (err) => {
+        console.error(err)
+    }
+
 
     return (
-        <>
+        <div className="profile-wrapper">
             <form className="content__form" onSubmit={setNameForHook}>
                 <FormGroup>
                     <Label for="exampleEmail">Введите ваше имя:</Label>
@@ -28,7 +55,26 @@ function Profile({setNameForHook, name}) {
                 </FormGroup>
                 <Button color="success" type="submit">Submit</Button>
             </form>
-        </>
+
+            <SocialButton
+                provider='google'
+                appId='757364433150-lmr5boetgmmhqqtotat4dtbeqkfugqdd.apps.googleusercontent.com'
+                onLoginSuccess={handleSocialLogin}
+                onLoginFailure={handleSocialLoginFailure}
+            >
+                Login with Google
+            </SocialButton>
+
+            <SocialButton
+                provider='facebook'
+                appId='243090580632360'
+                onLoginSuccess={handleSocialLoginFacebook}
+                onLoginFailure={handleSocialLoginFailureFacebook}
+            >
+                Login with Facebook
+            </SocialButton>
+
+        </div>
 
     );
 }
