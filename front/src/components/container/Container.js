@@ -43,14 +43,13 @@ function Container() {
                     <Route exact path={`/posts`} render={() => {
                          return <ArticlesListContainer/>
                     }}/>
-                    <Route exact path={`/posts/single_post/:post_id`} render={() => {
+                    <Route exact path={`/posts/:post_id`} render={() => {
                         return <ArticleContainer/>
                     }}/>
 
-                    <Route exact path={`/post/edit/:post_id`} render={() => {
+                    <Route exact path={`/posts/edit/:post_id`} render={() => {
                         return <EditArticleContainer/>
                     }}/>
-
 
                     <Route path='*' render={() => {
                         return <Page404/>;

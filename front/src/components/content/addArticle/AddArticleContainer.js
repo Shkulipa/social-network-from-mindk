@@ -8,8 +8,6 @@ import AddArticle from "./AddArticle";
 function AddArticleContainer() {
     const mutation = useMutation(ReqAddArticle)
 
-    // const {mutate: addNewPost} = useMutation(ReqAddArticle);
-
     const onSubmit = useCallback( async formData => {
         try {
             await mutation.mutate(formData);

@@ -7,11 +7,9 @@ import {
 import {useQuery} from "react-query";
 
 function ArticleContainer() {
-
     const { post_id } = useParams();
 
     const postQuery = useQuery('posts', () => getPost(post_id));
-    console.log(postQuery);
     const post = postQuery.data?.data || [];
 
     return (

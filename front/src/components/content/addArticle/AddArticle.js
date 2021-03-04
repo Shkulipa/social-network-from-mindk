@@ -16,6 +16,9 @@ function AddArticle({onSubmit}) {
             .required('Обязательное поле'),
     });
 
+    const test = () => {
+        console.log(1);
+    }
 
     return (
         <div className='AddArticle'>
@@ -28,7 +31,7 @@ function AddArticle({onSubmit}) {
                     available: 'all'
                 }}
                 validationSchema={SignupSchema}
-                onSubmit={onSubmit}
+                onSubmit={test}
             >
                 {({errors, touched}) => (
                     <Form className='formik'>
