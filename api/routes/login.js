@@ -35,9 +35,7 @@ router
                     audience: process.env.HOST,
                 });
 
-
                 res.send(await db('users').where({ user_id: user.user_id }).update({ user_token: jwtToken }, ['user_token']));
-                // res.send({ user_token: jwtToken });
             },
         )(req, res)
     )
@@ -53,7 +51,6 @@ router
                     throw new Error(trace.message || 'Authentication error');
                 }
 
-                // @TODO: Match Google to system user and get appropriate one from DB [...]
                 const jwtToken = jwt.sign(user, process.env.JWT_SECRET, {
                     expiresIn: '1d',
                     audience: process.env.HOST,
@@ -63,94 +60,6 @@ router
             },
         )(req, res),
     )
-
-/*    .get('/auth/facebook',
-        passport.authenticate(
-            'facebook',
-            {
-            scope: ['public_profile', 'email']
-            }
-        )
-    )
-
-    .get('/auth/facebook/callback',
-        passport.authenticate('facebook', {
-            successRedirect: '/profile',
-            failureRedirect: '/error'
-        })
-    )*/
-
-/*    .get('/auth/facebook',
-        passport.authenticate('facebook'))
-
-    .get('/auth/facebook/callback', (req, res) =>
-        passport.authenticate(
-            'facebook',
-            {
-                failureRedirect: '/login'
-            },
-            async (err, user, trace) => {
-                if (err || !user) {
-                    throw new Error(trace.message || 'Authentication error');
-                }
-
-                // @TODO: Match Google to system user and get appropriate one from DB [...]
-                const jwtToken = jwt.sign(user, process.env.JWT_SECRET, {
-                    expiresIn: '1d',
-                    audience: process.env.HOST,
-                });
-
-                res.send({ user_token: jwtToken });
-            },
-            )(req, res),
-        )*/
-
-    // .get('/auth/facebook/callback', (req, res) =>
-    //     passport.authenticate(
-    //         'facebook',
-    //         {
-    //             failureRedirect: '/login'
-    //         },
-    //         async (err, user, trace) => {
-    //             if (err || !user) {
-    //                 throw new Error(trace.message || 'Authentication error');
-    //             }
-    //
-    //             // @TODO: Match Google to system user and get appropriate one from DB [...]
-    //             const jwtToken = jwt.sign(user, process.env.JWT_SECRET, {
-    //                 expiresIn: '1d',
-    //                 audience: process.env.HOST,
-    //             });
-    //             console.log(user);
-    //             res.send({ user_token: jwtToken });
-    //         },
-    //     )(req, res),
-    // )
-    //
-    // .post('/social/facebook', (req, res) =>
-    //     passport.authenticate(
-    //         'facebook',
-    //         {
-    //             failureRedirect: '/login',
-    //             clientID: '243090580632360',
-    //             clientSecret: '47bcee4e452de4a4fdcefa921004528c',
-    //             callbackURL: "http://localhost:3000/login/auth/facebook/callback"
-    //         },
-    //         async (err, user, trace) => {
-    //             if (err || !user) {
-    //                 throw new Error(trace.message || 'Authentication error');
-    //             }
-    //
-    //             // @TODO: Match Google to system user and get appropriate one from DB [...]
-    //             const jwtToken = jwt.sign(user, process.env.JWT_SECRET, {
-    //                 expiresIn: '1d',
-    //                 audience: process.env.HOST,
-    //             });
-    //
-    //             res.send({ user_token: jwtToken });
-    //         },
-    //     )(req, res),
-    // )
 
     .post('/social/facebook', async (req, res) =>{
         try {

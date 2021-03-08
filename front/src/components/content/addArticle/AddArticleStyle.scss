@@ -1,0 +1,41 @@
+.AddArticle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.formik {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+
+  margin-top: 25px;
+
+  .Error {
+    margin-top: 10px;
+    color: red;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+
+  .textarea {
+    width: 75%;
+    height: 250px;
+    resize: none;
+  }
+
+  label {
+    margin-top: 25px;
+  }
+
+  .btn {
+    margin-top: 25px;
+    border-radius: 12px;
+    background-color: limegreen;
+    padding: 7px 10px;
+    font-weight: bold;
+    color: white;
+  }
+}

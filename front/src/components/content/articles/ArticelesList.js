@@ -1,6 +1,7 @@
+import './ArticlesListStyle.scss';
 import {Link} from "react-router-dom";
 
-function ArticlesListContainer({posts}) {
+function ArticlesListContainer({posts, loading}) {
     return (
         <div>
             This page of Articles <br/>
@@ -15,6 +16,8 @@ function ArticlesListContainer({posts}) {
                     <hr/>
                 </div>
             )}
+
+            {loading && <div>loading...</div>}
 
         </div>
 

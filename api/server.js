@@ -2,6 +2,7 @@ require("dotenv").config();
 const host = process.env.HOST;
 const port = process.env.PORT;
 const express = require('express');
+var cors = require('cors');
 const app = express();
 
 const passport = require('./services/auth/passport');
@@ -17,6 +18,7 @@ app.use(express.json());
 
 app.use(passport.initialize());
 app.use(authRequest);
+app.use(cors())
 
 app.use("/posts", posts);
 app.use("/registration", registration);
