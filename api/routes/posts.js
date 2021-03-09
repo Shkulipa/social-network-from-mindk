@@ -2,12 +2,11 @@
 const express = require("express");
 const router = express.Router();
 const db = require('../db/db');
-const checkAuthPosts = require('../middleware/acl').checkAuthPosts;
-const checkAuthAddPosts = require('../middleware/acl').checkAuthAddPosts;
+const checkACL = require('../middleware/acl').checkACL;
+const validator = require('../middleware/validator').validator;
 
 router
     .get("/:id", async (req, res) => {
-        res.header("Access-Control-Allow-Origin", "*");
         try {
             const id = req.params.id;
             res.send(await db.select().from('posts').where('post_id', id).orderBy('post_id', 'desc'));
@@ -17,7 +16,6 @@ router
     })
 
     .get("/", async (req, res) => {
-        res.header("Access-Control-Allow-Origin", "*");
         try {
             res.send(await db.select().from('posts').orderBy('post_id', 'desc'));
         } catch(err) {
@@ -25,7 +23,7 @@ router
         }
     })
 
-    .delete("/delete/:id", [checkAuthPosts([
+    .delete("/delete/:id", [checkACL([
         {
             permission: 'deleteAnyPost'
         },
@@ -33,7 +31,7 @@ router
             permission: 'deleteOwnPost',
             checkAuthor: true,
             table: 'posts',
-            column: 'post_id',
+            column: 'user_id',
         },
     ]), async (req, res, next) => {
         try {
@@ -44,9 +42,13 @@ router
         }
     }])
 
-    .put("/update/:id", async (req, res, next) => {
-        res.header("Access-Control-Allow-Origin", "*");
-
+    .put("/update/:id",
+        validator({
+            user_idPost: ['required', 'max:5'],
+            description: ['required', 'max:880'],
+            available: ['required'],
+        }),
+        async (req, res, next) => {
         try {
             await db('posts').where('post_id', req.params.id).update({ description: req.body.description })
             res.send('post updated');
@@ -55,16 +57,22 @@ router
         }
     })
 
-    .post("/", async (req, res) => {
-        try {
-            const description = req.body.description;
-            const user_id = req.body.user_id;
-            await db('posts').insert({description: description, user_id: user_id});
+    .post("/",
+        validator({
+            user_id: ['required', 'max:5'],
+            description: ['required', 'max:880'],
+            available: ['required'],
+        }),
+        async (req, res) => {
+            try {
+                const description = req.body.description;
+                const user_id = req.body.user_id;
+                await db('posts').insert({description: description, user_id: user_id});
 
-            res.send('post added');
-        } catch(err) {
-            console.error(err.message)
-        }
-    })
+                res.send('post added');
+            } catch (err) {
+                console.error(err.message)
+            }
+        })
 
 module.exports = router;
