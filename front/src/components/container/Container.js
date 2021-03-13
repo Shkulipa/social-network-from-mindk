@@ -12,9 +12,15 @@ import ProfileEdit from "../content/ProfileEdit/ProfileEdit";
 import ArticleContainer from "../content/article/ArticleContainer";
 import AddArticleContainer from "../content/addArticle/AddArticleContainer";
 import EditArticleContainer from "../content/editPost/EditArticleContainer";
+import HeaderContainer from "../header/headerContainer";
 
 function Container() {
     const [name, setName] = useState();
+    const [update, setUpdate] = useState(0);
+
+    const setUpdateForHook = () => {
+        setUpdate(update + 1);
+    }
 
     const setNameForHook = event => {
         setName(`${event.name} ${event.surname}`);
@@ -22,7 +28,7 @@ function Container() {
 
     return (
         <div className="page">
-            <Header name={name}/>
+            <HeaderContainer name={name} setUpdateForHook={setUpdateForHook} update={update}/>
             <div className="container">
                 <div className="content">
                     <Switch>
@@ -42,7 +48,7 @@ function Container() {
                             return <AddArticleContainer/>
                         }}/>
                         <Route exact path={`/posts`} render={() => {
-                            return <ArticlesListContainer/>
+                            return <ArticlesListContainer update={update}/>
                         }}/>
                         <Route exact path={`/posts/:post_id`} render={() => {
                             return <ArticleContainer/>

@@ -3,7 +3,7 @@ import ArticlesList from './ArticelesList';
 import {getPosts} from "./reqArticles/ReqArticles";
 import React, {useEffect, useState} from "react";
 
-function ArticlesListContainer() {
+function ArticlesListContainer({update}) {
 
     const [page, setPage] = useState(1);
     const [posts, setPosts] = useState([]);
@@ -38,6 +38,9 @@ function ArticlesListContainer() {
     }, [page]);
 
 
+    useEffect(  () => {
+        setPage(1);
+    }, [update]);
 
     return (
         <div>
