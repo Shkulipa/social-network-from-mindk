@@ -5,7 +5,6 @@ const db = require('../db/db');
 const passport = require('../services/auth/passport');
 const jwt = require('jsonwebtoken');
 const {v4: uuidv4 } = require('uuid');
-const User = require('../models/user');
 const fetch = require('node-fetch');
 
 router
@@ -64,14 +63,8 @@ router
     .post('/social/facebook', async (req, res) =>{
         try {
             const {accessToken, userID} = req.body;
-            const id = '1361134677569483';
-            const acces_token = 'EAADdFuZB08ygBAFjXYyLkQPGMPiOP8t3jBIXcqRDrzBOBhCZBd4DQomJWk4ZAhLQBxiWRZCoPVCtwtEjWqdZAbyCe7iBflLAOIp7BrmYWxphKdK1cdv2egy5WFpBL90newpv7g6u1FJ7OxDWHiuY5uompE3eP6SCiVffrIjpRhLLKgueNCHi0q1x0ZBqGhasnjl9hMtyo33qCaIV7n50G0';
-            // const URL = `https://graph.facebook.com/v2.9/${userID}/?fields=id,name,email,picture&access_token=${accessToken}`;
-            const URL = `https://graph.facebook.com/v2.9/${id}/?fields=id,name,email,picture&access_token=${acces_token}`;
+            const URL = `https://graph.facebook.com/v2.9/${userID}/?fields=id,name,email,picture&access_token=${accessToken}`;
             const data = await fetch(URL).then(res => res.json()).then(res => {return res})
-
-            //проверяем есть ли уже юзер по емейлу , если нету то регистрируем
-            console.log(data);
 
 
             // Generate token for user and actualize:

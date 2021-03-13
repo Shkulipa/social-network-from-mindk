@@ -1,7 +1,7 @@
 import { axiosReq } from "../../../../axios/axios";
 
-const getPosts = async () => {
-    return await axiosReq.get(`/posts`);
+const getPosts = async (page) => {
+    return await axiosReq.get(`/posts?page=${page}&limit=7`);
 }
 
 export {

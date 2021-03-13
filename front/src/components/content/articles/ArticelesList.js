@@ -1,24 +1,48 @@
 import './ArticlesListStyle.scss';
 import {Link} from "react-router-dom";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import React from "react";
+import Tooltip from "@material-ui/core/Tooltip";
+import Loader from "react-loader-spinner";
 
 function ArticlesListContainer({posts, loading}) {
     return (
-        <div>
-            This page of Articles <br/>
+        <div className="ArticleList">
+            <h2 className="title">Articles page</h2>
 
             {posts.map( ({post_id, description}) =>
-                <div key={post_id}>
-                    <Link to={`/posts/${post_id}`}>
-                        Post id: {post_id}<br/>
-                    </Link>
-                    Description: {description}
-                    <br/>
-                    <hr/>
-                </div>
+                <Card className="card" key={post_id}>
+                    <Tooltip title="Click here to view the article">
+                        <CardActionArea className="post-id">
+                            <Link to={`/posts/${post_id}`}>
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    Post id: {post_id}
+                                </Typography>
+                            </Link>
+                        </CardActionArea>
+                    </Tooltip>
+
+                    <CardContent className="post-content">
+                        <Typography gutterBottom variant="h5" component="h2">
+                            Description: {description.length > 25 ? description.slice(0, 25) + '...' : description}
+                        </Typography>
+                    </CardContent>
+                </Card>
             )}
 
-            {loading && <div>loading...</div>}
-
+            {loading &&
+                <div className="loader">
+                    <Loader
+                        type="ThreeDots"
+                        color="#00BFFF"
+                        height={100}
+                        width={100}
+                    />
+                </div>
+            }
         </div>
 
     );

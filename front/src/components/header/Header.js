@@ -3,10 +3,9 @@ import Logo from './components/logo/logo';
 import HeaderNav from "./components/headerNav/HeaderNav";
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
+import React from "react";
 
 function Header({name}) {
-    // throw new Error('error');
-
     let user_link;
     if(!name) {
         user_link = 'not_authorized';
@@ -15,15 +14,17 @@ function Header({name}) {
     }
 
     return (
-        <header className="header">
-            <Logo/>
+        <div className="container">
+            <header className="header">
+                <Logo/>
 
-            <Link to="/add-article">Add Article</Link>
-            <Link to="/posts">Articles</Link>
-            <Link to={`/profile/${user_link}`}>Profile</Link>
+                <Link to="/add-article">Add Article</Link>
+                <Link to="/posts">Articles</Link>
+                <Link to={`/profile/${user_link}`}>Profile</Link>
 
-            <HeaderNav name={name}/>
-        </header>
+                <HeaderNav name={name}/>
+            </header>
+        </div>
     );
 }
 
