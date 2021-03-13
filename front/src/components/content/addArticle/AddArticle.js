@@ -16,10 +16,6 @@ function AddArticle({onSubmit}) {
             .required('Обязательное поле'),
     });
 
-    const test = () => {
-        console.log(1);
-    }
-
     return (
         <div className='AddArticle'>
             This page to add Article
@@ -31,7 +27,7 @@ function AddArticle({onSubmit}) {
                     available: 'all'
                 }}
                 validationSchema={SignupSchema}
-                onSubmit={test}
+                onSubmit={onSubmit}
             >
                 {({errors, touched}) => (
                     <Form className='formik'>
