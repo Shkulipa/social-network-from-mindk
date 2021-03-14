@@ -6,31 +6,45 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import Tooltip from "@material-ui/core/Tooltip";
+import Loader from "react-loader-spinner";
 
-function ArticlesListContainer({posts}) {
+function ArticlesListContainer({posts, isFetching}) {
     return (
         <div className="ArticleList">
             <h2 className="title">Articles page</h2>
 
-            {posts.map( ({post_id, description}) =>
-                <Card className="card" key={post_id}>
-                    <Tooltip title="Click here to view the article">
-                        <CardActionArea className="post-id">
-                            <Link to={`/posts/${post_id}`}>
-                                <Typography gutterBottom variant="h5" component="h2">
-                                    Post id: {post_id}
-                                </Typography>
-                            </Link>
-                        </CardActionArea>
-                    </Tooltip>
+            {posts.map(el =>
+                el.map( ({post_id, description}) =>
+                    <Card className="card" key={post_id}>
+                        <Tooltip title="Click here to view the article">
+                            <CardActionArea className="post-id">
+                                <Link to={`/posts/${post_id}`}>
+                                    <Typography gutterBottom variant="h5" component="h2">
+                                        Post id: {post_id}
+                                    </Typography>
+                                </Link>
+                            </CardActionArea>
+                        </Tooltip>
 
-                    <CardContent className="post-content">
-                        <Typography gutterBottom variant="h5" component="h2">
-                            Description: {description.length > 25 ? description.slice(0, 25) + '...' : description}
-                        </Typography>
-                    </CardContent>
-                </Card>
+                        <CardContent className="post-content">
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Description: {description.length > 25 ? description.slice(0, 25) + '...' : description}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                )
             )}
+
+            {isFetching &&
+            <div className="loader">
+                <Loader
+                    type="ThreeDots"
+                    color="#00BFFF"
+                    height={100}
+                    width={100}
+                />
+            </div>
+            }
         </div>
 
     );

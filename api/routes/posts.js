@@ -21,7 +21,9 @@ router
             const offset = (req.query.page - 1) * limit || 0;
 
             const query = await db.select().from('posts').limit(limit).offset(offset).orderBy('post_id', 'desc');
-            res.send(query);
+            const [{count}] = await db.count().from('posts');
+
+            res.send({data: query, count: count});
         } catch(err) {
             console.error(err.message)
         }

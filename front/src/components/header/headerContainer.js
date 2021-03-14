@@ -5,14 +5,13 @@ import {ReqAddArticle} from './ReqAddArticle-2';
 import Header from "./Header";
 import React, {useCallback} from "react";
 
-function HeaderContainer({setUpdateForHook, update}) {
+function HeaderContainer() {
     const mutation = useMutation(ReqAddArticle);
 
     const onSubmit = useCallback( async formData => {
         try {
             await mutation.mutate(formData);
             handleClose();
-            setUpdateForHook(update + 1);
         } catch(e) {
             console.log(e);
         }
