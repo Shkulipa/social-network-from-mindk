@@ -6,9 +6,8 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import Tooltip from "@material-ui/core/Tooltip";
-import Loader from "react-loader-spinner";
 
-function ArticlesListContainer({posts, loading}) {
+function ArticlesListContainer({posts}) {
     return (
         <div className="ArticleList">
             <h2 className="title">Articles page</h2>
@@ -32,17 +31,6 @@ function ArticlesListContainer({posts, loading}) {
                     </CardContent>
                 </Card>
             )}
-
-            {loading &&
-                <div className="loader">
-                    <Loader
-                        type="ThreeDots"
-                        color="#00BFFF"
-                        height={100}
-                        width={100}
-                    />
-                </div>
-            }
         </div>
 
     );

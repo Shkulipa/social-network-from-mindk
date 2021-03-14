@@ -1,50 +1,22 @@
 import './ArticlesListStyle.scss';
 import ArticlesList from './ArticelesList';
 import {getPosts} from "./reqArticles/ReqArticles";
-import React, {useEffect, useState} from "react";
+import React from "react";
+import {useQuery} from "react-query";
 
-function ArticlesListContainer({update}) {
+function ArticlesListContainer() {
+    const intervalMs = 3000;
 
-    const [page, setPage] = useState(1);
-    const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    function logit() {
-        if(window.innerHeight + window.pageYOffset === document.body.offsetHeight) {
-            setPage(page + 1);
-        }
-    }
-
-    function watchScroll() {
-        window.addEventListener("scroll", logit);
-    }
-
-    useEffect(  () => {
-        watchScroll();
-        return () => {
-            window.removeEventListener("scroll", logit);
-        };
-    })
-
-    useEffect(  () => {
-        const loadPosts = async () => {
-            setLoading(true);
-            const { data } = await getPosts(page);
-            setPosts((prev) => [...prev, ...data]);
-            setLoading(false);
-        }
-
-        loadPosts();
-    }, [page]);
-
-
-    useEffect(  () => {
-        setPage(1);
-    }, [update]);
+    const postQuery = useQuery('posts/single_post', () => getPosts(),
+        {
+            // Refetch the data every second
+            refetchInterval: intervalMs,
+        });
+    const post = postQuery.data?.data || [];
 
     return (
         <div>
-            <ArticlesList posts={posts} loading={loading}/>
+            <ArticlesList posts={post}/>
         </div>
     );
 }

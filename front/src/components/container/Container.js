@@ -16,11 +16,6 @@ import HeaderContainer from "../header/headerContainer";
 
 function Container() {
     const [name, setName] = useState();
-    const [update, setUpdate] = useState(0);
-
-    const setUpdateForHook = () => {
-        setUpdate(update + 1);
-    }
 
     const setNameForHook = event => {
         setName(`${event.name} ${event.surname}`);
@@ -28,7 +23,7 @@ function Container() {
 
     return (
         <div className="page">
-            <HeaderContainer name={name} setUpdateForHook={setUpdateForHook} update={update}/>
+            <HeaderContainer name={name}/>
             <div className="container">
                 <div className="content">
                     <Switch>
@@ -48,7 +43,7 @@ function Container() {
                             return <AddArticleContainer/>
                         }}/>
                         <Route exact path={`/posts`} render={() => {
-                            return <ArticlesListContainer update={update}/>
+                            return <ArticlesListContainer/>
                         }}/>
                         <Route exact path={`/posts/:post_id`} render={() => {
                             return <ArticleContainer/>
