@@ -5,8 +5,6 @@ function validator(el) {
         const required = 'required';
         const max = 'max';
 
-        console.log(el);
-
         Object.entries(el).forEach( ([field, rules]) => {
             rules.forEach(rule => {
                 const [ruleName, ruleVal, ...params] = rule.split(':');

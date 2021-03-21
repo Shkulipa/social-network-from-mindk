@@ -35,7 +35,6 @@ util.inherits(Strategy, passport.Strategy);
  */
 Strategy.prototype.authenticate = function (req, options) {
     options = options || {};
-    console.log(req.headers);
 
     const authHeader = req.headers.authorization;
     const accessToken = authHeader ? authHeader.replace('Bearer ', '') : null;

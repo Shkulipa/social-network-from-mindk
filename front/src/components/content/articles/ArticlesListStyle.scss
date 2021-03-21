@@ -1,3 +1,25 @@
-.list {
-  height: 25px;
+.ArticleList {
+  .title {
+    margin-bottom: 25px;
+    text-align: center;
+  }
+
+  .card {
+    margin-bottom: 25px;
+    width: 100%;
+  }
+
+  .post-id {
+    padding: 7px 20px;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+
+    .MuiTypography-gutterBottom {
+      margin: 0;
+    }
+  }
+
+  .loader {
+    display: flex;
+    justify-content: center;
+  }
 }

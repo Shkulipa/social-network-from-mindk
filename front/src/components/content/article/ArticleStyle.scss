@@ -2,19 +2,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 90%;
 
   h2 {
-    font-size: 1.1rem;
     margin-bottom: 25px;
   }
 }
 
 .post {
-  border: 2px solid rgba(0,0,0, .3);
   padding: 10px;
   border-radius: 8px;
-  width: 55%;
 
   &__header {
     display: flex;

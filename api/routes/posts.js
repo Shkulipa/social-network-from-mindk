@@ -17,7 +17,13 @@ router
 
     .get("/", async (req, res) => {
         try {
-            res.send(await db.select().from('posts').orderBy('post_id', 'desc'));
+            const limit = req.query.limit || 7;
+            const offset = (req.query.page - 1) * limit || 0;
+
+            const query = await db.select().from('posts').limit(limit).offset(offset).orderBy('post_id', 'desc');
+            const [{count}] = await db.count().from('posts');
+
+            res.send({data: query, count: count});
         } catch(err) {
             console.error(err.message)
         }
