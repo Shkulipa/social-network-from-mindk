@@ -18,13 +18,13 @@ function ArticlesListContainer() {
         setPosts([...posts, data.data]);
     }
 
-    const { data, isFetching } = useQuery(['posts', page],
+    const { data, isFetching, refetch } = useQuery(['posts', page],
         () => fetchPosts(page),
         {
             staleTime: 5000,
         });
 
-    useEffect(() => {}, [data, page, queryClient])
+    useEffect(() => {refetch()}, [data, page, queryClient])
 
     const countPagePosts = () => {
         let countPosts = 0;

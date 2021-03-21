@@ -69,16 +69,16 @@ router
             description: ['required', 'max:880'],
             available: ['required'],
         }),
-        async (req, res) => {
-            try {
-                const description = req.body.description;
-                const user_id = req.body.user_id;
-                await db('posts').insert({description: description, user_id: user_id});
+    async (req, res) => {
+        try {
+            const description = req.body.description;
+            const user_id = req.body.user_id;
+            await db('posts').insert({description: description, user_id: user_id});
 
-                res.send('post added');
-            } catch (err) {
-                console.error(err.message)
-            }
-        })
+            res.send('post added');
+        } catch (err) {
+            console.error(err.message)
+        }
+    })
 
 module.exports = router;

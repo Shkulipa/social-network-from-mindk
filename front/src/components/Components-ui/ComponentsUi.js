@@ -7,11 +7,12 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 function UiField(props) {
-    const [field, meta] = useField(props);
+    const [field, {error, touched}] = useField(props);
     return (
         <TextField
+            error={!!error}
+            touched={touched.toString()}
             {...field}
-            {...meta}
             {...props}
         />
     );
@@ -20,26 +21,28 @@ function UiField(props) {
 }
 
 function UiTextarea(props) {
-    const [field, meta] = useField(props);
+    const [field, {error, touched}] = useField(props);
 
     return (
         <TextField
             {...field}
-            {...meta}
+            error={!!error}
+            touched={touched.toString()}
             {...props}
         />
     );
 }
 
 function UiSelect({selectValues, label, id, labelId, ...props}) {
-    const [field, meta] = useField(props);
+    const [field, {error, touched}] = useField(props);
 
     return (
         <FormControl variant="outlined">
             <InputLabel id={labelId}>Available</InputLabel>
             <Select
                 {...field}
-                {...meta}
+                error={!!error}
+                touched={touched.toString()}
                 labelId={labelId}
                 id={id}
                 label={label}

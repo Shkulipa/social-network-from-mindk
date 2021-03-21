@@ -29,7 +29,7 @@ function Profile({setNameForHook, name}) {
             .required('required field'),
     });
 
-    if(profile_user && !name == '') {
+    if(profile_user && name) {
         return (
             <div className="profile-wrapper">
                 <h2 className='title'>Welcome {name}!</h2>
