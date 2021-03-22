@@ -18,7 +18,7 @@ const profile = require("./routes/profile");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/images/avatars", express.static("/images/avatars"));
+app.use("/images/avatars/", express.static(__dirname + "/images/avatars/"));
 
 
 app.use(cors(

@@ -68,7 +68,6 @@ function GetAvatarContainer() {
                             </CardActions>
                         </Card>
                     </Form>
-
                 )}
             </Formik>
 
