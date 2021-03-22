@@ -5,18 +5,6 @@ const db = require('../db/db');
 const multer  = require('multer');
 const upload = multer({dest: 'images/avatars'});
 
-/*var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'images/avatars')
-    },
-    filename: function (req, file, cb) {
-        const typeImg = file.mimetype.split('/')[1];
-        cb(null, file.fieldname + '-' + Date.now() + '.' + typeImg);
-    }
-})*/
-
-// var upload = multer({ storage: storage })
-
 router
     .post("/search", async (req, res) => {
         try {
