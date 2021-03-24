@@ -1,21 +1,26 @@
 import './Header.scss';
+
 import Logo from './components/logo/logo';
 import HeaderNav from "./components/headerNav/HeaderNav";
+import {UiField, UiSelect, UiTextarea} from "../Components-ui/ComponentsUi";
+
+import React from "react";
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
-import React from "react";
+import {Form, Formik} from "formik";
+import * as Yup from "yup";
+
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import {Form, Formik} from "formik";
+import CardActions from "@material-ui/core/CardActions";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import {UiField, UiSelect, UiTextarea} from "../Components-ui/ComponentsUi";
-import CardActions from "@material-ui/core/CardActions";
-import * as Yup from "yup";
+import Popper from '@material-ui/core/Popper';
+import Fade from '@material-ui/core/Fade';
 
-function Header({name, onSubmit, handleClickOpen, open, handleClose}) {
+function Header({name, onSubmit, handleClickOpen, open, handleClose, id, anchorEl, openProfileMenu, handleClickPopover}) {
     let user_link;
     if(!name) {
         user_link = 'not_authorized';
@@ -46,7 +51,19 @@ function Header({name, onSubmit, handleClickOpen, open, handleClose}) {
                 <Link to="/posts">Articles</Link>
                 <Link to={`/profile/${user_link}`}>Profile</Link>
 
-                <HeaderNav name={name}/>
+                <button className="btn-Header-popper" aria-describedby={id} type="button" onClick={handleClickPopover}>
+                    <HeaderNav name={name}/>
+                </button>
+                <Popper className="Header-popper" open={openProfileMenu} elevation={3} id={id} anchorEl={anchorEl} transition>
+                    {({ TransitionProps }) => (
+                        <Fade {...TransitionProps} timeout={350}>
+                            <div className="Header-popper__items">
+                                <Link to="/settings">Profile Edit</Link>
+                                <Link to="/get-avatar">Get img Avatar</Link>
+                            </div>
+                        </Fade>
+                    )}
+                </Popper>
             </header>
 
             <Dialog
@@ -55,7 +72,7 @@ function Header({name, onSubmit, handleClickOpen, open, handleClose}) {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+                <DialogTitle className={"addArticle-popup-title"} id="alert-dialog-title">{"For add new article, fill all fields"}</DialogTitle>
                 <DialogContent>
                     <Formik
                         initialValues={{
@@ -68,7 +85,7 @@ function Header({name, onSubmit, handleClickOpen, open, handleClose}) {
                     >
                         {({errors, touched, values, handleChange}) => (
                             <Form>
-                                <Card className='card'>
+                                <Card className='addArticle-popup'>
                                     <CardContent>
                                         <UiField
                                             id="user_id"

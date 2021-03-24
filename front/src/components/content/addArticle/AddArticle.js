@@ -22,7 +22,7 @@ function AddArticle({onSubmit}) {
     });
 
     return (
-        <div className='AddArticle'>
+        <div className='ContainerWrapper'>
             <h2>Add article page</h2>
 
             <Formik
@@ -34,7 +34,7 @@ function AddArticle({onSubmit}) {
                 validationSchema={SignupSchema}
                 onSubmit={onSubmit}
             >
-                {({errors, touched, values, handleChange}) => (
+                {({errors, touched}) => (
                     <Form>
                         <Card className='card'>
                             <CardContent>

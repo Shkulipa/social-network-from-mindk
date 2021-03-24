@@ -1,18 +1,19 @@
 import './Container.scss';
 import Footer from '../footer/Footer';
 import Header from "../header/Header";
-import React, {useState} from "react";
+import React, {createContext, useState} from "react";
 import {Route, Switch} from "react-router-dom";
 import Profile from "../content/profile/Profile";
 import "../content/Content.scss";
 import ArticlesListContainer from "../content/articles/ArticlesListContainer";
 import Page404 from "../404/Page404";
 import UserProfile from "../content/userProfile/UserProfile";
-import ProfileEdit from "../content/ProfileEdit/ProfileEdit";
 import ArticleContainer from "../content/article/ArticleContainer";
 import AddArticleContainer from "../content/addArticle/AddArticleContainer";
 import EditArticleContainer from "../content/editPost/EditArticleContainer";
 import HeaderContainer from "../header/headerContainer";
+import ProfileEditContainer from "../content/ProfileEdit/ProfileEditContainer";
+import GetAvatarContainer from "../content/GetAvatar/GetAvatarContainer";
 
 function Container() {
     const [name, setName] = useState();
@@ -30,11 +31,14 @@ function Container() {
                         <Route exact path={`/`} render={() => {
                             return <ArticlesListContainer/>
                         }}/>
-                        <Route exact path={`/profile/:profile_user/`} render={props => {
+                        <Route exact path={`/profile/:profile_user`} render={props => {
                             return <Profile {...props} setNameForHook={setNameForHook} name={name}/>
                         }}/>
-                        <Route exact path={`/profile/:profile_user/:action(edit|avatar)/`} render={props => {
-                            return <ProfileEdit {...props} />
+                        <Route exact path={`/get-avatar`} render={props => {
+                            return <GetAvatarContainer {...props} />
+                        }}/>
+                        <Route exact path={`/settings`} render={props => {
+                            return <ProfileEditContainer {...props} />
                         }}/>
                         <Route exact path={`/users/:view_user`} render={() => {
                             return <UserProfile/>

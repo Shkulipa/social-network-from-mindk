@@ -10,7 +10,7 @@ import Loader from "react-loader-spinner";
 
 function ArticlesListContainer({posts, isFetching}) {
     return (
-        <div className="ArticleList">
+        <div className="ContainerWrapper ArticleList">
             <h2 className="title">Articles page</h2>
 
             {posts.map(el =>

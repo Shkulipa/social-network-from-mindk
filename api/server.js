@@ -12,10 +12,15 @@ const authRequest = require('./middleware/request-auth');
 const posts = require("./routes/posts");
 const registration = require("./routes/registration");
 const login = require("./routes/login");
+const profile = require("./routes/profile");
+
 
 app.use(express.urlencoded({ extended: true }));
-
 app.use(express.json());
+
+app.use("/images/avatars/", express.static(__dirname + "/images/avatars/"));
+
+
 app.use(cors(
     {
         "origin": ["http://localhost:3001", "https://localhost:3001"],
@@ -28,9 +33,11 @@ app.use(passport.initialize());
 app.use(authRequest);
 app.use(cors())
 
+
 app.use("/posts", posts);
 app.use("/registration", registration);
 app.use("/login", login);
+app.use("/profile", profile);
 
 app.listen(port, () => {
     console.log(`Example app listening at http://${host}:${port}`)
