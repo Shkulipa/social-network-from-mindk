@@ -1,4 +1,5 @@
 import './Header.scss';
+import "cropperjs/dist/cropper.css";
 
 import Logo from './components/logo/logo';
 import HeaderNav from "./components/headerNav/HeaderNav";
@@ -10,6 +11,7 @@ import {Link} from "react-router-dom";
 import {Form, Formik} from "formik";
 import * as Yup from "yup";
 
+
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import Button from "@material-ui/core/Button";
@@ -19,8 +21,13 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Popper from '@material-ui/core/Popper';
 import Fade from '@material-ui/core/Fade';
+import Cropper from "react-cropper";
 
-function Header({name, onSubmit, handleClickOpen, open, handleClose, id, anchorEl, openProfileMenu, handleClickPopover}) {
+
+function Header({name,
+                onSubmit, handleClickOpen, open, handleClose,
+                id, anchorEl, openProfileMenu, handleClickPopover,
+                uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg}) {
     let user_link;
     if(!name) {
         user_link = 'not_authorized';
@@ -72,7 +79,7 @@ function Header({name, onSubmit, handleClickOpen, open, handleClose, id, anchorE
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle className={"addArticle-popup-title"} id="alert-dialog-title">{"For add new article, fill all fields"}</DialogTitle>
+                <DialogTitle className="addArticle-popup-title" id="alert-dialog-title">{"For add new article, fill all fields"}</DialogTitle>
                 <DialogContent>
                     <Formik
                         initialValues={{
@@ -83,8 +90,8 @@ function Header({name, onSubmit, handleClickOpen, open, handleClose, id, anchorE
                         validationSchema={SignupSchema}
                         onSubmit={onSubmit}
                     >
-                        {({errors, touched, values, handleChange}) => (
-                            <Form>
+                        {({errors, touched}) => (
+                            <Form encType="multipart/form-data">
                                 <Card className='addArticle-popup'>
                                     <CardContent>
                                         <UiField
@@ -128,6 +135,28 @@ function Header({name, onSubmit, handleClickOpen, open, handleClose, id, anchorE
                                         {errors.description && touched.description ? (
                                             <div className='Error'>{errors.description}</div>
                                         ) : null}
+
+                                        {visionBtnUploadImg && <div className="btn-upload-img">
+                                            <Button variant="contained" color="primary" component="label">
+                                                {!image && !crroperedImg ? "Upload Image" : "Change Image"}
+                                                <input onChange={uploadImage} hidden type="file"/>
+                                            </Button>
+                                        </div>
+                                        }
+                                        {image && !crroperedImg && <div className="btn-upload-img">
+                                            <Button variant="contained" color="primary" onClick={setCroppedImgFunc}>
+                                                Crop
+                                            </Button>
+                                        </div>}
+
+                                        {image && !crroperedImg && <Cropper
+                                                        src={image}
+                                                        onInitialized={item => setCropFunc(item)}
+                                                        autoCropArea={1}
+                                                        movable={false}
+                                                        zoomable={false}
+                                        />}
+                                        {crroperedImg && <img src={crroperedImg} alt=""/>}
                                     </CardContent>
                                     <CardActions>
                                         <Button className="btn" variant="contained" color="primary" type="button" onClick={handleClose} >

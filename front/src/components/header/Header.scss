@@ -8,9 +8,10 @@
 }
 
 .addArticle-popup {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    width: 450px;
+    align-items: center;
     border: none;
     box-shadow: none !important;
 
@@ -42,6 +43,18 @@
 
     &-title {
         text-align: center;
+    }
+
+    img{
+        max-width: 100%;
+        border-radius: 12px;
+        margin: 0 auto;
+    }
+
+    .btn-upload-img {
+        margin: 15px 0;
+        display: flex;
+        justify-content: center;
     }
 }
 

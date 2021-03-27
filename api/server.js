@@ -19,11 +19,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/images/avatars/", express.static(__dirname + "/images/avatars/"));
+app.use("/images/posts/", express.static(__dirname + "/images/posts/"));
 
 
 app.use(cors(
     {
-        "origin": ["http://localhost:3001", "https://localhost:3001"],
+        "origin": ["http://localhost:3001"],
         "methods": "GET,PUT,POST,DELETE",
         "optionsSuccessStatus": 200
     }

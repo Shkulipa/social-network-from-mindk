@@ -4,6 +4,10 @@ const router = express.Router();
 const db = require('../db/db');
 const checkACL = require('../middleware/acl').checkACL;
 const validator = require('../middleware/validator').validator;
+const multer  = require('multer');
+/*const upload = multer({ storage: multer.memoryStorage({}) });
+const fs = require('fs');*/
+const upload = multer({dest: 'images/posts'});
 
 router
     .get("/:id", async (req, res) => {
@@ -63,7 +67,7 @@ router
         }
     })
 
-    .post("/",
+    /*.post("/",
         validator({
             user_id: ['required', 'max:5'],
             description: ['required', 'max:880'],
@@ -79,6 +83,36 @@ router
         } catch (err) {
             console.error(err.message)
         }
+    })*/
+
+    .post("/",
+        upload.single('fileToUpload'),
+        async function (req, res, next) {
+            try {
+                console.log('req.file:', req.file);
+                console.log('req.body:', req.body);
+            } catch(err) {
+                console.error(err.message);
+            }
+
+            // req.file is the fileToUpload file
+            // req.body will hold the text fields, if there were any
     })
+
+    /*.post("/", upload.single('avatar-img'), async function (req, res, next) {
+        const {filename} = req.file;
+        const {user_id} = req.body;
+
+        try {
+            await db('users').where('user_id', user_id).update({ avatar_img: filename })
+            res.sendStatus(200);
+        } catch(err) {
+            console.error(err.message);
+        }
+    })*/
+
+
+
+
 
 module.exports = router;

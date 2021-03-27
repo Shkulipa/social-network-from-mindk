@@ -21,8 +21,9 @@ router
         const {user_id} = req.body;
 
         try {
-            await db('users').where('user_id', user_id).update({ avatar_img: filename })
-            res.sendStatus(200);
+            /*await db('users').where('user_id', user_id).update({ avatar_img: filename })
+            res.sendStatus(200);*/
+            console.log(req.file);
         } catch(err) {
             console.error(err.message);
         }

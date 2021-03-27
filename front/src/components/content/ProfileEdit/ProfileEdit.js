@@ -15,7 +15,7 @@ function ProfileEdit() {
                 <br/>
 
                 <label htmlFor="name">Your avatar img:&#160;&#160;</label>
-                <input type="file" name="avatar-img" id="avatar-img"/>
+                <input type="file" name="avatar-img" onChange={(e) => console.log(e)} id="avatar-img"/>
                 <br/><br/>
                 <Divider />
                 <br/>
