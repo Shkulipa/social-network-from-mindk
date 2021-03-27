@@ -12,22 +12,29 @@ function HeaderContainer({name}) {
     const onSubmit = useCallback( async items => {
         //croppedImg from base64 in string
         /*const crroperedImgBase654 = crroperedImg || 'string'
-        const img = crroperedImgBase654.split(':');
+        const decodeImg = crroperedImgBase654.split('base64,')[1];
+        const typeImg = decodeImg[0].split(':')[1];
 
-        let buff = new Buffer(img[1] || 'test', 'base64');
-        let base64ToStringNewImg = buff.toString('ASCII') || 'string';*/
+        const img = new Blob([decodeImg]);*/
+
+        const {name, size, type} = filDesc || '';
+        const date = new Date();
+        const time = date.getFullYear().toString() + date.getMonth().toString() +
+            date.getMonth().toString() + date.getDate().toString() +
+            date.getHours().toString() + date.getSeconds().toString() +
+            date.getMilliseconds().toString();
+
+        const dataImg = {
+            name: name + time,
+            type: type,
+            size: size,
+            img: crroperedImg,
+        }
+
+        console.log(dataImg);
 
         try {
-            let newFormData = new FormData();
-            newFormData.append(
-                'items',
-                items
-            );
-            newFormData.append(
-                'fileToUpload',
-                crroperedImg
-            );
-            await mutation.mutate(newFormData);
+            await mutation.mutate({...items, dataImg});
             handleClose();
         } catch(e) {
             console.log(e);
@@ -57,6 +64,7 @@ function HeaderContainer({name}) {
     const id = openProfileMenu ? 'simple-popover' : undefined;
 
     //upload image
+    const [filDesc, setFilDesc] = useState();
     const [image, setImage] = useState();
     const [cropper, setCropper] = useState();
     const [crroperedImg, setCroppedImg] = useState('');
@@ -71,6 +79,7 @@ function HeaderContainer({name}) {
         };
         reader.readAsDataURL(e.target.files[0]);
 
+        setFilDesc(e.target.files[0]);
         setCropper();
         setCroppedImg();
         setVisionBtnUploadImg(false);

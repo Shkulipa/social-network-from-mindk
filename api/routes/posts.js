@@ -4,10 +4,8 @@ const router = express.Router();
 const db = require('../db/db');
 const checkACL = require('../middleware/acl').checkACL;
 const validator = require('../middleware/validator').validator;
-const multer  = require('multer');
-/*const upload = multer({ storage: multer.memoryStorage({}) });
-const fs = require('fs');*/
-const upload = multer({dest: 'images/posts'});
+const fs = require('fs');
+const basedBlob = require('based-blob');
 
 router
     .get("/:id", async (req, res) => {
@@ -86,11 +84,24 @@ router
     })*/
 
     .post("/",
-        upload.single('fileToUpload'),
         async function (req, res, next) {
             try {
-                console.log('req.file:', req.file);
-                console.log('req.body:', req.body);
+                const {description, user_id, available} = req.body;
+                const {name, type, size, img} = req.body.dataImg;
+
+                const typeImg = type.split('/')[1];
+                const imgSplitString = img.split('base64,')[1];
+
+                // var bufferValue = new Buffer(imgSplitString.toString(), 'base64')
+                var bufferValue = Buffer.from(imgSplitString.toString(),"base64");
+
+                fs.writeFile(`./../images/posts/${name}.${typeImg}`, bufferValue,function (err) {
+                    if (err) return console.log(err)
+
+                    res.end('Success!')
+                })
+                console.log('bufferValue: ', bufferValue);
+                // console.log('req.body: ', req.body);
             } catch(err) {
                 console.error(err.message);
             }

@@ -140,6 +140,7 @@ function Header({name,
                                             <Button variant="contained" color="primary" component="label">
                                                 {!image && !crroperedImg ? "Upload Image" : "Change Image"}
                                                 <input onChange={uploadImage} hidden type="file"/>
+                                                {/*<input onChange={e => console.log(e)} hidden type="file"/>*/}
                                             </Button>
                                         </div>
                                         }

@@ -2,6 +2,7 @@
   "name": "api",
   "version": "1.0.0",
   "dependencies": {
+    "based-blob": "^1.0.1",
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "ejs": "^3.1.5",
