@@ -19,15 +19,15 @@ import Dialog from "@material-ui/core/Dialog";
 import CardActions from "@material-ui/core/CardActions";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Popper from '@material-ui/core/Popper';
-import Fade from '@material-ui/core/Fade';
 import Cropper from "react-cropper";
+import Popover from "@material-ui/core/Popover";
+import Typography from "@material-ui/core/Typography";
 
 
 function Header({name,
                 onSubmit, handleClickOpen, open, handleClose,
-                id, anchorEl, openProfileMenu, handleClickPopover,
-                uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg}) {
+                id, anchorEl, openProfileMenu, handleClickPopover, handleClosePopover,
+                uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg, errorImg}) {
     let user_link;
     if(!name) {
         user_link = 'not_authorized';
@@ -61,16 +61,29 @@ function Header({name,
                 <button className="btn-Header-popper" aria-describedby={id} type="button" onClick={handleClickPopover}>
                     <HeaderNav name={name}/>
                 </button>
-                <Popper className="Header-popper" open={openProfileMenu} elevation={3} id={id} anchorEl={anchorEl} transition>
-                    {({ TransitionProps }) => (
-                        <Fade {...TransitionProps} timeout={350}>
-                            <div className="Header-popper__items">
+                <Popover
+                         open={openProfileMenu}
+                         id={id}
+                         anchorEl={anchorEl}
+                         onClose={handleClosePopover}
+
+                         anchorOrigin={{
+                             vertical: 'bottom',
+                             horizontal: 'center',
+                         }}
+                         transformOrigin={{
+                             vertical: 'top',
+                             horizontal: 'center',
+                         }}
+                >
+                    <Typography className="Header-popper">
+                        <div className="Header-popper__items">
                                 <Link to="/settings">Profile Edit</Link>
                                 <Link to="/get-avatar">Get img Avatar</Link>
-                            </div>
-                        </Fade>
-                    )}
-                </Popper>
+                        </div>
+                    </Typography>
+
+                </Popover>
             </header>
 
             <Dialog
@@ -115,9 +128,9 @@ function Header({name,
                                             className="field"
                                             selectValues={
                                                 [
-                                                    {val: 'all', text: 'All'},
-                                                    {val: 'friends', text: 'Friends'},
-                                                    {val: 'only-me', text: 'Only Me'},
+                                                    {val: 'All', text: 'All'},
+                                                    {val: 'Friends', text: 'Friends'},
+                                                    {val: 'Only Me', text: 'Only Me'},
                                                 ]
                                             }
                                         />
@@ -140,10 +153,13 @@ function Header({name,
                                             <Button variant="contained" color="primary" component="label">
                                                 {!image && !crroperedImg ? "Upload Image" : "Change Image"}
                                                 <input onChange={uploadImage} hidden type="file"/>
-                                                {/*<input onChange={e => console.log(e)} hidden type="file"/>*/}
                                             </Button>
-                                        </div>
-                                        }
+                                        </div>}
+
+                                        {errorImg &&
+                                        <div className='Error'>Sorry, but Your img should be type: PNG, JPEG, JPG and hasn't bigger
+                                            10MB and have name length not bigger than 255 characters</div>}
+
                                         {image && !crroperedImg && <div className="btn-upload-img">
                                             <Button variant="contained" color="primary" onClick={setCroppedImgFunc}>
                                                 Crop
@@ -157,7 +173,11 @@ function Header({name,
                                                         movable={false}
                                                         zoomable={false}
                                         />}
-                                        {crroperedImg && <img src={crroperedImg} alt=""/>}
+                                        {crroperedImg &&
+                                            <div className="crroperedImg">
+                                                <img src={crroperedImg} alt=""/>
+                                            </div>
+                                        }
                                     </CardContent>
                                     <CardActions>
                                         <Button className="btn" variant="contained" color="primary" type="button" onClick={handleClose} >

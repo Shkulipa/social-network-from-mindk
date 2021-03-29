@@ -12,7 +12,6 @@ function ArticleContainer() {
     const {data} = useQuery('posts', () => getPost(post_id));
     const post = data?.data || [];
 
-
     return (
         <>
             <Article post={post}/>

@@ -6,16 +6,41 @@
   h2 {
     margin-bottom: 25px;
   }
+
+  .card {
+    width: 100%;
+    max-width: 500px;
+    border-bottom: 0;
+
+    .CardContent {
+      padding: 0;
+    }
+
+    &__img {
+      width: 100%;
+      max-width: 500px;
+    }
+  }
+
+
 }
 
 .post {
-  padding: 10px;
   border-radius: 8px;
+
+  &__desc {
+    padding: 10px;
+  }
 
   &__header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    align-items: center;
+    padding: 10px;
+
+    p {
+      margin: 0;
+    }
 
     .btn-edit {
       padding: 7px 10px;

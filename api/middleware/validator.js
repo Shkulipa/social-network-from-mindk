@@ -4,6 +4,10 @@ function validator(el) {
 
         const required = 'required';
         const max = 'max';
+        const size = 'size';
+        const type = 'type';
+
+
 
         Object.entries(el).forEach( ([field, rules]) => {
             rules.forEach(rule => {
@@ -21,6 +25,27 @@ function validator(el) {
                             if(req.body[field].length > ruleVal) {
                                 errors.push({
                                     [field]: `this field ${field} is longer, max characters are ${ruleVal}`,
+                                });
+                            }
+                        }
+                        break;
+                    case size:
+                        if(req.body[field]) {
+                            if(req.body[field].size > ruleVal) {
+                                errors.push({
+                                    [field]: `max size your image is ${ruleVal}`,
+                                });
+                            }
+                        }
+                        break;
+                    case type:
+                        if(req.body[field]) {
+                            const { type } = req.body[field];
+                            const arrFromString = ruleVal.split('||');
+
+                            if(!arrFromString.includes(type)) {
+                                errors.push({
+                                    [field]: `your image should be PNG, JPG or JPEG`,
                                 });
                             }
                         }

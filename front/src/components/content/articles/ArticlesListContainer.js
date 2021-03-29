@@ -21,7 +21,7 @@ function ArticlesListContainer() {
     const { data, isFetching, refetch } = useQuery(['posts', page],
         () => fetchPosts(page),
         {
-            staleTime: 5000,
+            staleTime: Infinity,
         });
 
     useEffect(() => {refetch()}, [data, page, queryClient])
@@ -34,7 +34,7 @@ function ArticlesListContainer() {
 
 
     return (
-        <div>
+        <div className="articles-list-container">
             <ArticlesList posts={posts} isFetching={isFetching || false}/>
             <Button
                 size="large"

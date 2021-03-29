@@ -12,12 +12,10 @@ function AddArticle({onSubmit}) {
 
     const SignupSchema = Yup.object().shape({
         user_id: Yup.string()
-            .min(1, 'Too short! Too short! Enter please min 1 character!')
-            .max(5, 'Too long! Enter please max 5 character!')
+            .positive()
+            .integer()
             .required('required field'),
         description: Yup.string()
-            .min(1, 'Too short! Too short! Enter please min 1 character!')
-            .max(880, 'Too long! Enter please max 880 character!')
             .required('required field'),
     });
 
@@ -59,9 +57,9 @@ function AddArticle({onSubmit}) {
                                         className="field"
                                         selectValues={
                                             [
-                                                {val: 'all', text: 'All'},
-                                                {val: 'friends', text: 'Friends'},
-                                                {val: 'only-me', text: 'Only Me'},
+                                                {val: 'All', text: 'All'},
+                                                {val: 'Friends', text: 'Friends'},
+                                                {val: 'Only Me', text: 'Only Me'},
                                             ]
                                         }
                                     />

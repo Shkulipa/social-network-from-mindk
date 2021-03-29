@@ -4,37 +4,26 @@ import {
 import {ReqAddArticle} from './ReqAddArticle-2';
 import Header from "./Header";
 import React, {useCallback, useState} from "react";
+import {DataAboutImgForUpload} from "../../Functions/Functions";
 
 function HeaderContainer({name}) {
+    //error
+    const [errorImg, setErrorImg] = useState(false);
+
     //req add new article
     const mutation = useMutation(ReqAddArticle);
 
     const onSubmit = useCallback( async items => {
-        //croppedImg from base64 in string
-        /*const crroperedImgBase654 = crroperedImg || 'string'
-        const decodeImg = crroperedImgBase654.split('base64,')[1];
-        const typeImg = decodeImg[0].split(':')[1];
-
-        const img = new Blob([decodeImg]);*/
-
-        const {name, size, type} = filDesc || '';
-        const date = new Date();
-        const time = date.getFullYear().toString() + date.getMonth().toString() +
-            date.getMonth().toString() + date.getDate().toString() +
-            date.getHours().toString() + date.getSeconds().toString() +
-            date.getMilliseconds().toString();
-
-        const dataImg = {
-            name: name + time,
-            type: type,
-            size: size,
-            img: crroperedImg,
-        }
-
-        console.log(dataImg);
-
         try {
-            await mutation.mutate({...items, dataImg});
+            if(crroperedImg) {
+                const dataImg = DataAboutImgForUpload(filDesc, crroperedImg);
+                await mutation.mutate({...items, dataImg})
+            } else {
+                await mutation.mutate(items);
+            }
+
+            setImage('');
+            setCroppedImg('');
             handleClose();
         } catch(e) {
             console.log(e);
@@ -57,8 +46,12 @@ function HeaderContainer({name}) {
     //poper profile menu
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClickPopover = (event) => {
-        setAnchorEl(anchorEl ? null : event.currentTarget);
+        setAnchorEl(event.currentTarget);
     };
+    const handleClosePopover = () => {
+        setAnchorEl(null);
+    };
+
 
     const openProfileMenu = Boolean(anchorEl);
     const id = openProfileMenu ? 'simple-popover' : undefined;
@@ -73,18 +66,26 @@ function HeaderContainer({name}) {
     const uploadImage = (e) => {
         e.preventDefault();
 
-        const reader = new FileReader();
-        reader.onload = () => {
-            setImage(reader.result);
-        };
-        reader.readAsDataURL(e.target.files[0]);
+        const {type, size} = e.target.files[0];
+        const FILE_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
 
-        setFilDesc(e.target.files[0]);
-        setCropper();
-        setCroppedImg();
-        setVisionBtnUploadImg(false);
+        if(FILE_TYPES.includes(type) && size < 10000000 && e.target.files[0].name.length <= 255) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                setImage(reader.result);
+            };
+            reader.readAsDataURL(e.target.files[0]);
+
+            setFilDesc(e.target.files[0]);
+            setCropper();
+            setCroppedImg();
+            setVisionBtnUploadImg(false);
+            setErrorImg(false);
+        } else {
+            setErrorImg(true)
+        }
+
     }
-
     const setCropFunc = (item) => {
         setCropper(item);
     }
@@ -95,6 +96,7 @@ function HeaderContainer({name}) {
             setVisionBtnUploadImg(true);
         }
     }
+
     return (
         <>
             <Header
@@ -109,7 +111,7 @@ function HeaderContainer({name}) {
                 id={id}
                 openProfileMenu={openProfileMenu}
                 anchorEl={anchorEl}
-                onClose={handleClose}
+                handleClosePopover={handleClosePopover}
 
                 uploadImage={uploadImage}
                 image={image}
@@ -117,6 +119,7 @@ function HeaderContainer({name}) {
                 setCroppedImgFunc={setCroppedImgFunc}
                 crroperedImg={crroperedImg}
                 visionBtnUploadImg={visionBtnUploadImg}
+                errorImg={errorImg}
             />
         </>
 

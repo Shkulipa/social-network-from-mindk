@@ -14,7 +14,7 @@ function ArticlesListContainer({posts, isFetching}) {
             <h2 className="title">Articles page</h2>
 
             {posts.map(el =>
-                el.map( ({post_id, description}) =>
+                el.map( ({post_id, description, post_img}) =>
                     <Card className="card" key={post_id}>
                         <Tooltip title="Click here to view the article">
                             <CardActionArea className="post-id">
@@ -26,11 +26,17 @@ function ArticlesListContainer({posts, isFetching}) {
                             </CardActionArea>
                         </Tooltip>
 
-                        <CardContent className="post-content">
-                            <Typography gutterBottom variant="h5" component="h2">
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2" className="post-content">
                                 Description: {description.length > 25 ? description.slice(0, 25) + '...' : description}
                             </Typography>
                         </CardContent>
+
+                        {post_img && <img
+                            className={'card__img'}
+                            src={`http://localhost:3000/images/posts/${post_img.toString()}`}
+                            alt=""
+                        />}
                     </Card>
                 )
             )}

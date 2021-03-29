@@ -10,13 +10,23 @@ export default function Article({post}) {
             <h2>This page "Article"</h2>
 
             <Card className='card'>
-                <CardContent>
+                <CardContent className="CardContent">
                     <div className='post__header'>
                         <p>Article ID: {post[0]?.post_id || ''}</p>
                         <p>Post of user ID: {post[0]?.user_id || ''}</p>
                         <Link className={'btn-edit'} to={`/posts/edit/${post[0]?.post_id || ''}`}>Edit?</Link>
                     </div>
-                    Description: {post[0]?.description || ''}<br/><br/>
+
+                    <div className='post__desc'>
+                        Description: {post[0]?.description || ''}
+                    </div>
+
+
+                    {post[0]?.post_img && <img
+                        className={'card__img'}
+                        src={`http://localhost:3000/images/posts/${post[0]?.post_img.toString()}`}
+                        alt=""
+                    />}
                 </CardContent>
             </Card>
         </div>

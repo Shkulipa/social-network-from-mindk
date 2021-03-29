@@ -15,8 +15,8 @@ const login = require("./routes/login");
 const profile = require("./routes/profile");
 
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({limit: '10mb', extended: true }));
+app.use(express.json({limit: '10mb'}));
 
 app.use("/images/avatars/", express.static(__dirname + "/images/avatars/"));
 app.use("/images/posts/", express.static(__dirname + "/images/posts/"));
