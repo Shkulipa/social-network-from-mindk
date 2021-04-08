@@ -1,35 +1,39 @@
 import './ArticlesListStyle.scss';
 import {Link} from "react-router-dom";
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
+import React, {useContext} from "react";
 import Tooltip from "@material-ui/core/Tooltip";
 import Loader from "react-loader-spinner";
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import {Context} from "../../../authStore";
 
 function ArticlesListContainer({posts, isFetching}) {
+    const { user } = useContext(Context)[0];
+
     return (
         <div className="ContainerWrapper ArticleList">
             <h2 className="title">Articles page</h2>
 
             {posts.map(el =>
-                el.map( ({post_id, description, post_img}) =>
+                el.map( ({post_id, description, post_img, user_id}) =>
                     <Card className="card" key={post_id}>
-                        <Tooltip title="Click here to view the article">
-                            <CardActionArea className="post-id">
-                                <Link to={`/posts/${post_id}`}>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                        Post id: {post_id}
+                        <CardContent className="card__content">
+                                <Tooltip placement="bottom-start" title="Click here to view the article">
+                                    <Typography gutterBottom variant="h5" component="h2" className="post-content">
+                                        <Link to={`/posts/${post_id}`}>
+                                            {description.length > 25 ? description.slice(0, 25) + '...' : description}
+                                        </Link>
                                     </Typography>
-                                </Link>
-                            </CardActionArea>
-                        </Tooltip>
+                                </Tooltip>
 
-                        <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2" className="post-content">
-                                Description: {description.length > 25 ? description.slice(0, 25) + '...' : description}
-                            </Typography>
+                                {user && user.user_id === user_id ?
+                                    <Tooltip title="Settings">
+                                    <Link className="settings" to={`/posts/edit/${post_id}`}>
+                                        <MoreHorizIcon fontSize="large"/>
+                                    </Link>
+                                </Tooltip> : null}
                         </CardContent>
 
                         {post_img && <img

@@ -3,10 +3,9 @@ import "cropperjs/dist/cropper.css";
 
 import Logo from './components/logo/logo';
 import HeaderNav from "./components/headerNav/HeaderNav";
-import {UiField, UiSelect, UiTextarea} from "../Components-ui/ComponentsUi";
+import {UiSelect, UiTextarea} from "../Components-ui/ComponentsUi";
 
 import React from "react";
-import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
 import {Form, Formik} from "formik";
 import * as Yup from "yup";
@@ -24,26 +23,17 @@ import Popover from "@material-ui/core/Popover";
 import Typography from "@material-ui/core/Typography";
 
 
-function Header({name,
+function Header({
+                user,
                 onSubmit, handleClickOpen, open, handleClose,
                 id, anchorEl, openProfileMenu, handleClickPopover, handleClosePopover,
-                uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg, errorImg}) {
-    let user_link;
-    if(!name) {
-        user_link = 'not_authorized';
-    } else {
-        user_link = name.toString().replace(' ', '_');
-    }
+                uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg, errorImg,
+                handleLogout}) {
 
     const SignupSchema = Yup.object().shape({
-        user_id: Yup.string()
-            .min(1, 'Too short! Too short! Enter please min 1 character!')
-            .max(5, 'Too long! Enter please max 5 character!')
-            .required('required field'),
         description: Yup.string()
-            .min(1, 'Too short! Too short! Enter please min 1 character!')
-            .max(880, 'Too long! Enter please max 880 character!')
-            .required('required field'),
+            .required('required field')
+            .test('len', 'Must be max 255 characters', val => val && val.toString().length < 255 ),
     });
 
     return (
@@ -51,17 +41,23 @@ function Header({name,
             <header className="header">
                 <Logo/>
 
-                <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+                {user && <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                     Add Article
-                </Button>
+                </Button>}
 
                 <Link to="/posts">Articles</Link>
-                <Link to={`/profile/${user_link}`}>Profile</Link>
 
-                <button className="btn-Header-popper" aria-describedby={id} type="button" onClick={handleClickPopover}>
-                    <HeaderNav name={name}/>
-                </button>
-                <Popover
+                {!user && <Link to={`/login`}>
+                    <Button className="btn-Header-popper" variant="contained" color="primary" type="button">
+                        Sign in/Sign up
+                    </Button>
+                </Link>}
+
+                {user && <button className="btn-Header-popper" aria-describedby={id} type="button" onClick={handleClickPopover}>
+                    <HeaderNav user={user}/>
+                </button>}
+
+                {user && openProfileMenu && <Popover
                          open={openProfileMenu}
                          id={id}
                          anchorEl={anchorEl}
@@ -76,27 +72,25 @@ function Header({name,
                              horizontal: 'center',
                          }}
                 >
-                    <Typography className="Header-popper">
-                        <div className="Header-popper__items">
-                                <Link to="/settings">Profile Edit</Link>
-                                <Link to="/get-avatar">Get img Avatar</Link>
-                        </div>
+                    <Typography className="Header-popper-items ">
+                        <Link to="/settings">Profile Edit</Link>
+                        <Link to="/logout" onClick={handleLogout}>logout</Link>
                     </Typography>
+                </Popover>}
 
-                </Popover>
             </header>
 
-            <Dialog
+            {user && <Dialog
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+                className="dialog"
             >
                 <DialogTitle className="addArticle-popup-title" id="alert-dialog-title">{"For add new article, fill all fields"}</DialogTitle>
                 <DialogContent>
                     <Formik
                         initialValues={{
-                            user_id: '',
                             description: '',
                             available: 'all'
                         }}
@@ -107,19 +101,6 @@ function Header({name,
                             <Form encType="multipart/form-data">
                                 <Card className='addArticle-popup'>
                                     <CardContent>
-                                        <UiField
-                                            id="user_id"
-                                            name="user_id"
-                                            variant="outlined"
-                                            label="User ID*"
-                                            placeholder="Your ID..."
-                                            className="field"
-                                        />
-                                        {errors.user_id && touched.user_id ? (
-                                            <div className='Error'>{errors.user_id}</div>
-                                        ) : null}
-
-
                                         <UiSelect
                                             labelId="available-label"
                                             id="available"
@@ -191,14 +172,9 @@ function Header({name,
                         )}
                     </Formik>
                 </DialogContent>
-            </Dialog>
+            </Dialog>}
         </div>
     );
-}
-
-Header.propTypes = {
-    setPageForHook: PropTypes.func,
-    name: PropTypes.string
 }
 
 export default Header;

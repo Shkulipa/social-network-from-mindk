@@ -7,7 +7,7 @@ const GoogleStrategy = require('./strategies/google');
 
 passport.use(
     new LocalStrategy(
-        { usernameField: 'user_email', passwordField: 'user_password' },
+        { usernameField: 'email', passwordField: 'password' },
         async function (user_email, password, done) {
             const user = await User.findByEmail(user_email);
             if (user) {

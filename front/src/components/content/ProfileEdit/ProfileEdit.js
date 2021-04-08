@@ -16,10 +16,6 @@ function ProfileEdit({
                          uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg, errorImg, visionPrevImg, status200
                      }) {
     const validProfileEdit = Yup.object().shape({
-        user_id: Yup.number()
-            .positive()
-            .integer()
-            .required('required field'),
         name: Yup.string()
             .required('required field'),
         email: Yup.string()
@@ -42,20 +38,17 @@ function ProfileEdit({
 
             <Formik
                 initialValues={{
-                    user_id: profile[0]?.user_id || '',
-                    user_id_available: profile[0]?.user_id_available || 'All',
+                    name: profile?.name_user || '',
+                    name_available: profile?.name_available || 'All',
 
-                    name: profile[0]?.name_user || '',
-                    name_available: profile[0]?.name_available || 'All',
+                    email: profile?.email_user || '',
+                    email_available: profile?.email_available || 'All',
 
-                    email: profile[0]?.email_user || '',
-                    email_available: profile[0]?.email_available || 'All',
+                    phone: profile?.phone || '',
+                    phone_available: profile?.phone_available || 'All',
 
-                    phone: profile[0]?.phone || '',
-                    phone_available: profile[0]?.phone_available || 'All',
-
-                    university:  profile[0]?.university || '',
-                    university_available: profile[0]?.university_available || 'All'
+                    university:  profile?.university || '',
+                    university_available: profile?.university_available || 'All'
                 }}
                 validationSchema={validProfileEdit}
                 onSubmit={onEditSubmit}
@@ -65,40 +58,6 @@ function ProfileEdit({
                         <Card className="edit-profile-form">
                             <CardContent className="profile">
                                 <CardContent className="left-side">
-                                    <CardContent className="two-fields">
-                                        <div className="field-and-err">
-                                            <UiField
-                                                id="user_id"
-                                                name="user_id"
-                                                variant="outlined"
-                                                label="User ID*"
-                                                placeholder="Your ID..."
-                                                className="field"
-                                            />
-                                            {errors.user_id && touched.user_id ? (
-                                                <div className='error'>
-                                                    {errors.user_id.includes('user_id must be a `number` type') ? 'Only numbers' : errors.user_id}
-                                                </div>
-                                            ) : null}
-                                        </div>
-
-
-                                        <UiSelect
-                                            labelId="user_id_available"
-                                            id="user_id_available"
-                                            label="available"
-                                            name="user_id_available"
-                                            className="field field-available"
-                                            selectValues={
-                                                [
-                                                    {val: 'All', text: 'All'},
-                                                    {val: 'Friends', text: 'Friends'},
-                                                    {val: 'Only Me', text: 'Only Me'},
-                                                ]
-                                            }
-                                        />
-                                    </CardContent>
-
                                     <CardContent className="two-fields">
                                         <div className="field-and-err">
                                             <UiField
@@ -227,8 +186,8 @@ function ProfileEdit({
                                 </CardContent>
 
                                 <CardContent className="right-side">
-                                    {!profile[0]?.avatar_img && visionPrevImg && <img className="avatar-img" src={notAvatar} alt=""/>}
-                                    {profile[0]?.avatar_img && visionPrevImg && <img className="avatar-img" src={`http://localhost:3000/images/avatars/${profile[0]?.avatar_img}`} alt=""/>}
+                                    {!profile?.avatar_img && visionPrevImg && <img className="avatar-img" src={notAvatar} alt=""/>}
+                                    {profile?.avatar_img && visionPrevImg && <img className="avatar-img" src={`http://localhost:3000/images/avatars/${profile?.avatar_img}`} alt=""/>}
 
                                     {image && !crroperedImg && <Cropper
                                         src={image}

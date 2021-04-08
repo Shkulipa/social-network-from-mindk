@@ -1,7 +1,8 @@
 import EditArticle from "./EditArticle";
 import {getPost} from "./reqEditArticle/ReqEditArticle";
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import {
+    Redirect,
     useParams
 } from "react-router-dom";
 import {
@@ -10,8 +11,13 @@ import {
 } from 'react-query';
 import {updatePost} from "./reqEditArticle/ReqEditArticle";
 import {DataAboutImgForUpload} from "../../../Functions/Functions";
+import useRequireAuth from "../../../hooks/useRequireAuth";
+import {Context} from "../../../authStore";
 
-function ArticleContainer() {
+function ArticleContainer(props) {
+    useRequireAuth(false, props);
+    const { user } = useContext(Context)[0];
+
     //error mas for image load
     const [errorImg, setErrorImg] = useState();
 
@@ -21,8 +27,7 @@ function ArticleContainer() {
     //get article data
     const { post_id } = useParams();
 
-    const postQuery = useQuery('posts', () => getPost(post_id));
-    const post = postQuery.data?.data || [];
+    const {data} = useQuery('posts', () => getPost(post_id));
 
     //update post
     const mutation = useMutation(updatePost);
@@ -84,10 +89,18 @@ function ArticleContainer() {
         }
     }
 
+
+    // check owner of posts
+    /*if(post.length > 0) {
+        if (!user || post[0].user_id !== user.user_id ) {
+            return <Redirect to='/posts' />;
+        }
+    }*/
+
     return (
         <>
             <EditArticle
-                post={post}
+                post={data?.data || []}
                 onEditSubmit={onEditSubmit}
 
                 uploadImage={uploadImage}

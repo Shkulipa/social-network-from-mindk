@@ -1,8 +1,5 @@
 import PropTypes from 'prop-types';
 import Button from "@material-ui/core/Button";
-import {
-    useParams
-} from "react-router-dom";
 import SocialButton from "../react-social-login/SocialButton";
 import './Profile.scss';
 import Card from "@material-ui/core/Card";
@@ -10,36 +7,38 @@ import CardContent from "@material-ui/core/CardContent";
 import {UiField} from "../../Components-ui/ComponentsUi";
 import CardActions from "@material-ui/core/CardActions";
 import {Form, Formik} from "formik";
-import React from "react";
+import React, {useCallback, useEffect} from "react";
 import * as Yup from "yup";
 import Grid from "@material-ui/core/Grid";
+import {useMutation} from "react-query";
+import useAuth from "../../../hooks/useAuth";
+import {Link, withRouter} from "react-router-dom";
+import useRequireAuth from "../../../hooks/useRequireAuth";
 
-
-function Profile({setNameForHook, name}) {
-    let { profile_user } = useParams()
-
+function LoginContainer() {
     const SignupSchema = Yup.object().shape({
-        name: Yup.string()
-            .min(1, 'Too short! Enter please min 1 character!')
-            .max(15, 'Too long! Enter please max 15 character!')
+        email: Yup.string()
             .required('required field'),
-        surname: Yup.string()
-            .min(1, 'Too short! Enter please min 1 character!')
-            .max(15, 'Too long! Enter please max 15 character!')
+        password: Yup.string()
             .required('required field'),
     });
 
-    if(profile_user && name) {
-        return (
-            <div className="profile-wrapper">
-                <h2 className='title'>Welcome {name}!</h2>
-            </div>
-        )
-    }
+    //Login
+    useRequireAuth(true);
+    const { login } = useAuth();
+
+    const mutation = useMutation(login);
+
+    const postQueryLogin = useCallback( async formData => {
+        try {
+            await mutation.mutate(formData);
+        } catch(e) {
+            console.error(e);
+        }
+    }, [mutation]);
+
     //google
     const handleSocialLogin = (user) => {
-        console.log(user);
-        console.log(user._token.accessToken);
     }
     const handleSocialLoginFailure = (err) => {
         console.error(err)
@@ -47,9 +46,6 @@ function Profile({setNameForHook, name}) {
 
     //facebook
     const handleSocialLoginFacebook = (user) => {
-        console.log(user);
-        console.log(user._token.accessToken);
-        console.log(user._profile.id);
         try {
             //something code
         } catch (err) {
@@ -66,43 +62,47 @@ function Profile({setNameForHook, name}) {
 
             <Formik
                 initialValues={{
-                    name: '',
-                    surname: '',
+                    email: '',
+                    password: '',
                 }}
                 validationSchema={SignupSchema}
-                onSubmit={setNameForHook}
+                onSubmit={postQueryLogin}
             >
-                {({errors, touched, values, handleChange}) => (
+                {({errors, touched}) => (
                     <Form>
                         <Card className='card'>
                             <CardContent>
                                     <UiField
-                                        id="name"
-                                        name="name"
+                                        id="email"
+                                        name="email"
                                         variant="outlined"
-                                        label="Enter your name"
-                                        placeholder="Your name..."
+                                        label="Enter your email"
+                                        placeholder="Your email..."
                                         className="field"
                                     />
-                                    {errors.name && touched.name ? (
-                                        <div className='Error'>{errors.name}</div>
+                                    {errors.email && touched.email ? (
+                                        <div className='Error'>{errors.email}</div>
                                     ) : null}
 
                                     <UiField
-                                        id="surname"
-                                        name="surname"
+                                        id="password"
+                                        name="password"
                                         variant="outlined"
-                                        label="Enter your surname"
-                                        placeholder="Enter your surname..."
+                                        label="Enter your password"
+                                        placeholder="Enter your password..."
                                         className="field"
+                                        type="password"
                                     />
-                                    {errors.surname && touched.surname ? (
-                                        <div className='Error'>{errors.surname}</div>
+                                    {errors.password && touched.password ? (
+                                        <div className='Error'>{errors.password}</div>
                                     ) : null}
                             </CardContent>
                             <CardActions>
                                 <Grid container spacing={3}>
-                                    <Grid container justify="center" item xs={12}>
+                                    <Grid container justify="space-between" item xs={12}>
+                                        <Link to="/sign-up">
+                                            <Button variant="outlined" color="primary" type="submit">Sign Up</Button>
+                                        </Link>
                                         <Button variant="contained" color="primary" type="submit">Login</Button>
                                     </Grid>
                                 </Grid>
@@ -148,8 +148,8 @@ const initialValuesType = {
     name: PropTypes.string,
 };
 
-Profile.propTypes = {
+LoginContainer.propTypes = {
     name: initialValuesType.name
 }
 
-export default Profile;
+export default withRouter(LoginContainer);

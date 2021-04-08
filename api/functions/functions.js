@@ -1,4 +1,33 @@
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
+const moment = require('moment');
+
+function generateTokens(user) {
+    const accessTokenExpires = moment().add(10, 'minutes');
+    const accessToken = jwt.sign(user, process.env.JWT_SECRET, {
+        expiresIn: '600s',
+        audience: process.env.HOST,
+    });
+
+    const refreshTokenExpires = moment().add(24, 'hours');
+    const refreshToken = jwt.sign(user, process.env.JWT_SECRET, {
+        expiresIn: "24h",
+        audience: process.env.HOST,
+    });
+
+    const tokens = {
+        access: {
+            token: accessToken,
+            expires: accessTokenExpires.toDate(),
+        },
+        refresh: {
+            token: refreshToken,
+            expires: refreshTokenExpires.toDate(),
+        },
+    };
+
+    return tokens;
+}
 
 function recordFile (dataImg, path) {
     const {name, type, img} = dataImg;
@@ -15,6 +44,8 @@ function recordFile (dataImg, path) {
     return fileName;
 }
 
+
 module.exports = {
-    recordFile
+    recordFile,
+    generateTokens
 }

@@ -1,21 +1,21 @@
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useContext, useState} from "react";
 import ProfileEdit from "./ProfileEdit";
-import {useMutation, useQuery} from "react-query";
+import {useMutation} from "react-query";
 import {DataAboutImgForUpload} from "../../../Functions/Functions";
-import {getProfile, updateProfile} from "../../../Functions/reqProfileEdit/ReqProfileEdit";
+import {updateProfile} from "../../../Functions/reqProfileEdit/ReqProfileEdit";
+import {Context} from "../../../authStore";
 
 function ProfileEditContainer() {
+    //check login user
+
     //error mas for image load
     const [errorImg, setErrorImg] = useState();
 
     //modal window
     const [status200, setStatus200] = useState(false);
 
-    //get profile data
-    const postQuery = useQuery('profile', () => getProfile(1));
-    const profile = postQuery.data?.data || [];
-
-
+    //get Login data
+    const { user } = useContext(Context)[0];
 
     //update Profile
     const mutation = useMutation(updateProfile);
@@ -80,7 +80,7 @@ function ProfileEditContainer() {
     return (
         <>
             <ProfileEdit
-                profile={profile}
+                profile={user}
                 onEditSubmit={onEditSubmit}
 
                 uploadImage={uploadImage}

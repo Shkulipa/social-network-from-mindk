@@ -8,17 +8,20 @@ import {
     QueryClient,
     QueryClientProvider
 } from 'react-query';
+import AuthStore from './authStore';
+
 
 // Create a client
 const queryClient = new QueryClient()
 
 ReactDOM.render(
-
+    <AuthStore>
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
                 <App/>
             </BrowserRouter>
-        </QueryClientProvider>,
+        </QueryClientProvider>
+    </AuthStore>,
 
     document.getElementById('root')
 );

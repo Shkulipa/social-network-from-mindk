@@ -10,7 +10,13 @@ router
     .get("/:id", async (req, res) => {
         try {
             const id = req.params.id;
-            res.send(await db.select().from('posts').where('post_id', id));
+
+            res.send(await db.select('avatar_img', 'name_user', 'users.user_id',
+                'available', 'post_img', 'description', 'post_id')
+                .from('posts').join('users', function() {
+                    this.on
+                    ('posts.user_id', '=', 'users.user_id')
+                }).where('post_id', Number(id)).limit(1));
         } catch(err) {
             console.error(err.message)
         }
@@ -21,7 +27,14 @@ router
             const limit = req.query.limit || 7;
             const offset = (req.query.page - 1) * limit || 0;
 
-            const query = await db.select().from('posts').limit(limit).offset(offset).orderBy('post_id', 'desc');
+            const query = await db.select('avatar_img', 'name_user', 'users.user_id',
+                'available', 'post_img', 'description', 'post_id')
+                .from('posts').limit(limit).offset(offset)
+                .join('users', function() {
+                    this.on
+                    ('posts.user_id', '=', 'users.user_id')
+                })
+                .orderBy('post_id', 'desc');
             const [{count}] = await db.count().from('posts');
 
             res.send({data: query, count: count});
@@ -64,10 +77,10 @@ router
                 const fileName = recordFile(req.body.dataImg);
 
                 await db('posts').where('post_id', req.params.id).update({ description: description, user_id: user_id, available: available, post_img: fileName})
-                res.status(200);
+                res.status(200).send();
             } else {
                 await db('posts').where('post_id', req.params.id).update({ description: description, user_id: user_id, available: available})
-                res.status(200);
+                res.status(200).send();
             }
         } catch(err) {
             console.error(err.message);

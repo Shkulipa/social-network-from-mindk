@@ -6,6 +6,7 @@ const passport = require('../services/auth/passport');
 const jwt = require('jsonwebtoken');
 const {v4: uuidv4 } = require('uuid');
 const fetch = require('node-fetch');
+const {generateTokens} = require("../functions/functions");
 
 router
     .get("/", async (req, res) => {
@@ -20,21 +21,23 @@ router
         passport.authenticate(
             'local',
             {
-                usernameField: 'user_email',
-                passwordField: 'user_password',
+                usernameField: 'email',
+                passwordField: 'password',
                 session: false,
             },
             async (err, user, trace) => {
                 if (err || !user) {
                     throw new Error(trace.message || 'Authentication error');
                 }
-                // Generate token for user and actualize:
-                const jwtToken = jwt.sign(user, process.env.JWT_SECRET, {
-                    expiresIn: '1d',
-                    audience: process.env.HOST,
-                });
 
-                res.send(await db('users').where({ user_id: user.user_id }).update({ user_token: jwtToken }, ['user_token']));
+                // Generate token for user:
+                const tokens = await generateTokens(user);
+
+                //update and get user data
+                await db('users').where({ user_id: user.user_id }).update({ user_token:  tokens.refresh.token });
+                const userInfo = await db.select().from('users').where('user_token', tokens.refresh.token );
+
+                res.send({userInfo, tokens});
             },
         )(req, res)
     )

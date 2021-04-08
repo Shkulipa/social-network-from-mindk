@@ -3,12 +3,34 @@ import {
 } from 'react-query';
 import {ReqAddArticle} from './ReqAddArticle-2';
 import Header from "./Header";
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useContext, useState} from "react";
 import {DataAboutImgForUpload} from "../../Functions/Functions";
+import useAuth from "../../hooks/useAuth";
+import {Context} from "../../authStore";
+import { useHistory } from "react-router-dom";
 
-function HeaderContainer({name}) {
+function HeaderContainer() {
+    //react-router History
+    let history = useHistory();
+
+    //login user
+    const { user } = useContext(Context)[0];
+
     //error
     const [errorImg, setErrorImg] = useState(false);
+
+    //logout
+    const { logout } = useAuth();
+    const handleLogout = useCallback(
+        event => {
+            event.preventDefault();
+            setAnchorEl(false);
+            logout().then(() => {
+                history.push("/posts");
+            });
+        },
+        [logout],
+    );
 
     //req add new article
     const mutation = useMutation(ReqAddArticle);
@@ -17,9 +39,9 @@ function HeaderContainer({name}) {
         try {
             if(crroperedImg) {
                 const dataImg = DataAboutImgForUpload(filDesc, crroperedImg);
-                await mutation.mutate({...items, dataImg})
+                await mutation.mutate({...items, dataImg, user_id: user.user_id})
             } else {
-                await mutation.mutate(items);
+                await mutation.mutate({...items, user_id: user.user_id});
             }
 
             setImage('');
@@ -43,13 +65,13 @@ function HeaderContainer({name}) {
         setOpen(false);
     };
 
-    //poper profile menu
-    const [anchorEl, setAnchorEl] = useState(null);
+    //poper Login menu
+    const [anchorEl, setAnchorEl] = useState(false);
     const handleClickPopover = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClosePopover = () => {
-        setAnchorEl(null);
+        setAnchorEl(false);
     };
 
 
@@ -100,8 +122,6 @@ function HeaderContainer({name}) {
     return (
         <>
             <Header
-                name={name}
-
                 open={open}
                 handleClickOpen={handleClickOpen}
                 handleClose={handleClose}
@@ -112,6 +132,7 @@ function HeaderContainer({name}) {
                 openProfileMenu={openProfileMenu}
                 anchorEl={anchorEl}
                 handleClosePopover={handleClosePopover}
+                user={user}
 
                 uploadImage={uploadImage}
                 image={image}
@@ -120,6 +141,8 @@ function HeaderContainer({name}) {
                 crroperedImg={crroperedImg}
                 visionBtnUploadImg={visionBtnUploadImg}
                 errorImg={errorImg}
+
+                handleLogout={handleLogout}
             />
         </>
 

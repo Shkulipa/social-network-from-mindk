@@ -1,7 +1,7 @@
 import { axiosReq } from "../../../../axios/axios";
 
-const getPost = async (id) => {
-    return await axiosReq.get(`/posts/${id}`);
+const getPost = (id) => {
+    return axiosReq.get(`/posts/${id}`);
 }
 
 const updatePost = async (data) => {

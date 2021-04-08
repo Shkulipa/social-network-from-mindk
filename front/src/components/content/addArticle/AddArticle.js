@@ -2,19 +2,14 @@ import './AddArticleStyle.scss';
 import React from "react";
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import {UiField, UiSelect, UiTextarea} from "../../Components-ui/ComponentsUi";
+import {UiSelect, UiTextarea} from "../../Components-ui/ComponentsUi";
 import CardContent from "@material-ui/core/CardContent";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 
 function AddArticle({onSubmit}) {
-
     const SignupSchema = Yup.object().shape({
-        user_id: Yup.string()
-            .positive()
-            .integer()
-            .required('required field'),
         description: Yup.string()
             .required('required field'),
     });
@@ -25,7 +20,6 @@ function AddArticle({onSubmit}) {
 
             <Formik
                 initialValues={{
-                    user_id: '',
                     description: '',
                     available: 'all'
                 }}
@@ -36,19 +30,6 @@ function AddArticle({onSubmit}) {
                     <Form>
                         <Card className='card'>
                             <CardContent>
-                                    <UiField
-                                        id="user_id"
-                                        name="user_id"
-                                        variant="outlined"
-                                        label="User ID*"
-                                        placeholder="Your ID..."
-                                        className="field"
-                                    />
-                                    {errors.user_id && touched.user_id ? (
-                                        <div className='Error'>{errors.user_id}</div>
-                                    ) : null}
-
-
                                     <UiSelect
                                         labelId="available-label"
                                         id="available"

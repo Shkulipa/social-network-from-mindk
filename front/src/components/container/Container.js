@@ -1,9 +1,7 @@
 import './Container.scss';
 import Footer from '../footer/Footer';
-import Header from "../header/Header";
-import React, {createContext, useState} from "react";
-import {Route, Switch} from "react-router-dom";
-import Profile from "../content/profile/Profile";
+import React, {useCallback, useEffect} from "react";
+import {Redirect, Route, Switch} from "react-router-dom";
 import "../content/Content.scss";
 import ArticlesListContainer from "../content/articles/ArticlesListContainer";
 import Page404 from "../404/Page404";
@@ -13,34 +11,53 @@ import AddArticleContainer from "../content/addArticle/AddArticleContainer";
 import EditArticleContainer from "../content/editPost/EditArticleContainer";
 import HeaderContainer from "../header/headerContainer";
 import ProfileEditContainer from "../content/ProfileEdit/ProfileEditContainer";
-import GetAvatarContainer from "../content/GetAvatar/GetAvatarContainer";
+import LoginContainer from "../content/Login/Login";
+import useAuth from "../../hooks/useAuth";
 
 function Container() {
-    const [name, setName] = useState();
+    const { user, refreshToken, refresh } = useAuth();
 
-    const setNameForHook = event => {
-        setName(`${event.name} ${event.surname}`);
+    //logout
+    const { logout } = useAuth();
+    const handleLogout = useCallback(
+        event => {
+            event.preventDefault();
+            logout().then(() => {
+                refresh();
+            })
+        },
+        [logout],
+    );
+
+    useEffect(() => {
+        if (!user && refreshToken) {
+            refresh();
+        }
+    }, [user, refreshToken]);
+
+    if (!user && refreshToken) {
+        return <button onClick={handleLogout}>asd</button>;
     }
 
     return (
         <div className="page">
-            <HeaderContainer name={name}/>
+            <HeaderContainer/>
             <div className="container">
                 <div className="content">
                     <Switch>
                         <Route exact path={`/`} render={() => {
-                            return <ArticlesListContainer/>
+                            return <Redirect to="/login" />
                         }}/>
-                        <Route exact path={`/profile/:profile_user`} render={props => {
-                            return <Profile {...props} setNameForHook={setNameForHook} name={name}/>
+                        <Route exact path={`/login`} render={() => {
+                            return <LoginContainer/>
                         }}/>
-                        <Route exact path={`/get-avatar`} render={props => {
-                            return <GetAvatarContainer {...props} />
+                        <Route exact path={`/sign-up`} render={() => {
+                            return <div>sign up page</div>
                         }}/>
                         <Route exact path={`/settings`} render={props => {
                             return <ProfileEditContainer {...props} />
                         }}/>
-                        <Route exact path={`/users/:view_user`} render={() => {
+                        <Route exact path={`/profile/:view_user`} render={() => {
                             return <UserProfile/>
                         }}/>
                         <Route exact path={`/add-article`} render={() => {

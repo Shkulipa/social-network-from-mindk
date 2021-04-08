@@ -12,6 +12,17 @@
     border: 1px solid rgba(0,0,0, .1);
     border-bottom: none;
 
+    &__content {
+      position: relative;
+
+      .settings {
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+      }
+    }
+
     &__img {
       width: 100%;
       max-width: 500px;

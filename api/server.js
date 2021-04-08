@@ -13,7 +13,8 @@ const posts = require("./routes/posts");
 const registration = require("./routes/registration");
 const login = require("./routes/login");
 const profile = require("./routes/profile");
-
+const logout = require("./routes/logout");
+const refreshTokens = require("./routes/refreshTokens");
 
 app.use(express.urlencoded({limit: '10mb', extended: true }));
 app.use(express.json({limit: '10mb'}));
@@ -39,6 +40,9 @@ app.use("/posts", posts);
 app.use("/registration", registration);
 app.use("/login", login);
 app.use("/profile", profile);
+app.use("/logout", logout);
+app.use("/refresh-tokens", refreshTokens);
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://${host}:${port}`)

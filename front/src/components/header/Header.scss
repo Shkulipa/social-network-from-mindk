@@ -7,6 +7,15 @@
     padding: 15px 10px;
 }
 
+.MuiDialog-paperWidthSm {
+    max-width: none;
+    width: 500px;
+}
+
+.MuiCardContent-root {
+    width: 100%;
+}
+
 .addArticle-popup {
     width: 100%;
     display: flex;
@@ -68,11 +77,9 @@
     border: none;
 }
 
-.Header-popper {
-    &__items {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 15px;
-    }
+.Header-popper-items {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
 }

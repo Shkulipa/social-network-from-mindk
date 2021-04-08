@@ -1,11 +1,11 @@
 import './EditArticleStyle.scss';
 import {Form, Formik} from "formik";
-import React from "react";
+import React, {useEffect} from "react";
 import * as Yup from "yup";
 import {Link, useParams} from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import {UiField, UiSelect, UiTextarea} from "../../Components-ui/ComponentsUi";
+import {UiSelect, UiTextarea} from "../../Components-ui/ComponentsUi";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import Cropper from "react-cropper";
@@ -16,15 +16,10 @@ export default function EditArticle({
     const { post_id } = useParams();
 
     const SignupSchema = Yup.object().shape({
-        user_idPost: Yup.string()
-            .positive()
-            .integer()
-            .required('required filed'),
         description: Yup.string()
-            .required('required filed'),
+            .required('required filed')
+            .test('len', 'Must be max 255 characters', val => val && val.toString().length < 255 ),
     });
-
-
 
     return (
         <div className="EditArticle" >
@@ -34,10 +29,10 @@ export default function EditArticle({
 
             <Formik
                 initialValues={{
-                    user_idPost: post_id,
                     description: post[0]?.description || '',
-                    available:  post[0]?.available || 'all'
+                    available:  post[0]?.available || 'All'
                 }}
+                enableReinitialize={true}
                 validationSchema={SignupSchema}
                 onSubmit={onEditSubmit}
             >
@@ -45,19 +40,6 @@ export default function EditArticle({
                     <Form>
                         <Card className='card'>
                             <CardContent>
-                                <UiField
-                                    id="user_idPost"
-                                    name="user_idPost"
-                                    variant="outlined"
-                                    label="User ID*"
-                                    placeholder="Your ID..."
-                                    className="field"
-                                />
-                                {errors.user_idPost && touched.user_idPost ? (
-                                    <div className='Error'>{errors.user_idPost}</div>
-                                ) : null}
-
-
                                 <UiSelect
                                     labelId="available-label"
                                     id="available"

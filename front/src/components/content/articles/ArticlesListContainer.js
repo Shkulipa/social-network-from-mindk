@@ -32,7 +32,6 @@ function ArticlesListContainer() {
         return countPosts;
     };
 
-
     return (
         <div className="articles-list-container">
             <ArticlesList posts={posts} isFetching={isFetching || false}/>
