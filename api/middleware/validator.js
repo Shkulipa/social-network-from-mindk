@@ -7,8 +7,6 @@ function validator(el) {
         const size = 'size';
         const type = 'type';
 
-
-
         Object.entries(el).forEach( ([field, rules]) => {
             rules.forEach(rule => {
                 const [ruleName, ruleVal, ...params] = rule.split(':');

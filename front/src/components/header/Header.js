@@ -73,7 +73,7 @@ function Header({
                          }}
                 >
                     <Typography className="Header-popper-items ">
-                        <Link to="/settings">Profile Edit</Link>
+                        <Link to="/profile">Profile</Link>
                         <Link to="/logout" onClick={handleLogout}>logout</Link>
                     </Typography>
                 </Popover>}

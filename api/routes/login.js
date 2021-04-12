@@ -3,7 +3,6 @@ const express = require("express");
 let router = express.Router();
 const db = require('../db/db');
 const passport = require('../services/auth/passport');
-const jwt = require('jsonwebtoken');
 const {v4: uuidv4 } = require('uuid');
 const fetch = require('node-fetch');
 const {generateTokens} = require("../functions/functions");
@@ -27,7 +26,7 @@ router
             },
             async (err, user, trace) => {
                 if (err || !user) {
-                    throw new Error(trace.message || 'Authentication error');
+                    return res.send(trace);
                 }
 
                 // Generate token for user:
@@ -35,7 +34,16 @@ router
 
                 //update and get user data
                 await db('users').where({ user_id: user.user_id }).update({ user_token:  tokens.refresh.token });
-                const userInfo = await db.select().from('users').where('user_token', tokens.refresh.token );
+                const userInfo = await db.select(
+                    'users.user_id', 'name_user', 'email_user', 'user_token', 'permission',
+                    'avatar_img', 'phone', 'university', 'university', 'name_available',
+                    'email_available', 'phone_available', 'university_available'
+                ).from('users')
+                    .join('users_info_available', function() {
+                        this.on
+                        ('users_info_available.user_id', '=', 'users.user_id')
+                    })
+                    .where('user_token', tokens.refresh.token ).first();
 
                 res.send({userInfo, tokens});
             },
@@ -52,31 +60,89 @@ router
                 if (err || !user) {
                     throw new Error(trace.message || 'Authentication error');
                 }
+                // Generate tokens for user:
+                const tokens = await generateTokens(user);
+                await db('users').where({ user_id: user.user_id }).update({ user_token:  tokens.refresh.token });
 
-                const jwtToken = jwt.sign(user, process.env.JWT_SECRET, {
-                    expiresIn: '1d',
-                    audience: process.env.HOST,
-                });
+                const userInfo = await db.select(
+                    'users.user_id', 'name_user', 'email_user', 'user_token', 'permission',
+                    'avatar_img', 'phone', 'university', 'university', 'name_available',
+                    'email_available', 'phone_available', 'university_available'
+                ).from('users')
+                    .join('users_info_available', function() {
+                        this.on
+                        ('users_info_available.user_id', '=', 'users.user_id')
+                    })
+                    .where('user_token', tokens.refresh.token ).first();
 
-                res.send({ user_token: jwtToken });
+                res.send({userInfo, tokens});
             },
         )(req, res),
     )
 
-    .post('/social/facebook', async (req, res) =>{
+    .post('/social/facebook',
+        async (req, res) => {
         try {
-            const {accessToken, userID} = req.body;
-            const URL = `https://graph.facebook.com/v2.9/${userID}/?fields=id,name,email,picture&access_token=${accessToken}`;
-            const data = await fetch(URL).then(res => res.json()).then(res => {return res})
+            const {accessToken} = req.body._token;
+            const {id} = req.body._profile;
+            const URL = `https://graph.facebook.com/v2.9/${id}/?fields=id,name,email,picture&access_token=${accessToken}`;
+            const {name, email} = await fetch(URL).then(res => res.json()).then(res => {return res})
 
+            const user = await db.select().from('users').where({email_user: email}).first();
 
-            // Generate token for user and actualize:
-            const jwtToken = jwt.sign(data, process.env.JWT_SECRET, {
-                expiresIn: '1d',
-                audience: process.env.HOST,
-            });
+            if(user) {
+                const tokens = await generateTokens({user_id: user.user_id, name_user: user.name_user, permission: user.permission});
 
-            res.send({ user_token: jwtToken });
+                await db('users').where({ user_id: user.user_id }).update({ user_token:  tokens.refresh.token });
+
+                const userInfo = await db.select(
+                    'users.user_id', 'name_user', 'email_user', 'user_token', 'permission',
+                    'avatar_img', 'phone', 'university', 'university', 'name_available',
+                    'email_available', 'phone_available', 'university_available'
+                ).from('users')
+                    .join('users_info_available', function() {
+                        this.on
+                        ('users_info_available.user_id', '=', 'users.user_id')
+                    })
+                    .where('user_token', tokens.refresh.token ).first();
+
+                return res.send({userInfo, tokens});
+            } else {
+                const addNewUser = await db('users').insert({
+                    name_user: name,
+                    email_user: email,
+                    reg_type: 'social',
+                    permission: ['deleteOwnPost','updateOwnPost','postPost', 'updateOwnProfile', 'addNewPost']
+                }).returning('user_id');
+
+                const idNewUser = addNewUser[0];
+
+                await db('users_info_available').insert({
+                    user_id: idNewUser,
+                    name_available: 'All',
+                    email_available: 'All',
+                    phone_available: 'All',
+                    university_available: 'All'
+                });
+
+                const newUser = await db.select().from('users').where('user_id', idNewUser ).first();
+                const tokens = await generateTokens({user_id: newUser.user_id, name_user: newUser.name_user, permission: newUser.permission});
+
+                await db('users').where({ user_id: newUser.user_id }).update({ user_token:  tokens.refresh.token });
+
+                const userInfo = await db.select(
+                    'users.user_id', 'name_user', 'email_user', 'user_token', 'permission',
+                    'avatar_img', 'phone', 'university', 'university', 'name_available',
+                    'email_available', 'phone_available', 'university_available'
+                ).from('users')
+                    .join('users_info_available', function() {
+                        this.on
+                        ('users_info_available.user_id', '=', 'users.user_id')
+                    })
+                    .where('user_token', tokens.refresh.token ).first();
+
+                return res.send({userInfo, tokens});
+            }
         } catch (err) {
             console.log(err);
         }

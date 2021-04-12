@@ -5,14 +5,19 @@ import {Redirect, Route, Switch} from "react-router-dom";
 import "../content/Content.scss";
 import ArticlesListContainer from "../content/articles/ArticlesListContainer";
 import Page404 from "../404/Page404";
-import UserProfile from "../content/userProfile/UserProfile";
 import ArticleContainer from "../content/article/ArticleContainer";
-import AddArticleContainer from "../content/addArticle/AddArticleContainer";
 import EditArticleContainer from "../content/editPost/EditArticleContainer";
 import HeaderContainer from "../header/headerContainer";
 import ProfileEditContainer from "../content/ProfileEdit/ProfileEditContainer";
 import LoginContainer from "../content/Login/Login";
 import useAuth from "../../hooks/useAuth";
+import UserProfileContainer from "../content/userProfile/UserProfileContainer";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Typography from "@material-ui/core/Typography";
+
 
 function Container() {
     const { user, refreshToken, refresh } = useAuth();
@@ -22,9 +27,7 @@ function Container() {
     const handleLogout = useCallback(
         event => {
             event.preventDefault();
-            logout().then(() => {
-                refresh();
-            })
+            logout()
         },
         [logout],
     );
@@ -36,51 +39,60 @@ function Container() {
     }, [user, refreshToken]);
 
     if (!user && refreshToken) {
-        return <button onClick={handleLogout}>asd</button>;
+        return (
+            <div className="re-log-page">
+                <Card variant="outlined">
+                    <CardContent>
+                        <Typography color="textPrimary" gutterBottom>
+                            <b>Your session has expired, please re-login</b>
+                        </Typography>
+                    </CardContent>
+                    <CardActions className="re-log-page__btn">
+                        <Button variant="contained" color="primary" size="large" onClick={handleLogout}>Re-login</Button>
+                    </CardActions>
+                </Card>
+            </div>
+        );
     }
 
     return (
         <div className="page">
-            <HeaderContainer/>
-            <div className="container">
-                <div className="content">
-                    <Switch>
-                        <Route exact path={`/`} render={() => {
-                            return <Redirect to="/login" />
-                        }}/>
-                        <Route exact path={`/login`} render={() => {
-                            return <LoginContainer/>
-                        }}/>
-                        <Route exact path={`/sign-up`} render={() => {
-                            return <div>sign up page</div>
-                        }}/>
-                        <Route exact path={`/settings`} render={props => {
-                            return <ProfileEditContainer {...props} />
-                        }}/>
-                        <Route exact path={`/profile/:view_user`} render={() => {
-                            return <UserProfile/>
-                        }}/>
-                        <Route exact path={`/add-article`} render={() => {
-                            return <AddArticleContainer/>
-                        }}/>
-                        <Route exact path={`/posts`} render={() => {
-                            return <ArticlesListContainer/>
-                        }}/>
-                        <Route exact path={`/posts/:post_id`} render={() => {
-                            return <ArticleContainer/>
-                        }}/>
+                <HeaderContainer/>
+                <div className="container">
+                    <div className="content">
+                        <Switch>
+                            <Route exact path={`/`} render={() => {
+                                return <Redirect to="/login" />
+                            }}/>
+                            <Route exact path={`/login`} render={() => {
+                                return <LoginContainer/>
+                            }}/>
+                            <Route exact path={`/sign-up`} render={() => {
+                                return <div>sign up page</div>
+                            }}/>
+                            <Route exact path={`/profile`} render={() => {
+                                return <ProfileEditContainer />
+                            }}/>
+                            <Route exact path={`/user/:user_id`} render={() => {
+                                return <UserProfileContainer />
+                            }}/>
+                            <Route exact path={`/posts`} render={() => {
+                                return <ArticlesListContainer/>
+                            }}/>
+                            <Route exact path={`/posts/:post_id`} render={() => {
+                                return <ArticleContainer/>
+                            }}/>
 
-                        <Route exact path={`/posts/edit/:post_id`} render={() => {
-                            return <EditArticleContainer/>
-                        }}/>
+                            <Route exact path={`/posts/edit/:post_id`} render={() => {
+                                return <EditArticleContainer/>
+                            }}/>
 
-                        <Route path='*' render={() => {
-                            return <Page404/>;
-                        }}/>
-                    </Switch>
+                            <Route path='*' render={() => {
+                                return <Page404/>;
+                            }}/>
+                        </Switch>
+                    </div>
                 </div>
-            </div>
-
             <Footer className="footer"/>
         </div>
     );

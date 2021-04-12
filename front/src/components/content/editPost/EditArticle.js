@@ -1,6 +1,6 @@
 import './EditArticleStyle.scss';
 import {Form, Formik} from "formik";
-import React, {useEffect} from "react";
+import React from "react";
 import * as Yup from "yup";
 import {Link, useParams} from "react-router-dom";
 import Card from "@material-ui/core/Card";
@@ -9,9 +9,10 @@ import {UiSelect, UiTextarea} from "../../Components-ui/ComponentsUi";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import Cropper from "react-cropper";
+import PropTypes from "prop-types";
 
 export default function EditArticle({
-                                        post, onEditSubmit,
+                                        post, onEditSubmit, resRequestUpdate,
                                         uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg, errorImg, visionPrevImg, status200}) {
     const { post_id } = useParams();
 
@@ -21,16 +22,31 @@ export default function EditArticle({
             .test('len', 'Must be max 255 characters', val => val && val.toString().length < 255 ),
     });
 
+
+
     return (
         <div className="EditArticle" >
             <h2 className="title">Edit Article</h2>
 
-            {status200 && <p className="Success">Your post updated!</p>}
+            {resRequestUpdate &&
+            resRequestUpdate.map(el => {
+                        for (let key in el) {
+
+                            if(key === "success") {
+                                return <p key={el[key]} className="answer success">{el[key]}</p>
+                            } else {
+                                return <p key={el[key]} className="answer error">{el[key]}</p>
+                            }
+
+                        }
+                    }
+                )
+            }
 
             <Formik
                 initialValues={{
-                    description: post[0]?.description || '',
-                    available:  post[0]?.available || 'All'
+                    description: post?.description || '',
+                    available:  post?.available || 'All'
                 }}
                 enableReinitialize={true}
                 validationSchema={SignupSchema}
@@ -39,41 +55,43 @@ export default function EditArticle({
                 {({ errors, touched }) => (
                     <Form>
                         <Card className='card'>
-                            <CardContent>
-                                <UiSelect
-                                    labelId="available-label"
-                                    id="available"
-                                    label="Available"
-                                    name="available"
-                                    className="field"
-                                    selectValues={
-                                        [
-                                            {val: 'All', text: 'All'},
-                                            {val: 'Friends', text: 'Friends'},
-                                            {val: 'Only Me', text: 'Only Me'},
-                                        ]
-                                    }
-                                />
-
-                                <UiTextarea
-                                    id="description"
-                                    name="description"
-                                    label="Description*"
-                                    multiline
-                                    variant="outlined"
-                                    placeholder="Your text..."
-                                    rowsMax={15}
-                                    className="field"
-                                />
+                            <CardContent className="card__items">
+                                <div className="field">
+                                    <UiSelect
+                                        labelId="available-label"
+                                        id="available"
+                                        label="Available"
+                                        name="available"
+                                        className="field"
+                                        selectValues={
+                                            [
+                                                {val: 'All', text: 'All'},
+                                                {val: 'Friends', text: 'Friends'},
+                                                {val: 'Only Me', text: 'Only Me'},
+                                            ]
+                                        }
+                                    />
+                                </div>
+                                <div className="field">
+                                    <UiTextarea
+                                        id="description"
+                                        name="description"
+                                        label="Description*"
+                                        multiline
+                                        variant="outlined"
+                                        placeholder="Your text..."
+                                        rowsMax={15}
+                                    />
+                                </div>
                                 {errors.description && touched.description ? (
                                     <div className='Error'>{errors.description}</div>
                                 ) : null}
                             </CardContent>
 
 
-                            {post[0]?.post_img && visionPrevImg && <img
+                            {post?.post_img && visionPrevImg && <img
                                 className={'card__img'}
-                                src={`http://localhost:3000/images/posts/${post[0]?.post_img.toString()}`}
+                                src={`http://localhost:3000/images/posts/${post?.post_img.toString()}`}
                                 alt=""
                             />}
 
@@ -119,5 +137,13 @@ export default function EditArticle({
             </Formik>
         </div>
     );
+}
+
+const initialValuesType = {
+    post: PropTypes.array,
+};
+
+EditArticle.propTypes = {
+    post: initialValuesType.name
 }
 

@@ -24,7 +24,16 @@ router
             const tokens = await generateTokens(user);
 
             await db('users').where({ user_token: refreshToken }).update({ user_token: tokens.refresh.token });
-            const userInfo = await db.select().from('users').where('user_token', tokens.refresh.token );
+            const userInfo = await db.select(
+                'users.user_id', 'name_user', 'email_user', 'user_token', 'permission',
+                'avatar_img', 'phone', 'university', 'university', 'name_available',
+                'email_available', 'phone_available', 'university_available'
+            ).from('users')
+                .join('users_info_available', function() {
+                    this.on
+                    ('users_info_available.user_id', '=', 'users.user_id')
+                })
+                .where('user_token', tokens.refresh.token ).first();
 
             res.send({userInfo, tokens});
         } catch (err) {

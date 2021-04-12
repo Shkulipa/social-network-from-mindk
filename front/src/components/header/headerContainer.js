@@ -1,5 +1,5 @@
 import {
-    useMutation,
+    useMutation
 } from 'react-query';
 import {ReqAddArticle} from './ReqAddArticle-2';
 import Header from "./Header";
@@ -8,6 +8,8 @@ import {DataAboutImgForUpload} from "../../Functions/Functions";
 import useAuth from "../../hooks/useAuth";
 import {Context} from "../../authStore";
 import { useHistory } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import Modal from "@material-ui/core/Modal";
 
 function HeaderContainer() {
     //react-router History
@@ -47,12 +49,18 @@ function HeaderContainer() {
             setImage('');
             setCroppedImg('');
             handleClose();
+            setOpenModalRefresh(true);
         } catch(e) {
             console.log(e);
         }
     }, [mutation]);
 
+    //modal refresh
+    const [openModalRefresh, setOpenModalRefresh] = useState(false);
 
+    const handleModalRefresh = () => {
+        window.location.reload();
+    };
 
     //pop-up modal window for add article
     const [open, setOpen] = useState(false);
@@ -73,7 +81,6 @@ function HeaderContainer() {
     const handleClosePopover = () => {
         setAnchorEl(false);
     };
-
 
     const openProfileMenu = Boolean(anchorEl);
     const id = openProfileMenu ? 'simple-popover' : undefined;
@@ -121,6 +128,21 @@ function HeaderContainer() {
 
     return (
         <>
+            <Modal
+                className="modal-deleted"
+                open={openModalRefresh}
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+            >
+                <div className="modal-deleted-paper">
+                    <span className="cl-green">Your post Added!</span>
+                    <span>Refresh your page</span>
+                    <br/>
+                    <Button variant="contained" color="secondary" size="large" onClick={handleModalRefresh}>
+                        Refresh
+                    </Button>
+                </div>
+            </Modal>
             <Header
                 open={open}
                 handleClickOpen={handleClickOpen}
@@ -145,7 +167,6 @@ function HeaderContainer() {
                 handleLogout={handleLogout}
             />
         </>
-
     );
 }
 

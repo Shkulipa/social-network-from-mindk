@@ -15,10 +15,11 @@ export default function useAuth() {
                         refreshToken: state.refreshToken.token,
                     })
                     .then(res => {
+
                         dispatch({
                             type: 'SET_AUTH',
                             payload: {
-                                user: res.data.userInfo[0],
+                                user: res.data.userInfo,
                                 accessToken: res.data.tokens.access,
                                 refreshToken: res.data.tokens.refresh,
                             },
@@ -55,20 +56,56 @@ export default function useAuth() {
                     password,
                 })
                 .then(res => {
-                        dispatch({
-                            type: 'SET_AUTH',
-                            payload: {
-                                user: res.data.userInfo[0],
-                                accessToken: res.data.tokens.access,
-                                refreshToken: res.data.tokens.refresh,
-                            },
-                        });
-                        localStorage.setItem(
-                            'refreshToken',
-                            JSON.stringify(res.data.tokens.refresh),
-                        );
+                        if(res.data.message) {
+                            return res.data
+                        } else {
+                            dispatch({
+                                type: 'SET_AUTH',
+                                payload: {
+                                    user: res.data.userInfo,
+                                    accessToken: res.data.tokens.access,
+                                    refreshToken: res.data.tokens.refresh,
+                                },
+                            });
+                            localStorage.setItem(
+                                'refreshToken',
+                                JSON.stringify(res.data.tokens.refresh),
+                            );
+                        }
                     }
                 ),
+        [],
+    );
+
+    const loginSocial = useCallback(
+        (user, social) => {
+            const token = user._token.accessToken;
+
+            axios
+                .post(`http://localhost:3000/login/social/${social}`, user,{headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `${token}`
+                    }})
+                .then(res => {
+                        if(res.data.message) {
+                            return res.data
+                        } else {
+                            dispatch({
+                                type: 'SET_AUTH',
+                                payload: {
+                                    user: res.data.userInfo[0],
+                                    accessToken: res.data.tokens.access,
+                                    refreshToken: res.data.tokens.refresh,
+                                },
+                            });
+                            localStorage.setItem(
+                                'refreshToken',
+                                JSON.stringify(res.data.tokens.refresh),
+                            );
+                        }
+                    }
+                )
+        },
         [],
     );
 
@@ -101,5 +138,6 @@ export default function useAuth() {
         refresh,
         login,
         logout,
+        loginSocial
     };
 }

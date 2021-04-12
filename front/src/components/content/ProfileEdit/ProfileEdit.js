@@ -1,5 +1,5 @@
 import './EditProfile.scss';
-import React, {useEffect} from "react";
+import React from "react";
 import {Form, Formik} from "formik";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -10,11 +10,11 @@ import * as Yup from "yup";
 import notAvatar from './../../../images/user-astronaut-solid.svg';
 import Cropper from "react-cropper";
 
-
 function ProfileEdit({
-                         profile, onEditSubmit,
-                         uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg, errorImg, visionPrevImg, status200
-                     }) {
+                 user, onEditSubmit,
+                 uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg, errorImg, visionPrevImg, resRequestUpdate
+             }) {
+
     const validProfileEdit = Yup.object().shape({
         name: Yup.string()
             .required('required field'),
@@ -28,27 +28,38 @@ function ProfileEdit({
             .max(99, 'Too long! Maximum 99 characters'),
     });
 
-    useEffect(()=>{}, [profile]);
-
     return (
         <div className="edit-profile">
             <h2 className="title">My Profile</h2>
 
-            {status200 && <p className="Success">Your post updated!</p>}
+            {resRequestUpdate &&
+                resRequestUpdate.map(el => {
+                        for (let key in el) {
+
+                            if(key === "success") {
+                                return <p key={el[key]} className="answer success">{el[key]}</p>
+                            } else {
+                                return <p key={el[key]} className="answer error">{el[key]}</p>
+                            }
+
+                        }
+                    }
+                )
+            }
 
             <Formik
                 initialValues={{
-                    name: profile?.name_user || '',
-                    name_available: profile?.name_available || 'All',
+                    name: user?.name_user || '',
+                    name_available: user?.name_available || 'All',
 
-                    email: profile?.email_user || '',
-                    email_available: profile?.email_available || 'All',
+                    email: user?.email_user || '',
+                    email_available: user?.email_available || 'All',
 
-                    phone: profile?.phone || '',
-                    phone_available: profile?.phone_available || 'All',
+                    phone: user?.phone || '',
+                    phone_available: user?.phone_available || 'All',
 
-                    university:  profile?.university || '',
-                    university_available: profile?.university_available || 'All'
+                    university:  user?.university || '',
+                    university_available: user?.university_available || 'All'
                 }}
                 validationSchema={validProfileEdit}
                 onSubmit={onEditSubmit}
@@ -186,8 +197,8 @@ function ProfileEdit({
                                 </CardContent>
 
                                 <CardContent className="right-side">
-                                    {!profile?.avatar_img && visionPrevImg && <img className="avatar-img" src={notAvatar} alt=""/>}
-                                    {profile?.avatar_img && visionPrevImg && <img className="avatar-img" src={`http://localhost:3000/images/avatars/${profile?.avatar_img}`} alt=""/>}
+                                    {!user?.avatar_img && visionPrevImg && <img className="avatar-img" src={notAvatar} alt=""/>}
+                                    {user?.avatar_img && visionPrevImg && <img className="avatar-img" src={`http://localhost:3000/images/avatars/${user?.avatar_img}`} alt=""/>}
 
                                     {image && !crroperedImg && <Cropper
                                         src={image}
@@ -230,6 +241,7 @@ function ProfileEdit({
                     </Form>
                 )}
             </Formik>
+
         </div>
     );
 }

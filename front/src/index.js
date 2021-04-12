@@ -10,7 +10,6 @@ import {
 } from 'react-query';
 import AuthStore from './authStore';
 
-
 // Create a client
 const queryClient = new QueryClient()
 

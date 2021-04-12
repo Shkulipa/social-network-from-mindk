@@ -1,7 +1,58 @@
+.modal-deleted {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &-paper{
+    position: absolute;
+    width: 400px;
+    background-color: #272c34;
+    border: 2px solid #01FA51;
+    padding: 8px;
+    border-radius: 12px;
+
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    outline: none;
+    box-shadow: 0 0 15px rgba(0,0,0, .3);
+
+    .cl-green {
+      color: #01FA51;
+    }
+  }
+}
+
+
 .articles-list-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.popover-settings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 10px;
+
+  .link {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .icon {
+      margin-right: 7px;
+    }
+  }
 }
 
 .ArticleList {
@@ -14,6 +65,21 @@
 
     &__content {
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .post__user {
+        display: flex;
+        align-items: center;
+
+        .post__user__avatar {
+          border-radius: 50%;
+          width: 50px;
+          height: 50px;
+          margin-right: 15px;
+        }
+      }
 
       .settings {
         position: absolute;

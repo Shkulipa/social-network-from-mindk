@@ -7,10 +7,10 @@ import CardContent from "@material-ui/core/CardContent";
 import {UiField} from "../../Components-ui/ComponentsUi";
 import CardActions from "@material-ui/core/CardActions";
 import {Form, Formik} from "formik";
-import React, {useCallback, useEffect} from "react";
+import React, {useCallback} from "react";
 import * as Yup from "yup";
 import Grid from "@material-ui/core/Grid";
-import {useMutation} from "react-query";
+import {useMutation, useQuery} from "react-query";
 import useAuth from "../../../hooks/useAuth";
 import {Link, withRouter} from "react-router-dom";
 import useRequireAuth from "../../../hooks/useRequireAuth";
@@ -25,7 +25,7 @@ function LoginContainer() {
 
     //Login
     useRequireAuth(true);
-    const { login } = useAuth();
+    const { login, loginSocial } = useAuth();
 
     const mutation = useMutation(login);
 
@@ -38,16 +38,17 @@ function LoginContainer() {
     }, [mutation]);
 
     //google
-    const handleSocialLogin = (user) => {
+    const handleSocialLogin = async (user) => {
+        await loginSocial(user, 'google');
     }
     const handleSocialLoginFailure = (err) => {
         console.error(err)
     }
 
     //facebook
-    const handleSocialLoginFacebook = (user) => {
+    const handleSocialLoginFacebook = async (user) => {
         try {
-            //something code
+            await loginSocial(user, 'facebook');
         } catch (err) {
             console.error(err)
         }
@@ -60,6 +61,8 @@ function LoginContainer() {
         <div className="profile-wrapper">
             <h2 className='title'>Login page</h2>
 
+            {mutation.data?.message && <div className='Error'>{mutation.data?.message}</div>}
+
             <Formik
                 initialValues={{
                     email: '',
@@ -71,7 +74,7 @@ function LoginContainer() {
                 {({errors, touched}) => (
                     <Form>
                         <Card className='card'>
-                            <CardContent>
+                            <CardContent className='card__fields'>
                                     <UiField
                                         id="email"
                                         name="email"
@@ -129,13 +132,13 @@ function LoginContainer() {
 
                     <Grid container justify="center" item xs={12}>
                     <SocialButton
-                    provider='facebook'
-                    appId='243090580632360'
-                    onLoginSuccess={handleSocialLoginFacebook}
-                    onLoginFailure={handleSocialLoginFailureFacebook}
-                    color="primary"
+                        provider='facebook'
+                        appId='282472323491532'
+                        onLoginSuccess={handleSocialLoginFacebook}
+                        onLoginFailure={handleSocialLoginFailureFacebook}
+                        color="primary"
                     >
-                    Login with Facebook
+                        Login with Facebook
                     </SocialButton>
                 </Grid>
             </Grid>

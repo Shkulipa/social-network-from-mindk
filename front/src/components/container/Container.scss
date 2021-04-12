@@ -16,3 +16,15 @@
     margin: 0 auto;
     padding: 0 15px;
 }
+
+.re-log-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+
+    &__btn {
+        display: flex;
+        justify-content: center;
+    }
+}

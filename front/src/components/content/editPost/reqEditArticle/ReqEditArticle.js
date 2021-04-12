@@ -5,7 +5,7 @@ const getPost = (id) => {
 }
 
 const updatePost = async (data) => {
-    return axiosReq.put(`/posts/update/${data.user_idPost}`, data);
+    return axiosReq.put(`/posts/update/${data.post_id}`, data);
 }
 
 export {

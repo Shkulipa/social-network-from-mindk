@@ -1,47 +1,28 @@
 import './ArticlesListStyle.scss';
-import {Link} from "react-router-dom";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
-import React, {useContext} from "react";
-import Tooltip from "@material-ui/core/Tooltip";
+import React from "react";
 import Loader from "react-loader-spinner";
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import {Context} from "../../../authStore";
+import SubComponentArticle from "./SubComponentArticle";
 
-function ArticlesListContainer({posts, isFetching}) {
-    const { user } = useContext(Context)[0];
+function ArticlesListContainer({posts, isFetching,refetch}) {
 
     return (
         <div className="ContainerWrapper ArticleList">
             <h2 className="title">Articles page</h2>
 
             {posts.map(el =>
-                el.map( ({post_id, description, post_img, user_id}) =>
-                    <Card className="card" key={post_id}>
-                        <CardContent className="card__content">
-                                <Tooltip placement="bottom-start" title="Click here to view the article">
-                                    <Typography gutterBottom variant="h5" component="h2" className="post-content">
-                                        <Link to={`/posts/${post_id}`}>
-                                            {description.length > 25 ? description.slice(0, 25) + '...' : description}
-                                        </Link>
-                                    </Typography>
-                                </Tooltip>
-
-                                {user && user.user_id === user_id ?
-                                    <Tooltip title="Settings">
-                                    <Link className="settings" to={`/posts/edit/${post_id}`}>
-                                        <MoreHorizIcon fontSize="large"/>
-                                    </Link>
-                                </Tooltip> : null}
-                        </CardContent>
-
-                        {post_img && <img
-                            className={'card__img'}
-                            src={`http://localhost:3000/images/posts/${post_img.toString()}`}
-                            alt=""
-                        />}
-                    </Card>
+                el.map( ({available, avatar_img, date, name_user, post_id, description, post_img, user_id}) =>
+                    <SubComponentArticle
+                        key={post_id}
+                        available={available}
+                        avatar_img={avatar_img}
+                        date={date}
+                        name_user={name_user}
+                        post_id={post_id}
+                        description={description}
+                        post_img={post_img}
+                        user_id={user_id}
+                        refetch={refetch}
+                    />
                 )
             )}
 

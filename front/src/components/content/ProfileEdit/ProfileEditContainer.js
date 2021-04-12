@@ -6,16 +6,11 @@ import {updateProfile} from "../../../Functions/reqProfileEdit/ReqProfileEdit";
 import {Context} from "../../../authStore";
 
 function ProfileEditContainer() {
-    //check login user
+    //login user
+    const { user } = useContext(Context)[0];
 
     //error mas for image load
     const [errorImg, setErrorImg] = useState();
-
-    //modal window
-    const [status200, setStatus200] = useState(false);
-
-    //get Login data
-    const { user } = useContext(Context)[0];
 
     //update Profile
     const mutation = useMutation(updateProfile);
@@ -23,12 +18,19 @@ function ProfileEditContainer() {
         try {
             if(crroperedImg) {
                 const dataImg = DataAboutImgForUpload(filDesc, crroperedImg);
-                await mutation.mutate({...items, dataImg})
+                await mutation.mutate({
+                    user_id: user.user_id,
+                    permission: user.permission,
+                    user_token: user.user_token,
+                    ...items,
+                    dataImg});
             } else {
-                await mutation.mutate(items);
+                await mutation.mutate({
+                    user_id: user.user_id,
+                    permission: user.permission,
+                    user_token: user.user_token,
+                    ...items});
             }
-
-            setStatus200(true);
         } catch(e) {
             console.log(e);
         }
@@ -64,7 +66,6 @@ function ProfileEditContainer() {
         } else {
             setErrorImg(true)
         }
-
     }
     const setCropFunc = (item) => {
         setCropper(item);
@@ -78,24 +79,21 @@ function ProfileEditContainer() {
     }
 
     return (
-        <>
-            <ProfileEdit
-                profile={user}
-                onEditSubmit={onEditSubmit}
+        <ProfileEdit
+            user={user}
+            onEditSubmit={onEditSubmit}
 
-                uploadImage={uploadImage}
-                image={image}
-                setCropFunc={setCropFunc}
-                setCroppedImgFunc={setCroppedImgFunc}
-                crroperedImg={crroperedImg}
-                visionBtnUploadImg={visionBtnUploadImg}
-                errorImg={errorImg}
-                visionPrevImg={visionPrevImg}
+            uploadImage={uploadImage}
+            image={image}
+            setCropFunc={setCropFunc}
+            setCroppedImgFunc={setCroppedImgFunc}
+            crroperedImg={crroperedImg}
+            visionBtnUploadImg={visionBtnUploadImg}
+            errorImg={errorImg}
+            visionPrevImg={visionPrevImg}
 
-                status200={status200}
-            />
-        </>
-
+            resRequestUpdate={mutation.data?.data || []}
+        />
     );
 }
 
