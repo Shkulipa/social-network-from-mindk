@@ -1,21 +1,22 @@
 import Article from "./Article";
-import {getPost} from "./reqArticle/ReqArticle";
 import React, {useContext} from "react";
 import {
     useParams
 } from "react-router-dom";
 import {useQuery} from "react-query";
 import {Context} from "../../../authStore";
+import useApi from "../../../hooks/useApi";
 
 function ArticleContainer() {
+    const {callApiNotLogged} = useApi();
+
     //login user
     const { user } = useContext(Context)[0];
 
     //data post
     const { post_id } = useParams();
 
-    const {data} = useQuery('posts', () => getPost(post_id));
-    const post = data?.data || [];
+    const {data} = useQuery('posts', () => callApiNotLogged(`/posts/${post_id}`));
 
     //popover settings
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -33,11 +34,11 @@ function ArticleContainer() {
 
     return (
         <Article
-            post={post}
+            post={data || {}}
             handleClose={handleClose}
             handleClick={handleClick}
             id={id}
-            user={user}
+            loggedUser_id={user ? user.user_id : ''}
             open={open}
             anchorEl={anchorEl}
         />

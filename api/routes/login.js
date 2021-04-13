@@ -5,6 +5,7 @@ const db = require('../db/db');
 const passport = require('../services/auth/passport');
 const {v4: uuidv4 } = require('uuid');
 const fetch = require('node-fetch');
+const {selectDataUser} = require("../functions/functions");
 const {generateTokens} = require("../functions/functions");
 
 router
@@ -34,16 +35,7 @@ router
 
                 //update and get user data
                 await db('users').where({ user_id: user.user_id }).update({ user_token:  tokens.refresh.token });
-                const userInfo = await db.select(
-                    'users.user_id', 'name_user', 'email_user', 'user_token', 'permission',
-                    'avatar_img', 'phone', 'university', 'university', 'name_available',
-                    'email_available', 'phone_available', 'university_available'
-                ).from('users')
-                    .join('users_info_available', function() {
-                        this.on
-                        ('users_info_available.user_id', '=', 'users.user_id')
-                    })
-                    .where('user_token', tokens.refresh.token ).first();
+                const userInfo = await selectDataUser(tokens.refresh.token);
 
                 res.send({userInfo, tokens});
             },
@@ -64,16 +56,7 @@ router
                 const tokens = await generateTokens(user);
                 await db('users').where({ user_id: user.user_id }).update({ user_token:  tokens.refresh.token });
 
-                const userInfo = await db.select(
-                    'users.user_id', 'name_user', 'email_user', 'user_token', 'permission',
-                    'avatar_img', 'phone', 'university', 'university', 'name_available',
-                    'email_available', 'phone_available', 'university_available'
-                ).from('users')
-                    .join('users_info_available', function() {
-                        this.on
-                        ('users_info_available.user_id', '=', 'users.user_id')
-                    })
-                    .where('user_token', tokens.refresh.token ).first();
+                const userInfo = await selectDataUser(tokens.refresh.token);
 
                 res.send({userInfo, tokens});
             },
@@ -130,16 +113,7 @@ router
 
                 await db('users').where({ user_id: newUser.user_id }).update({ user_token:  tokens.refresh.token });
 
-                const userInfo = await db.select(
-                    'users.user_id', 'name_user', 'email_user', 'user_token', 'permission',
-                    'avatar_img', 'phone', 'university', 'university', 'name_available',
-                    'email_available', 'phone_available', 'university_available'
-                ).from('users')
-                    .join('users_info_available', function() {
-                        this.on
-                        ('users_info_available.user_id', '=', 'users.user_id')
-                    })
-                    .where('user_token', tokens.refresh.token ).first();
+                const userInfo = await selectDataUser(tokens.refresh.token);
 
                 return res.send({userInfo, tokens});
             }

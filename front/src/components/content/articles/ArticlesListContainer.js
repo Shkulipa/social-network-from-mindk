@@ -1,12 +1,14 @@
 import './ArticlesListStyle.scss';
 import ArticlesList from './ArticelesList';
-import {getPosts} from "./reqArticles/ReqArticles";
 import React, {useEffect, useState} from "react";
 import {useQuery, useQueryClient} from "react-query";
 import Button from "@material-ui/core/Button";
+import useApi from "../../../hooks/useApi";
 
 
 function ArticlesListContainer() {
+    const {callApiNotLogged} = useApi();
+
     // get data post
     const queryClient = useQueryClient();
     const [page, setPage] = useState(1);
@@ -14,7 +16,7 @@ function ArticlesListContainer() {
     const [countPosts, setCountPosts] = useState(0);
 
     async function fetchPosts(page = 1) {
-        const { data } = await getPosts(page);
+        const data = await callApiNotLogged(`/posts?page=${page}&limit=7`);
 
         setCountPosts(Number(data.count));
         setPosts([...posts, data.data]);

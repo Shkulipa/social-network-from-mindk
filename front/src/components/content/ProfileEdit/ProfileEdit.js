@@ -9,8 +9,35 @@ import CardActions from "@material-ui/core/CardActions";
 import * as Yup from "yup";
 import notAvatar from './../../../images/user-astronaut-solid.svg';
 import Cropper from "react-cropper";
+import PropTypes from "prop-types";
 
-function ProfileEdit({
+ProfileEdit.propTypes = {
+    post: PropTypes.shape({
+        avatar_img:  PropTypes.string,
+        email_available:  PropTypes.string,
+        name_available:  PropTypes.string,
+        phone_available:  PropTypes.string,
+        email_user:  PropTypes.string,
+        name_user:  PropTypes.string,
+        permission: PropTypes.arrayOf(PropTypes.string),
+        phone:  PropTypes.string,
+        university: PropTypes.string,
+        university_available:  PropTypes.string,
+        user_id:  PropTypes.number,
+        user_token:  PropTypes.string,
+    }),
+    onEditSubmit: PropTypes.func,
+    uploadImage: PropTypes.func,
+    image: PropTypes.string,
+    setCropFunc: PropTypes.func,
+    crroperedImg: PropTypes.string,
+    visionBtnUploadImg: PropTypes.bool,
+    errorImg: PropTypes.bool,
+    visionPrevImg: PropTypes.bool,
+    resRequestUpdate: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string)),
+}
+
+export default function ProfileEdit({
                  user, onEditSubmit,
                  uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg, errorImg, visionPrevImg, resRequestUpdate
              }) {
@@ -244,6 +271,4 @@ function ProfileEdit({
 
         </div>
     );
-}
-
-export default ProfileEdit;
+};

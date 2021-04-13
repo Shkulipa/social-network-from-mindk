@@ -2,9 +2,24 @@ import './ArticlesListStyle.scss';
 import React from "react";
 import Loader from "react-loader-spinner";
 import SubComponentArticle from "./SubComponentArticle";
+import PropTypes from "prop-types";
+
+ArticlesListContainer.propTypes = {
+    post: PropTypes.arrayOf(PropTypes.shape({
+        available:  PropTypes.string,
+        avatar_img:  PropTypes.string,
+        date:  PropTypes.string,
+        description:  PropTypes.string,
+        name_user:  PropTypes.string,
+        post_img:  PropTypes.string,
+        post_id:  PropTypes.number,
+        user_id:  PropTypes.number,
+    })),
+    isFetching: PropTypes.bool,
+    refetch: PropTypes.func
+}
 
 function ArticlesListContainer({posts, isFetching,refetch}) {
-
     return (
         <div className="ContainerWrapper ArticleList">
             <h2 className="title">Articles page</h2>
@@ -14,7 +29,7 @@ function ArticlesListContainer({posts, isFetching,refetch}) {
                     <SubComponentArticle
                         key={post_id}
                         available={available}
-                        avatar_img={avatar_img}
+                        avatar_img={avatar_img || ''}
                         date={date}
                         name_user={name_user}
                         post_id={post_id}

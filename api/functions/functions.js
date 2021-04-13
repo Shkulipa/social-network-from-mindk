@@ -1,3 +1,4 @@
+const db = require('../db/db');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
@@ -44,8 +45,21 @@ function recordFile (dataImg, path) {
     return fileName;
 }
 
+function selectDataUser (tokenRefresh){
+    return db.select(
+        'users.user_id', 'name_user', 'email_user', 'user_token', 'permission',
+        'avatar_img', 'phone', 'university', 'university', 'name_available',
+        'email_available', 'phone_available', 'university_available'
+    ).from('users')
+        .join('users_info_available', function() {
+            this.on
+            ('users_info_available.user_id', '=', 'users.user_id')
+        })
+        .where('user_token', tokenRefresh ).first();
+}
 
 module.exports = {
     recordFile,
-    generateTokens
+    generateTokens,
+    selectDataUser
 }

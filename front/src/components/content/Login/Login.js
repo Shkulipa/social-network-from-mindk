@@ -10,7 +10,7 @@ import {Form, Formik} from "formik";
 import React, {useCallback} from "react";
 import * as Yup from "yup";
 import Grid from "@material-ui/core/Grid";
-import {useMutation, useQuery} from "react-query";
+import {useMutation} from "react-query";
 import useAuth from "../../../hooks/useAuth";
 import {Link, withRouter} from "react-router-dom";
 import useRequireAuth from "../../../hooks/useRequireAuth";
@@ -145,14 +145,6 @@ function LoginContainer() {
         </div>
 
     );
-}
-
-const initialValuesType = {
-    name: PropTypes.string,
-};
-
-LoginContainer.propTypes = {
-    name: initialValuesType.name
 }
 
 export default withRouter(LoginContainer);

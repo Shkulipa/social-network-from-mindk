@@ -11,9 +11,31 @@ import Button from "@material-ui/core/Button";
 import Cropper from "react-cropper";
 import PropTypes from "prop-types";
 
+EditArticle.propTypes = {
+    post: PropTypes.shape({
+        available:  PropTypes.string,
+        avatar_img:  PropTypes.string,
+        date:  PropTypes.string,
+        description:  PropTypes.string,
+        name_user:  PropTypes.string,
+        post_img:  PropTypes.string,
+        post_id:  PropTypes.number,
+        user_id:  PropTypes.number,
+    }),
+    onEditSubmit: PropTypes.func,
+    resRequestUpdate: PropTypes.array,
+    uploadImage: PropTypes.func,
+    setCropFunc: PropTypes.func,
+    setCroppedImgFunc: PropTypes.func,
+    crroperedImg: PropTypes.string,
+    visionBtnUploadImg: PropTypes.bool,
+    errorImg: PropTypes.bool,
+    visionPrevImg: PropTypes.bool
+}
+
 export default function EditArticle({
                                         post, onEditSubmit, resRequestUpdate,
-                                        uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg, errorImg, visionPrevImg, status200}) {
+                                        uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg, errorImg, visionPrevImg}) {
     const { post_id } = useParams();
 
     const SignupSchema = Yup.object().shape({
@@ -21,8 +43,6 @@ export default function EditArticle({
             .required('required filed')
             .test('len', 'Must be max 255 characters', val => val && val.toString().length < 255 ),
     });
-
-
 
     return (
         <div className="EditArticle" >
@@ -137,13 +157,5 @@ export default function EditArticle({
             </Formik>
         </div>
     );
-}
-
-const initialValuesType = {
-    post: PropTypes.array,
-};
-
-EditArticle.propTypes = {
-    post: initialValuesType.name
 }
 

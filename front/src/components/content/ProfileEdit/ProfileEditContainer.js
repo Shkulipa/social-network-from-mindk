@@ -5,12 +5,12 @@ import {DataAboutImgForUpload} from "../../../Functions/Functions";
 import {updateProfile} from "../../../Functions/reqProfileEdit/ReqProfileEdit";
 import {Context} from "../../../authStore";
 
-function ProfileEditContainer() {
+export default  function ProfileEditContainer() {
     //login user
     const { user } = useContext(Context)[0];
 
     //error mas for image load
-    const [errorImg, setErrorImg] = useState();
+    const [errorImg, setErrorImg] = useState()
 
     //update Profile
     const mutation = useMutation(updateProfile);
@@ -96,5 +96,3 @@ function ProfileEditContainer() {
         />
     );
 }
-
-export default ProfileEditContainer;

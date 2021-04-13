@@ -1,5 +1,5 @@
 import './ArticlesListStyle.scss';
-import React, {useCallback, useContext, useEffect, useState} from "react";
+import React, {useCallback, useContext, useState} from "react";
 import CardContent from "@material-ui/core/CardContent";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
@@ -11,12 +11,26 @@ import Popover from "@material-ui/core/Popover";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Button from "@material-ui/core/Button";
-import {useMutation, useQuery, useQueryClient} from "react-query";
-import {deletePost} from "../editPost/reqEditArticle/ReqDeleteArticle";
+import {useMutation} from "react-query";
 import Modal from "@material-ui/core/Modal";
 import notAvatar from "../../../images/user-astronaut-solid.svg";
+import PropTypes from "prop-types";
+import useApi from "../../../hooks/useApi";
 
-function SubComponentArticle({available, avatar_img, date, name_user, post_id, description, post_img, user_id}) {
+SubComponentArticle.propTypes = {
+    available: PropTypes.string,
+    avatar_img: PropTypes.string,
+    date: PropTypes.string,
+    name_user: PropTypes.string,
+    post_id: PropTypes.number,
+    description: PropTypes.string,
+    post_img: PropTypes.string,
+    user_id: PropTypes.number,
+}
+
+export default function SubComponentArticle({available, avatar_img, date, name_user, post_id, description, post_img, user_id}) {
+    const {callApiLogged} = useApi();
+
     //login user
     const { user } = useContext(Context)[0];
 
@@ -35,10 +49,14 @@ function SubComponentArticle({available, avatar_img, date, name_user, post_id, d
     const idMenuArticle = openMenuArticle ? 'simple-popover' : undefined;
 
     //delete Post
-    const mutation = useMutation(deletePost);
+    const mutation = useMutation(callApiLogged);
     const funcDeletePost = useCallback( () => {
         try {
-            mutation.mutate({post_id, user});
+            mutation.mutate({
+                url: `/posts/delete/${post_id}`,
+                method: 'DELETE',
+                data: {post_id, user}
+            });
             handleClickModalAnswer();
         } catch(e) {
             console.log(e);
@@ -169,6 +187,4 @@ function SubComponentArticle({available, avatar_img, date, name_user, post_id, d
             </Card>
         </>
     );
-}
-
-export default SubComponentArticle;
+};

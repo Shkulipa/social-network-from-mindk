@@ -9,8 +9,31 @@ import Popover from "@material-ui/core/Popover";
 import Typography from "@material-ui/core/Typography";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import PropTypes from "prop-types";
 
-export default function Article({post, id, open, anchorEl, handleClose, user, handleClick}) {
+Article.propTypes = {
+    post: PropTypes.shape({
+        available:  PropTypes.string,
+        avatar_img:  PropTypes.string,
+        date:  PropTypes.string,
+        description:  PropTypes.string,
+        name_user:  PropTypes.string,
+        post_img:  PropTypes.string,
+        post_id:  PropTypes.number,
+        user_id:  PropTypes.number,
+    }),
+    id: PropTypes.string,
+    open: PropTypes.bool,
+    anchorEl: PropTypes.object,
+    handleClose: PropTypes.func,
+    loggedUser_id: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]),
+    handleClick: PropTypes.func,
+}
+
+export default function Article({post, id, open, anchorEl, handleClose, loggedUser_id, handleClick}) {
     return (
         <div className='page-article'>
             <h2>This page "Article"</h2>
@@ -27,13 +50,13 @@ export default function Article({post, id, open, anchorEl, handleClose, user, ha
                                 alt=""
                             />}
                             <p>
-                                <Link to={`/profile/${post?.post_id || ''}`}>{post?.name_user || ''}</Link>
+                                <Link to={`/user/${post?.user_id || ''}`}>{post?.name_user || ''}</Link>
                             </p>
                         </div>
 
-                        {user && user.user_id === post?.user_id ? <MoreHorizIcon color="primary" fontSize="large" onClick={handleClick}/>: null}
+                        {loggedUser_id === post?.user_id ? <MoreHorizIcon color="primary" fontSize="large" onClick={handleClick}/>: null}
 
-                        {user && user.user_id === post?.user_id ? <Popover
+                        {loggedUser_id === post?.user_id ? <Popover
                             id={id}
                             open={open}
                             anchorEl={anchorEl}

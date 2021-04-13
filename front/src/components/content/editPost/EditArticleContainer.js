@@ -1,53 +1,66 @@
 import EditArticle from "./EditArticle";
-import {getPost} from "./reqEditArticle/ReqEditArticle";
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import {
+    Redirect,
     useParams
 } from "react-router-dom";
 import {
     useMutation,
     useQuery,
 } from 'react-query';
-import {updatePost} from "./reqEditArticle/ReqEditArticle";
 import {DataAboutImgForUpload} from "../../../Functions/Functions";
 import useRequireAuth from "../../../hooks/useRequireAuth";
 import {Context} from "../../../authStore";
+import useApi from "../../../hooks/useApi";
 
 function ArticleContainer() {
-    // check owner of posts
-    /*if(post.length > 0) {
-        if (!user || post[0].user_id !== user.user_id ) {
-            return <Redirect to='/posts' />;
-        }
-    }*/
+    const {callApiLogged, callApiNotLogged} = useApi();
 
     //login user
     useRequireAuth();
     const { user } = useContext(Context)[0];
+    // check owner of posts
 
     //error mas for image load
     const [errorImg, setErrorImg] = useState();
 
     //get article data
     const { post_id } = useParams();
-    const {data, refetch} = useQuery('posts', () => getPost(post_id));
-
-    useEffect(() => {refetch()}, [data]);
+    const {data} = useQuery('posts', () => callApiNotLogged(`/posts/${post_id}`));
 
     //update post
-    const mutation = useMutation(updatePost);
-    const onEditSubmit = useCallback( async items => {
+    const mutation = useMutation(callApiLogged);
+    const onEditSubmit = useCallback( items => {
         try {
             if(crroperedImg) {
                 const dataImg = DataAboutImgForUpload(filDesc, crroperedImg);
-                await mutation.mutate({...items, dataImg, user: user, post_id})
+                mutation.mutate({
+                    url: `/posts/update/${post_id}`,
+                    method: 'PUT',
+                    data: {
+                        ...items,
+                        dataImg,
+                        user:user,
+                        post_id
+                    }
+                });
             } else {
-                await mutation.mutate({...items, user: user, post_id});
+                mutation.mutate({
+                    url: `/posts/update/${post_id}`,
+                    method: 'PUT',
+                    data: {
+                        ...items,
+                        user:user,
+                        post_id
+                    }
+                });
             }
         } catch(e) {
             console.log(e);
         }
     }, [mutation]);
+
+    useEffect(() => {}, [mutation]);
 
     //cropper
     const [visionPrevImg, setVisionPrevImg] = useState(true);
@@ -92,11 +105,21 @@ function ArticleContainer() {
         }
     }
 
-
+    if( data ) {
+        if (user) {
+            if (!user.permission.includes('updateAnyPost', 'deleteAnyPost') && user.permission.includes('updateOwnPost', 'deleteOwnPost')) {
+                if(data.user_id !== user.user_id) {
+                    return <Redirect to={`/posts/${post_id}`}/>
+                }
+            }
+        } else {
+            return <Redirect to={`/posts/${post_id}`}/>
+        }
+    }
 
     return (
         <EditArticle
-            post={data?.data || []}
+            post={data || {}}
             onEditSubmit={onEditSubmit}
 
             uploadImage={uploadImage}
