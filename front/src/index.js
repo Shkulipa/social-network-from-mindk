@@ -10,15 +10,15 @@ import AuthStore from "./authStore";
 const queryClient = new QueryClient();
 
 ReactDOM.render(
-    <AuthStore>
-        <QueryClientProvider client={queryClient}>
-            <BrowserRouter>
-                <App />
-            </BrowserRouter>
-        </QueryClientProvider>
-    </AuthStore>,
+	<AuthStore>
+		<QueryClientProvider client={queryClient}>
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+		</QueryClientProvider>
+	</AuthStore>,
 
-    document.getElementById("root")
+	document.getElementById("root")
 );
 
 reportWebVitals();

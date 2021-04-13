@@ -6,26 +6,22 @@ const refreshTokenString = localStorage.getItem("refreshToken") || null;
 const refreshToken = JSON.parse(refreshTokenString);
 
 const initialState = {
-    user: null,
-    loading: false,
-    accessToken: null,
-    refreshToken,
+	user: null,
+	loading: false,
+	accessToken: null,
+	refreshToken,
 };
 
 export const Context = createContext(initialState);
 
 const Store = ({ children }) => {
-    const [state, dispatch] = useReducer(Reducer, initialState);
+	const [state, dispatch] = useReducer(Reducer, initialState);
 
-    return (
-        <Context.Provider value={[state, dispatch]}>
-            {children}
-        </Context.Provider>
-    );
+	return <Context.Provider value={[state, dispatch]}>{children}</Context.Provider>;
 };
 
 Store.propTypes = {
-    children: PropTypes.elementType,
+	children: PropTypes.elementType,
 };
 
 export default Store;

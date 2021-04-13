@@ -6,43 +6,41 @@ import { Context } from "../../../authStore";
 import useApi from "../../../hooks/useApi";
 
 function ArticleContainer() {
-    const { callApiNotLogged } = useApi();
+	const { callApiNotLogged } = useApi();
 
-    // login user
-    const { user } = useContext(Context)[0];
+	// login user
+	const { user } = useContext(Context)[0];
 
-    // data post
-    const { postId } = useParams();
+	// data post
+	const { postId } = useParams();
 
-    const { data } = useQuery("posts", () =>
-        callApiNotLogged(`/posts/${postId}`)
-    );
+	const { data } = useQuery("posts", () => callApiNotLogged(`/posts/${postId}`));
 
-    // popover settings
-    const [anchorEl, setAnchorEl] = React.useState(null);
+	// popover settings
+	const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+	const handleClick = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
 
-    const open = Boolean(anchorEl);
-    const id = open ? "simple-popover" : undefined;
+	const open = Boolean(anchorEl);
+	const id = open ? "simple-popover" : undefined;
 
-    return (
-        <Article
-            post={data || {}}
-            handleClose={handleClose}
-            handleClick={handleClick}
-            id={id}
-            loggeduserId={user ? user.userId : ""}
-            open={open}
-            anchorEl={anchorEl}
-        />
-    );
+	return (
+		<Article
+			post={data || {}}
+			handleClose={handleClose}
+			handleClick={handleClick}
+			id={id}
+			loggeduserId={user ? user.userId : ""}
+			open={open}
+			anchorEl={anchorEl}
+		/>
+	);
 }
 
 export default ArticleContainer;

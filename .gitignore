@@ -22,4 +22,12 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/api/.env
+api/.env
+api/*/.idea
+api/images/*
+front/*/.idea
+
+api/node_modules
+front/node_modules
+
+

@@ -6,30 +6,30 @@ import { Context } from "../../../authStore";
 import useApi from "../../../hooks/useApi";
 
 function UserProfileContainer() {
-    const { callApiLogged } = useApi();
+	const { callApiLogged } = useApi();
 
-    // login user
-    const { user } = useContext(Context)[0];
+	// login user
+	const { user } = useContext(Context)[0];
 
-    // get data user
-    const { userId } = useParams();
-    const { data } = useQuery("user", () => {
-        if (user) {
-            return callApiLogged({
-                url: `/profile/${parseInt(userId, 10)}`,
-                method: "POST",
-                data: { userLoginId: user.userId },
-            });
-        } else {
-            return callApiLogged({
-                url: `/profile/${parseInt(userId, 10)}`,
-                method: "POST",
-                data: { userLoginId: "not auth" },
-            });
-        }
-    });
+	// get data user
+	const { userId } = useParams();
+	const { data } = useQuery("user", () => {
+		if (user) {
+			return callApiLogged({
+				url: `/profile/${parseInt(userId, 10)}`,
+				method: "POST",
+				data: { userLoginId: user.userId },
+			});
+		} else {
+			return callApiLogged({
+				url: `/profile/${parseInt(userId, 10)}`,
+				method: "POST",
+				data: { userLoginId: "not auth" },
+			});
+		}
+	});
 
-    return <UserProfile dataUser={data?.data || {}} />;
+	return <UserProfile dataUser={data?.data || {}} />;
 }
 
 export default UserProfileContainer;
