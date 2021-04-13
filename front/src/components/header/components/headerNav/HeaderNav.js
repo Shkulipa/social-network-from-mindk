@@ -1,32 +1,30 @@
-import './HeaderNav.scss';
-import PropTypes from 'prop-types';
-import notAvatar from './../../../../images/user-astronaut-solid.svg';
+import React from "react";
+import "./HeaderNav.scss";
+import PropTypes from "prop-types";
+import notAvatar from "./../../../../images/user-astronaut-solid.svg";
 
-function HeaderNav({user}) {
-    const {name_user,avatar_img } = user;
+function HeaderNav({ user }) {
+    const { nameUser, avatarImg } = user;
 
     return (
         <div className="header__nav">
-            {name_user}
+            {nameUser}
 
-            {avatar_img ? <img
-                className="header__nav__avatar"
-                src={`http://localhost:3000/images/avatars/${avatar_img}`}
-                alt=""
-            /> : <img
+            {avatarImg ? (
+                <img
                     className="header__nav__avatar"
-                    src={notAvatar}
+                    src={`http://localhost:3000/images/avatars/${avatarImg}`}
                     alt=""
                 />
-            }
-
+            ) : (
+                <img className="header__nav__avatar" src={notAvatar} alt="" />
+            )}
         </div>
     );
 }
 
 HeaderNav.propTypes = {
-    user: PropTypes.object
-}
-
+    user: PropTypes.object,
+};
 
 export default HeaderNav;

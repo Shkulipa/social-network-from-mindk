@@ -1,16 +1,15 @@
-import { useCallback } from 'react';
-import useAuth from './useAuth';
-import {axiosReq} from "../axios/axios";
+import { useCallback } from "react";
+import useAuth from "./useAuth";
+import { axiosReq } from "../axios/axios";
 
 export default function useApi() {
     const { accessToken, refreshToken, refresh } = useAuth();
 
-    const callApiLogged = useCallback(async items => {
-        const {url, method = 'get', data = {}} = items;
+    const callApiLogged = useCallback(async (items) => {
+        const { url, method = "get", data = {} } = items;
 
         let token;
         if (accessToken) {
-
             const now = new Date();
             const expires = new Date(accessToken.expires);
             now.setMinutes(now.getMinutes() + 1);
@@ -33,17 +32,18 @@ export default function useApi() {
         return false;
     }, []);
 
+    const callApiNotLogged = useCallback(
+        async (url, method = "get", data = {}) => {
+            const response = await axiosReq({
+                method,
+                url,
+                data,
+            });
 
-    const callApiNotLogged = useCallback(async (url, method = 'get', data = {}) => {
-        const response = await axiosReq({
-            method,
-            url,
-            data,
-        });
-
-        return response.data;
-    }, []);
-
+            return response.data;
+        },
+        []
+    );
 
     return {
         callApiLogged,

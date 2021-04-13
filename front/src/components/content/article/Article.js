@@ -14,26 +14,26 @@ import PropTypes from "prop-types";
 Article.propTypes = {
     post: PropTypes.shape({
         available:  PropTypes.string,
-        avatar_img:  PropTypes.string,
+        avatarImg:  PropTypes.string,
         date:  PropTypes.string,
         description:  PropTypes.string,
-        name_user:  PropTypes.string,
-        post_img:  PropTypes.string,
-        post_id:  PropTypes.number,
-        user_id:  PropTypes.number,
+        nameUser:  PropTypes.string,
+        postImg:  PropTypes.string,
+        postId:  PropTypes.number,
+        userId:  PropTypes.number,
     }),
     id: PropTypes.string,
     open: PropTypes.bool,
     anchorEl: PropTypes.object,
     handleClose: PropTypes.func,
-    loggedUser_id: PropTypes.oneOfType([
+    loggeduserId: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
     ]),
     handleClick: PropTypes.func,
 }
 
-export default function Article({post, id, open, anchorEl, handleClose, loggedUser_id, handleClick}) {
+export default function Article({post, id, open, anchorEl, handleClose, loggeduserId, handleClick}) {
     return (
         <div className='page-article'>
             <h2>This page "Article"</h2>
@@ -42,21 +42,21 @@ export default function Article({post, id, open, anchorEl, handleClose, loggedUs
 
                     <div className='post__header'>
                         <div className="post__header__user">
-                            {post?.avatar_img ? <img
-                                src={`http://localhost:3000/images/avatars/${post?.avatar_img}`}
+                            {post?.avatarImg ? <img
+                                src={`http://localhost:3000/images/avatars/${post?.avatarImg}`}
                                 alt=""
                             /> : <img
                                 src={notAvatar}
                                 alt=""
                             />}
                             <p>
-                                <Link to={`/user/${post?.user_id || ''}`}>{post?.name_user || ''}</Link>
+                                <Link to={`/user/${post?.userId || ''}`}>{post?.nameUser || ''}</Link>
                             </p>
                         </div>
 
-                        {loggedUser_id === post?.user_id ? <MoreHorizIcon color="primary" fontSize="large" onClick={handleClick}/>: null}
+                        {loggeduserId === post?.userId ? <MoreHorizIcon color="primary" fontSize="large" onClick={handleClick}/>: null}
 
-                        {loggedUser_id === post?.user_id ? <Popover
+                        {loggeduserId === post?.userId ? <Popover
                             id={id}
                             open={open}
                             anchorEl={anchorEl}
@@ -71,11 +71,11 @@ export default function Article({post, id, open, anchorEl, handleClose, loggedUs
                             }}
                         >
                             <Typography className="popover-settings">
-                                <Link className="link" to={`/posts/edit/${post?.post_id || ''}`}>
+                                <Link className="link" to={`/posts/edit/${post?.postId || ''}`}>
                                     <EditIcon className="icon"/>
                                     Edit
                                 </Link>
-                                <Link className="link" to={`/posts/delete/${post?.post_id || ''}`}>
+                                <Link className="link" to={`/posts/delete/${post?.postId || ''}`}>
                                     <DeleteForeverIcon className="icon"/>
                                     Delete
                                 </Link>
@@ -88,9 +88,9 @@ export default function Article({post, id, open, anchorEl, handleClose, loggedUs
                     </div>
 
 
-                    {post?.post_img && <img
+                    {post?.postImg && <img
                         className={'card__img'}
-                        src={`http://localhost:3000/images/posts/${post?.post_img.toString()}`}
+                        src={`http://localhost:3000/images/posts/${post?.postImg.toString()}`}
                         alt=""
                     />}
                 </CardContent>

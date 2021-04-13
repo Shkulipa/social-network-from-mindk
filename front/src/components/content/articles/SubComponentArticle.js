@@ -1,17 +1,17 @@
-import './ArticlesListStyle.scss';
-import React, {useCallback, useContext, useState} from "react";
+import "./ArticlesListStyle.scss";
+import React, { useCallback, useContext, useState } from "react";
 import CardContent from "@material-ui/core/CardContent";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import Card from "@material-ui/core/Card";
-import {Context} from "../../../authStore";
+import { Context } from "../../../authStore";
 import Popover from "@material-ui/core/Popover";
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Button from "@material-ui/core/Button";
-import {useMutation} from "react-query";
+import { useMutation } from "react-query";
 import Modal from "@material-ui/core/Modal";
 import notAvatar from "../../../images/user-astronaut-solid.svg";
 import PropTypes from "prop-types";
@@ -19,22 +19,31 @@ import useApi from "../../../hooks/useApi";
 
 SubComponentArticle.propTypes = {
     available: PropTypes.string,
-    avatar_img: PropTypes.string,
+    avatarImg: PropTypes.string,
     date: PropTypes.string,
-    name_user: PropTypes.string,
-    post_id: PropTypes.number,
+    nameUser: PropTypes.string,
+    postId: PropTypes.number,
     description: PropTypes.string,
-    post_img: PropTypes.string,
-    user_id: PropTypes.number,
-}
+    postImg: PropTypes.string,
+    userId: PropTypes.number,
+};
 
-export default function SubComponentArticle({available, avatar_img, date, name_user, post_id, description, post_img, user_id}) {
-    const {callApiLogged} = useApi();
+export default function SubComponentArticle({
+    available,
+    avatarImg,
+    date,
+    nameUser,
+    postId,
+    description,
+    postImg,
+    userId,
+}) {
+    const { callApiLogged } = useApi();
 
-    //login user
+    // login user
     const { user } = useContext(Context)[0];
 
-    //popover menu article
+    // popover menu article
     const [menuArticle, setMenuArticle] = useState(null);
 
     const handleClickMenuArticle = (event) => {
@@ -46,24 +55,24 @@ export default function SubComponentArticle({available, avatar_img, date, name_u
     };
 
     const openMenuArticle = Boolean(menuArticle);
-    const idMenuArticle = openMenuArticle ? 'simple-popover' : undefined;
+    const idMenuArticle = openMenuArticle ? "simple-popover" : undefined;
 
-    //delete Post
+    // delete Post
     const mutation = useMutation(callApiLogged);
-    const funcDeletePost = useCallback( () => {
+    const funcDeletePost = useCallback(() => {
         try {
             mutation.mutate({
-                url: `/posts/delete/${post_id}`,
-                method: 'DELETE',
-                data: {post_id, user}
+                url: `/posts/delete/${postId}`,
+                method: "DELETE",
+                data: { postId, user },
             });
             handleClickModalAnswer();
-        } catch(e) {
+        } catch (e) {
             console.log(e);
         }
     }, [mutation]);
 
-    //answer from server after delete post
+    // answer from server after delete post
     const [modalAnswer, setModalAnswer] = useState(false);
 
     const handleClickModalAnswer = () => {
@@ -77,114 +86,156 @@ export default function SubComponentArticle({available, avatar_img, date, name_u
 
     return (
         <>
-            {/*modal update in finally*/}
-            {(user && user.user_id === user_id && user.permission.includes('deleteOwnPost')) ||
-            (user && user.permission.includes('deleteAnyPost')) ? <Modal
+            {/* modal update in finally*/}
+            {(user &&
+                user.userId === userId &&
+                user.permission.includes("deleteOwnPost")) ||
+            (user && user.permission.includes("deleteAnyPost")) ? (
+                <Modal
                     className="modal-deleted"
                     open={modalAnswer}
                     aria-labelledby="simple-modal-title"
                     aria-describedby="simple-modal-description"
                 >
-                <div className="modal-deleted-paper">
-                    <span className="cl-green">Your post deleted!</span>
-                    <span>Refresh your page</span>
-                    <br/>
-                    <Button variant="contained" color="secondary" size="large" onClick={handleCloseModalAnswer}>
-                        Refresh
-                    </Button>
-                </div>
-            </Modal> : null}
+                    <div className="modal-deleted-paper">
+                        <span className="cl-green">Your post deleted!</span>
+                        <span>Refresh your page</span>
+                        <br />
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            size="large"
+                            onClick={handleCloseModalAnswer}
+                        >
+                            Refresh
+                        </Button>
+                    </div>
+                </Modal>
+            ) : null}
 
-            {/*info card*/}
-            <Card className="card" key={post_id}>
+            {/* info card*/}
+            <Card className="card" key={postId}>
                 <CardContent className="card__content">
-                    {/*info user*/}
+                    {/* info user*/}
                     <div className="post__user">
-                        {avatar_img ? <img
-                            className="post__user__avatar"
-                            src={`http://localhost:3000/images/avatars/${avatar_img}`}
-                            alt=""
-                        /> : <img
-                            className="post__user__avatar"
-                            src={notAvatar}
-                            alt=""
-                        />
-                        }
-                        <Tooltip placement="bottom-start" title="View author profile">
-                            <Link className="link" to={`/user/${user_id}`}>
-                                {name_user}
+                        {avatarImg ? (
+                            <img
+                                className="post__user__avatar"
+                                /* eslint-disable-next-line max-len */
+                                src={`http://localhost:3000/images/avatars/${avatarImg}`}
+                                alt=""
+                            />
+                        ) : (
+                            <img
+                                className="post__user__avatar"
+                                src={notAvatar}
+                                alt=""
+                            />
+                        )}
+                        <Tooltip
+                            placement="bottom-start"
+                            title="View author profile"
+                        >
+                            <Link className="link" to={`/user/${userId}`}>
+                                {nameUser}
                             </Link>
                         </Tooltip>
                     </div>
 
-
-                    {/*3 dots*/}
-                    {(user && user.user_id === user_id && user.permission.includes('updateOwnPost')) ||
-                    (user && user.permission.includes('updateAnyPost')) ?
+                    {/* 3 dots*/}
+                    {(user &&
+                        user.userId === userId &&
+                        user.permission.includes("updateOwnPost")) ||
+                    (user && user.permission.includes("updateAnyPost")) ? (
                         <Tooltip placement="bottom" title="Settings">
-                            <MoreHorizIcon color="primary" fontSize="large" onClick={handleClickMenuArticle}/>
+                            <MoreHorizIcon
+                                color="primary"
+                                fontSize="large"
+                                onClick={handleClickMenuArticle}
+                            />
                         </Tooltip>
-                        : null}
+                    ) : null}
 
-                    {/*popover settings*/}
-                    {(user && user.user_id === user_id && user.permission.includes('updateOwnPost')) ||
-                    (user && user.permission.includes('updateAnyPost')) ? <Popover
-                        id={idMenuArticle}
-                        open={openMenuArticle}
-                        anchorEl={menuArticle}
-                        onClose={handleCloseMenuArticle}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'center',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'center',
-                        }}
-                    >
-                        <Typography className="popover-settings">
-                            <Link className="link" to={`/posts/edit/${post_id}`}>
-                                <Button variant="contained" color="primary" >
-                                    <EditIcon className="icon"/>
-                                    Edit
+                    {/* popover settings*/}
+                    {(user &&
+                        user.userId === userId &&
+                        user.permission.includes("updateOwnPost")) ||
+                    (user && user.permission.includes("updateAnyPost")) ? (
+                        <Popover
+                            id={idMenuArticle}
+                            open={openMenuArticle}
+                            anchorEl={menuArticle}
+                            onClose={handleCloseMenuArticle}
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "center",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "center",
+                            }}
+                        >
+                            <Typography className="popover-settings">
+                                <Link
+                                    className="link"
+                                    to={`/posts/edit/${postId}`}
+                                >
+                                    <Button variant="contained" color="primary">
+                                        <EditIcon className="icon" />
+                                        Edit
+                                    </Button>
+                                </Link>
+                                <Button
+                                    onClick={funcDeletePost}
+                                    variant="contained"
+                                    color="secondary"
+                                >
+                                    <DeleteForeverIcon className="icon" />
+                                    Delete
                                 </Button>
-                            </Link>
-                            <Button onClick={funcDeletePost} variant="contained" color="secondary" >
-                                <DeleteForeverIcon className="icon"/>
-                                Delete
-                            </Button>
-                        </Typography>
-                    </Popover> : null}
+                            </Typography>
+                        </Popover>
+                    ) : null}
                 </CardContent>
 
-                {/*date & available*/}
+                {/* date & available*/}
                 <CardContent className="card__content__date-available">
                     <Typography variant="subtitle2" gutterBottom>
                         Date: <b>{date}</b>
                     </Typography>
                     <Typography variant="subtitle2" gutterBottom>
-                        Available: <b>{available ? available : 'All'}</b>
+                        Available: <b>{available ? available : "All"}</b>
                     </Typography>
                 </CardContent>
 
-                {/*description post*/}
+                {/* description post*/}
                 <CardContent className="card__content">
                     <Tooltip placement="bottom-start" title="View post">
-                        <Typography gutterBottom variant="h5" component="h2" className="post-content">
-                            <Link to={`/posts/${post_id}`}>
-                                {description.length > 25 ? description.slice(0, 25) + '...' : description}
+                        <Typography
+                            gutterBottom
+                            variant="h5"
+                            component="h2"
+                            className="post-content"
+                        >
+                            <Link to={`/posts/${postId}`}>
+                                {description.length > 25
+                                    ? description.slice(0, 25) + "..."
+                                    : description}
                             </Link>
                         </Typography>
                     </Tooltip>
                 </CardContent>
 
-                {/*img post*/}
-                {post_img && <img
-                    className={'card__img'}
-                    src={`http://localhost:3000/images/posts/${post_img.toString()}`}
-                    alt=""
-                />}
+                {/* img post*/}
+                {postImg && (
+                    <img
+                        className={"card__img"}
+                        /* eslint-disable-next-line max-len */
+                        src={`http://localhost:3000/images/posts/${postImg.toString()}`}
+                        alt=""
+                    />
+                )}
             </Card>
         </>
     );
-};
+}

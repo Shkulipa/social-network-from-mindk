@@ -75,6 +75,10 @@
 .btn-Header-popper {
     background: none;
     border: none;
+
+    &:focus {
+        outline: none;
+    }
 }
 
 .Header-popper-items {

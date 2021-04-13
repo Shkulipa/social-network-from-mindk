@@ -14,13 +14,13 @@ import PropTypes from "prop-types";
 EditArticle.propTypes = {
     post: PropTypes.shape({
         available:  PropTypes.string,
-        avatar_img:  PropTypes.string,
+        avatarImg:  PropTypes.string,
         date:  PropTypes.string,
         description:  PropTypes.string,
-        name_user:  PropTypes.string,
-        post_img:  PropTypes.string,
-        post_id:  PropTypes.number,
-        user_id:  PropTypes.number,
+        nameUser:  PropTypes.string,
+        postImg:  PropTypes.string,
+        postId:  PropTypes.number,
+        userId:  PropTypes.number,
     }),
     onEditSubmit: PropTypes.func,
     resRequestUpdate: PropTypes.array,
@@ -36,7 +36,7 @@ EditArticle.propTypes = {
 export default function EditArticle({
                                         post, onEditSubmit, resRequestUpdate,
                                         uploadImage, image, setCropFunc, setCroppedImgFunc, crroperedImg, visionBtnUploadImg, errorImg, visionPrevImg}) {
-    const { post_id } = useParams();
+    const { postId } = useParams();
 
     const SignupSchema = Yup.object().shape({
         description: Yup.string()
@@ -109,9 +109,9 @@ export default function EditArticle({
                             </CardContent>
 
 
-                            {post?.post_img && visionPrevImg && <img
+                            {post?.postImg && visionPrevImg && <img
                                 className={'card__img'}
-                                src={`http://localhost:3000/images/posts/${post?.post_img.toString()}`}
+                                src={`http://localhost:3000/images/posts/${post?.postImg.toString()}`}
                                 alt=""
                             />}
 
@@ -146,7 +146,7 @@ export default function EditArticle({
                             }
 
                             <CardActions className="btns">
-                                <Link className="link" to={`/posts/${post_id}`}>
+                                <Link className="link" to={`/posts/${postId}`}>
                                     <Button className="btn" variant="contained" color="secondary" type="button">Cancel</Button>
                                 </Link>
                                 <Button className="btn" variant="contained" color="primary" type="submit">Update</Button>

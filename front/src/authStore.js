@@ -1,7 +1,8 @@
-import React, { createContext, useReducer } from 'react';
-import Reducer from './reducers/authReducer';
+import React, { createContext, useReducer } from "react";
+import Reducer from "./reducers/authReducer";
+import PropTypes from "prop-types";
 
-const refreshTokenString = localStorage.getItem('refreshToken') || null;
+const refreshTokenString = localStorage.getItem("refreshToken") || null;
 const refreshToken = JSON.parse(refreshTokenString);
 
 const initialState = {
@@ -21,6 +22,10 @@ const Store = ({ children }) => {
             {children}
         </Context.Provider>
     );
+};
+
+Store.propTypes = {
+    children: PropTypes.elementType,
 };
 
 export default Store;

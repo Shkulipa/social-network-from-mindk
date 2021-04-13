@@ -1,22 +1,27 @@
-const passport = require('passport-strategy');
-const util = require('util');
-const axios = require('axios').default;
+const passport = require("passport-strategy");
+const util = require("util");
+const axios = require("axios").default;
 
 // const GOOGLE_AUTH_ENDPOINT = 'https://www.googleapis.com/oauth2/v3/userinfo';
-const FACEBOOK_AUTH_ENDPOINT = 'https://graph.facebook.com/';
+const FACEBOOK_AUTH_ENDPOINT = "https://graph.facebook.com/";
 // {your-user-id}?fields=id,name,email&access_token={your-user-access-token}
 
 function Strategy(options, verify) {
     options = options || {};
-    var version = options.graphAPIVersion || 'v3.2';
+    const version = options.graphAPIVersion || "v3.2";
 
-    options.authorizationURL = options.authorizationURL || 'https://www.facebook.com/' + version + '/dialog/oauth';
-    options.tokenURL = options.tokenURL || 'https://graph.facebook.com/' + version + '/oauth/access_token';
-    options.scopeSeparator = options.scopeSeparator || ',';
+    options.authorizationURL =
+        options.authorizationURL ||
+        "https://www.facebook.com/" + version + "/dialog/oauth";
+    options.tokenURL =
+        options.tokenURL ||
+        "https://graph.facebook.com/" + version + "/oauth/access_token";
+    options.scopeSeparator = options.scopeSeparator || ",";
 
     OAuth2Strategy.call(this, options, verify);
-    this.name = 'facebook';
-    this._profileURL = options.profileURL || 'https://graph.facebook.com/' + version + '/me';
+    this.name = "facebook";
+    this._profileURL =
+        options.profileURL || "https://graph.facebook.com/" + version + "/me";
     this._profileFields = options.profileFields || null;
     this._enableProof = options.enableProof;
     this._clientSecret = options.clientSecret;
@@ -37,16 +42,16 @@ Strategy.prototype.authenticate = function (req, options) {
     options = options || {};
 
     const authHeader = req.headers.authorization;
-    const accessToken = authHeader ? authHeader.replace('Bearer ', '') : null;
+    const accessToken = authHeader ? authHeader.replace("Bearer ", "") : null;
 
     if (!accessToken) {
         return this.fail(
-            { message: options.badRequestMessage || 'Missing access token' },
-            400,
+            { message: options.badRequestMessage || "Missing access token" },
+            400
         );
     }
 
-    var self = this;
+    const self = this;
 
     function verified(err, user, info) {
         if (err) {
@@ -62,10 +67,10 @@ Strategy.prototype.authenticate = function (req, options) {
         axios
             .get(GOOGLE_AUTH_ENDPOINT, {
                 headers: {
-                    Accept: 'application/json',
+                    Accept: "application/json",
                     Authorization: `Bearer ${accessToken}`,
                 },
-                responseType: 'json',
+                responseType: "json",
             })
             .then((response) => {
                 self._verify(response.data, verified);
@@ -74,6 +79,5 @@ Strategy.prototype.authenticate = function (req, options) {
         return self.error(ex);
     }
 };
-
 
 module.exports = Strategy;

@@ -1,58 +1,72 @@
-import './ArticlesListStyle.scss';
+import "./ArticlesListStyle.scss";
 import React from "react";
 import Loader from "react-loader-spinner";
 import SubComponentArticle from "./SubComponentArticle";
 import PropTypes from "prop-types";
 
 ArticlesListContainer.propTypes = {
-    post: PropTypes.arrayOf(PropTypes.shape({
-        available:  PropTypes.string,
-        avatar_img:  PropTypes.string,
-        date:  PropTypes.string,
-        description:  PropTypes.string,
-        name_user:  PropTypes.string,
-        post_img:  PropTypes.string,
-        post_id:  PropTypes.number,
-        user_id:  PropTypes.number,
-    })),
+    posts: PropTypes.arrayOf(
+        PropTypes.arrayOf(
+            PropTypes.shape({
+                available: PropTypes.string,
+                avatarImg: PropTypes.string,
+                date: PropTypes.string,
+                description: PropTypes.string,
+                nameUser: PropTypes.string,
+                postImg: PropTypes.string,
+                postId: PropTypes.number,
+                userId: PropTypes.number,
+            })
+        )
+    ),
     isFetching: PropTypes.bool,
-    refetch: PropTypes.func
-}
+    refetch: PropTypes.func,
+};
 
-function ArticlesListContainer({posts, isFetching,refetch}) {
+function ArticlesListContainer({ posts, isFetching, refetch }) {
     return (
         <div className="ContainerWrapper ArticleList">
             <h2 className="title">Articles page</h2>
 
-            {posts.map(el =>
-                el.map( ({available, avatar_img, date, name_user, post_id, description, post_img, user_id}) =>
-                    <SubComponentArticle
-                        key={post_id}
-                        available={available}
-                        avatar_img={avatar_img || ''}
-                        date={date}
-                        name_user={name_user}
-                        post_id={post_id}
-                        description={description}
-                        post_img={post_img}
-                        user_id={user_id}
-                        refetch={refetch}
-                    />
+            {posts.map((el) =>
+                el.map(
+                    ({
+                        available,
+                        avatarImg,
+                        date,
+                        nameUser,
+                        postId,
+                        description,
+                        postImg,
+                        userId,
+                    }) => (
+                        <SubComponentArticle
+                            key={postId}
+                            available={available}
+                            avatarImg={avatarImg || ""}
+                            date={date}
+                            nameUser={nameUser}
+                            postId={postId}
+                            description={description}
+                            postImg={postImg}
+                            userId={userId}
+                            refetch={refetch}
+                        />
+                    )
                 )
             )}
 
-            {isFetching &&
-            <div className="loader">
-                <Loader
-                    type="ThreeDots"
-                    color="#00BFFF"
-                    height={100}
-                    width={100}
-                />
-            </div>
-            }
+            {isFetching && (
+                <div className="loader">
+                    <Loader
+                        type="ThreeDots"
+                        color="#00BFFF"
+                        height={100}
+                        width={100}
+                    />
+                </div>
+            )}
         </div>
-
     );
 }
 

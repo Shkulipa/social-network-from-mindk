@@ -26,11 +26,24 @@
   "scripts": {
     "devStart": "nodemon server.js"
   },
+  "prettier": {
+    "printWidth": 80,
+    "tabWidth": 4,
+    "singleQuote": false,
+    "endOfLine": "auto"
+  },
   "devDependencies": {
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
+    "eslint": "^7.24.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.7",
-    "passport-oauth2": "^1.5.0"
+    "passport-oauth2": "^1.5.0",
+    "prettier-eslint": "^12.0.0"
   }
 }

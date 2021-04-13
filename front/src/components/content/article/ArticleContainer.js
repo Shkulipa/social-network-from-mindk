@@ -1,24 +1,24 @@
 import Article from "./Article";
-import React, {useContext} from "react";
-import {
-    useParams
-} from "react-router-dom";
-import {useQuery} from "react-query";
-import {Context} from "../../../authStore";
+import React, { useContext } from "react";
+import { useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import { Context } from "../../../authStore";
 import useApi from "../../../hooks/useApi";
 
 function ArticleContainer() {
-    const {callApiNotLogged} = useApi();
+    const { callApiNotLogged } = useApi();
 
-    //login user
+    // login user
     const { user } = useContext(Context)[0];
 
-    //data post
-    const { post_id } = useParams();
+    // data post
+    const { postId } = useParams();
 
-    const {data} = useQuery('posts', () => callApiNotLogged(`/posts/${post_id}`));
+    const { data } = useQuery("posts", () =>
+        callApiNotLogged(`/posts/${postId}`)
+    );
 
-    //popover settings
+    // popover settings
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
@@ -30,7 +30,7 @@ function ArticleContainer() {
     };
 
     const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
+    const id = open ? "simple-popover" : undefined;
 
     return (
         <Article
@@ -38,7 +38,7 @@ function ArticleContainer() {
             handleClose={handleClose}
             handleClick={handleClick}
             id={id}
-            loggedUser_id={user ? user.user_id : ''}
+            loggeduserId={user ? user.userId : ""}
             open={open}
             anchorEl={anchorEl}
         />

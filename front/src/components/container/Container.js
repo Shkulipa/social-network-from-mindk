@@ -1,7 +1,7 @@
-import './Container.scss';
-import Footer from '../footer/Footer';
-import React, {useCallback, useEffect} from "react";
-import {Redirect, Route, Switch} from "react-router-dom";
+import "./Container.scss";
+import Footer from "../footer/Footer";
+import React, { useCallback, useEffect } from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
 import "../content/Content.scss";
 import ArticlesListContainer from "../content/articles/ArticlesListContainer";
 import Page404 from "../404/Page404";
@@ -18,18 +18,17 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Typography from "@material-ui/core/Typography";
 
-
 function Container() {
     const { user, refreshToken, refresh } = useAuth();
 
-    //logout
+    // logout
     const { logout } = useAuth();
     const handleLogout = useCallback(
-        event => {
+        (event) => {
             event.preventDefault();
-            logout()
+            logout();
         },
-        [logout],
+        [logout]
     );
 
     useEffect(() => {
@@ -48,7 +47,14 @@ function Container() {
                         </Typography>
                     </CardContent>
                     <CardActions className="re-log-page__btn">
-                        <Button variant="contained" color="primary" size="large" onClick={handleLogout}>Re-login</Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            onClick={handleLogout}
+                        >
+                            Re-login
+                        </Button>
                     </CardActions>
                 </Card>
             </div>
@@ -57,45 +63,80 @@ function Container() {
 
     return (
         <div className="page">
-                <HeaderContainer/>
-                <div className="container">
-                    <div className="content">
-                        <Switch>
-                            <Route exact path={`/`} render={() => {
-                                return <Redirect to="/login" />
-                            }}/>
-                            <Route exact path={`/login`} render={() => {
-                                return <LoginContainer/>
-                            }}/>
-                            <Route exact path={`/sign-up`} render={() => {
-                                return <div>sign up page</div>
-                            }}/>
-                            <Route exact path={`/profile`} render={() => {
-                                return <ProfileEditContainer />
-                            }}/>
-                            <Route exact path={`/user/:user_id`} render={() => {
-                                return <UserProfileContainer />
-                            }}/>
-                            <Route exact path={`/posts`} render={() => {
-                                return <ArticlesListContainer/>
-                            }}/>
-                            <Route exact path={`/posts/:post_id`} render={() => {
-                                return <ArticleContainer/>
-                            }}/>
+            <HeaderContainer />
+            <div className="container">
+                <div className="content">
+                    <Switch>
+                        <Route
+                            exact
+                            path={"/"}
+                            render={() => {
+                                return <Redirect to="/login" />;
+                            }}
+                        />
+                        <Route
+                            exact
+                            path={"/login"}
+                            render={() => {
+                                return <LoginContainer />;
+                            }}
+                        />
+                        <Route
+                            exact
+                            path={"/sign-up"}
+                            render={() => {
+                                return <div>sign up page</div>;
+                            }}
+                        />
+                        <Route
+                            exact
+                            path={"/profile"}
+                            render={() => {
+                                return <ProfileEditContainer />;
+                            }}
+                        />
+                        <Route
+                            exact
+                            path={"/user/:userId"}
+                            render={() => {
+                                return <UserProfileContainer />;
+                            }}
+                        />
+                        <Route
+                            exact
+                            path={"/posts"}
+                            render={() => {
+                                return <ArticlesListContainer />;
+                            }}
+                        />
+                        <Route
+                            exact
+                            path={"/posts/:postId"}
+                            render={() => {
+                                return <ArticleContainer />;
+                            }}
+                        />
 
-                            <Route exact path={`/posts/edit/:post_id`} render={() => {
-                                return <EditArticleContainer/>
-                            }}/>
+                        <Route
+                            exact
+                            path={"/posts/edit/:postId"}
+                            render={() => {
+                                return <EditArticleContainer />;
+                            }}
+                        />
 
-                            <Route path='*' render={() => {
-                                return <Page404/>;
-                            }}/>
-                        </Switch>
-                    </div>
+                        <Route
+                            path="*"
+                            render={() => {
+                                return <Page404 />;
+                            }}
+                        />
+                    </Switch>
                 </div>
-            <Footer className="footer"/>
+            </div>
+            <Footer className="footer" />
         </div>
     );
-};
+}
 
 export default Container;
