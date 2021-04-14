@@ -6,9 +6,7 @@ const db = require("../db/db");
 router
     .get("/", async (req, res) => {
         try {
-            res.send(
-                await db.select().from("users").orderBy("postId", "desc")
-            );
+            res.send(await db.select().from("users").orderBy("postId", "desc"));
         } catch (err) {
             console.error(err.message);
         }

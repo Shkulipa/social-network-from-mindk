@@ -73,7 +73,11 @@ function ArticleContainer() {
 		const FILE_TYPES = ["image/png", "image/jpeg", "image/jpg"];
 
 		// eslint-disable-next-line max-len
-		if (FILE_TYPES.includes(type) && size < 10000000 && e.target.files[0].name.length <= 255) {
+		if (
+			FILE_TYPES.includes(type) &&
+			size < 10000000 &&
+			e.target.files[0].name.length <= 255
+		) {
 			const reader = new FileReader();
 			reader.onload = () => {
 				setImage(reader.result);
