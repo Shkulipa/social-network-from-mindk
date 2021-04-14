@@ -45,7 +45,7 @@ function UiSelect({ selectValues, label, id, labelId, ...props }) {
 }
 
 UiSelect.propTypes = {
-	selectValues: PropTypes.string,
+	selectValues: PropTypes.array,
 	label: PropTypes.string,
 	id: PropTypes.string,
 	labelId: PropTypes.string,

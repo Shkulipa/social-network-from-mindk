@@ -19,7 +19,7 @@ function ArticleContainer() {
 
 	// get article data
 	const { postId } = useParams();
-	const { data } = useQuery("posts", () => callApiNotLogged(`/posts/${postId}`));
+	const { data, refetch } = useQuery("posts", () => callApiNotLogged(`/posts/${postId}`));
 
 	// update post
 	const mutation = useMutation(callApiLogged);
@@ -56,7 +56,9 @@ function ArticleContainer() {
 		[mutation]
 	);
 
-	useEffect(() => {}, [mutation]);
+	useEffect(() => {
+		refetch();
+	}, [mutation]);
 
 	// cropper
 	const [visionPrevImg, setVisionPrevImg] = useState(true);
@@ -73,11 +75,7 @@ function ArticleContainer() {
 		const FILE_TYPES = ["image/png", "image/jpeg", "image/jpg"];
 
 		// eslint-disable-next-line max-len
-		if (
-			FILE_TYPES.includes(type) &&
-			size < 10000000 &&
-			e.target.files[0].name.length <= 255
-		) {
+		if (FILE_TYPES.includes(type) && size < 10000000 && e.target.files[0].name.length <= 255) {
 			const reader = new FileReader();
 			reader.onload = () => {
 				setImage(reader.result);

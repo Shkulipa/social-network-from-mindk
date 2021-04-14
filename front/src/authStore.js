@@ -21,7 +21,7 @@ const Store = ({ children }) => {
 };
 
 Store.propTypes = {
-	children: PropTypes.elementType,
+	children: PropTypes.object,
 };
 
 export default Store;
