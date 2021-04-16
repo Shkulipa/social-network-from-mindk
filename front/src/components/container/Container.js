@@ -19,10 +19,9 @@ import CardActions from "@material-ui/core/CardActions";
 import Typography from "@material-ui/core/Typography";
 
 function Container() {
-	const { user, refreshToken, refresh } = useAuth();
+	const { user, refreshToken, refresh, logout } = useAuth();
 
 	// logout
-	const { logout } = useAuth();
 	const handleLogout = useCallback(
 		(event) => {
 			event.preventDefault();
