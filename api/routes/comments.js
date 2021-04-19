@@ -8,6 +8,8 @@ const validator = require("../middleware/validator").validator;
 const commentTable = "commentsForPosts";
 const commentTableCommentId = "commentId";
 
+const commentController = require("../controllers/comments");
+
 router
     .post(
         "/",
@@ -19,21 +21,7 @@ router
         validator({
             comment: ["required", "max:255"],
         }),
-        async function (req, res) {
-            try {
-                const { userId, postId, comment } = req.body;
-
-                await db(commentTable).insert({
-                    userId: userId,
-                    postId: postId,
-                    comment: comment,
-                });
-
-                res.send("Comment Added");
-            } catch (err) {
-                console.error(err.message);
-            }
-        }
+        commentController.addComment
     )
 
     .get("/", async function (req, res) {

@@ -21,7 +21,6 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Loader from "react-loader-spinner";
-import Comment from "../comment/Comment";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { UiTextarea } from "../../Components-ui/ComponentsUi";
@@ -134,111 +133,56 @@ export default function SubComponentArticle({
 		),
 	});
 
-	const socket = useRef();
-
 	useEffect(() => {
-		socket.current = new WebSocket("ws://localhost:5000");
+		const socket = new WebSocket("ws://localhost:3000/subscribeWSComment");
 
-		socket.current.onopen = () => {
+		socket.onopen = () => {
 			console.log("Connect to WebSocket is true");
 		};
 
-		socket.current.onmessage = (event) => {
+		socket.onmessage = (event) => {
 			const message = JSON.parse(event.data);
 			console.log(message);
-			socket.current.send(JSON.stringify(message));
+			setComments((m) => [...m, message]);
 		};
 
-		socket.current.onclose = () => {
+		socket.onclose = () => {
 			console.log("Socket close");
 		};
 
-		socket.current.onerror = () => {
+		socket.onerror = () => {
 			console.log("Socket error");
 		};
 	}, []);
 
-	const mutationComment = useMutation(callApiLogged);
+	const [newMessage, setNewMessage] = useState("");
+	const [ws, setWs] = useState(null);
+	const [refresh, setRefresh] = useState(false);
 
-	/*const onSubmitComment = useCallback(
-		async (items, { resetForm }) => {
-			try {
-				/!*await mutation.mutate({
-					url: "/comments",
-					method: "POST",
-					data: {
-						...items,
-						userId: user.userId,
-						postId: postId,
-						user: {
-							userToken: user.userToken,
-							permission: user.permission,
-						},
-					},
-				});
-				resetForm({});
-				refetch();*!/
+	useEffect(() => {
+		const socket = new WebSocket("ws://localhost:3000/subscribeWSComment");
 
-				const message = {
-					event: "message",
-					id: user.userToken,
-					data: {
-						...items,
-						userId: user.userId,
-						postId: postId,
-						user: {
-							userToken: user.userToken,
-							permission: user.permission,
-						},
-					},
-				};
-				socket.current.send(JSON.stringify(message));
-				resetForm({});
-			} catch (e) {
-				console.log(e);
-			}
-		},
-		[mutationComment]
-	);*/
+		socket.onmessage = (event) => {
+			setComments((coms) => [JSON.parse(event.data), ...coms]);
+		};
+		setWs(socket);
+		socket.onclose = () => {
+			setTimeout(() => {
+				setRefresh((r) => !r);
+			}, 2000);
+		};
+	}, [refresh]);
 
-	const onSubmitComment = async (items, { resetForm }) => {
-		try {
-			/*await mutation.mutate({
-					url: "/comments",
-					method: "POST",
-					data: {
-						...items,
-						userId: user.userId,
-						postId: postId,
-						user: {
-							userToken: user.userToken,
-							permission: user.permission,
-						},
-					},
-				});
-				resetForm({});
-				refetch();*/
-
-			const message = {
-				event: "message",
-				id: user.userToken,
-				data: {
-					...items,
-					userId: user.userId,
-					postId: postId,
-					user: {
-						userToken: user.userToken,
-						permission: user.permission,
-					},
-				},
-			};
-
-			socket.current.send(JSON.stringify(message));
-			resetForm({});
-		} catch (e) {
-			console.log(e);
-		}
-	};
+	const onSubmitComment = useCallback(async (event) => {
+		console.log(event);
+		ws.send(
+			JSON.stringify({
+				comment: "newMessage",
+				postId: postId,
+				user: user,
+			})
+		);
+	});
 
 	return (
 		<>
