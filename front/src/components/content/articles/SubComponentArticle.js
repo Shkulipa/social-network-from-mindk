@@ -1,5 +1,5 @@
 import "./ArticlesListStyle.scss";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import CardContent from "@material-ui/core/CardContent";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
@@ -134,12 +134,36 @@ export default function SubComponentArticle({
 		),
 	});
 
+	const socket = useRef();
+
+	useEffect(() => {
+		socket.current = new WebSocket("ws://localhost:5000");
+
+		socket.current.onopen = () => {
+			console.log("Connect to WebSocket is true");
+		};
+
+		socket.current.onmessage = (event) => {
+			const message = JSON.parse(event.data);
+			console.log(message);
+			socket.current.send(JSON.stringify(message));
+		};
+
+		socket.current.onclose = () => {
+			console.log("Socket close");
+		};
+
+		socket.current.onerror = () => {
+			console.log("Socket error");
+		};
+	}, []);
+
 	const mutationComment = useMutation(callApiLogged);
 
-	const onSubmitComment = useCallback(
+	/*const onSubmitComment = useCallback(
 		async (items, { resetForm }) => {
 			try {
-				await mutation.mutate({
+				/!*await mutation.mutate({
 					url: "/comments",
 					method: "POST",
 					data: {
@@ -153,15 +177,68 @@ export default function SubComponentArticle({
 					},
 				});
 				resetForm({});
-				refetch();
+				refetch();*!/
+
+				const message = {
+					event: "message",
+					id: user.userToken,
+					data: {
+						...items,
+						userId: user.userId,
+						postId: postId,
+						user: {
+							userToken: user.userToken,
+							permission: user.permission,
+						},
+					},
+				};
+				socket.current.send(JSON.stringify(message));
+				resetForm({});
 			} catch (e) {
 				console.log(e);
 			}
-
-			refetch();
 		},
 		[mutationComment]
-	);
+	);*/
+
+	const onSubmitComment = async (items, { resetForm }) => {
+		try {
+			/*await mutation.mutate({
+					url: "/comments",
+					method: "POST",
+					data: {
+						...items,
+						userId: user.userId,
+						postId: postId,
+						user: {
+							userToken: user.userToken,
+							permission: user.permission,
+						},
+					},
+				});
+				resetForm({});
+				refetch();*/
+
+			const message = {
+				event: "message",
+				id: user.userToken,
+				data: {
+					...items,
+					userId: user.userId,
+					postId: postId,
+					user: {
+						userToken: user.userToken,
+						permission: user.permission,
+					},
+				},
+			};
+
+			socket.current.send(JSON.stringify(message));
+			resetForm({});
+		} catch (e) {
+			console.log(e);
+		}
+	};
 
 	return (
 		<>
@@ -380,7 +457,7 @@ export default function SubComponentArticle({
 								</Formik>
 							)}
 
-							{comments.map((el) =>
+							{/*{comments.map((el) =>
 								el.map((el2) => (
 									<Comment
 										key={el2.commentId}
@@ -393,7 +470,7 @@ export default function SubComponentArticle({
 										refetch={refetch}
 									/>
 								))
-							)}
+							)}*/}
 
 							{isFetching && (
 								<div className="loader">
