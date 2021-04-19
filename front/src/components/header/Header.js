@@ -44,7 +44,11 @@ function Header({
 	const SignupSchema = Yup.object().shape({
 		description: Yup.string()
 			.required("required field")
-			.test("len", "Must be max 255 characters", (val) => val && val.toString().length < 255),
+			.test(
+				"len",
+				"Must be max 2555 characters",
+				(val) => val && val.toString().length < 2555
+			),
 	});
 
 	return (

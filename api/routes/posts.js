@@ -5,7 +5,9 @@ const db = require("../db/db");
 const { recordFile } = require("../functions/functions");
 const checkACL = require("../middleware/acl").checkACL;
 const validator = require("../middleware/validator").validator;
-const moment = require("moment");
+
+const postsTable = "posts";
+const postsTablePostId = "postId";
 
 router
     .get("/:id", async (req, res) => {
@@ -24,7 +26,7 @@ router
                         "postId",
                         "date"
                     )
-                    .from("posts")
+                    .from(postsTable)
                     .join("users", function () {
                         this.on("posts.userId", "=", "users.userId");
                     })
@@ -50,16 +52,16 @@ router
                     "postImg",
                     "description",
                     "postId",
-                    "date"
+                    db.raw('to_char("date", \'YYYY-MM-DD hh:mm:ss\') as "date"')
                 )
-                .from("posts")
+                .from(postsTable)
                 .limit(limit)
                 .offset(offset)
                 .join("users", function () {
                     this.on("posts.userId", "=", "users.userId");
                 })
-                .orderBy("postId", "desc");
-            const [{ count }] = await db.count().from("posts");
+                .orderBy("date", "desc");
+            const [{ count }] = await db.count().from(postsTable);
 
             res.send({ data: query, count: count });
         } catch (err) {
@@ -75,13 +77,13 @@ router
             {
                 permission: "deleteOwnPost",
                 checkAuthor: true,
-                table: "posts",
-                column: "postId",
+                table: postsTable,
+                column: postsTablePostId,
             },
         ]),
         async (req, res) => {
             try {
-                await db("posts").where("postId", req.params.id).del();
+                await db(postsTable).where("postId", req.params.id).del();
                 res.send("post deleted");
             } catch (err) {
                 console.error(err.message);
@@ -98,8 +100,8 @@ router
             {
                 permission: "updateOwnPost",
                 checkAuthor: true,
-                table: "posts",
-                column: "postId",
+                table: postsTable,
+                column: postsTablePostId,
             },
         ]),
         validator({
@@ -120,7 +122,7 @@ router
                         "images/posts"
                     );
 
-                    await db("posts").where("postId", req.params.id).update({
+                    await db(postsTable).where("postId", req.params.id).update({
                         description: description,
                         userId: userId,
                         available: available,
@@ -128,7 +130,7 @@ router
                     });
                     res.send([{ success: "Your post updated!" }]);
                 } else {
-                    await db("posts").where("postId", req.params.id).update({
+                    await db(postsTable).where("postId", req.params.id).update({
                         description: description,
                         userId: userId,
                         available: available,
@@ -155,7 +157,6 @@ router
         async function (req, res) {
             try {
                 const { description, userId, available } = req.body;
-                const nowDate = moment().format("MMMM Do YYYY, h:mm:ss a");
 
                 if (req.body.dataImg) {
                     const fileName = recordFile(
@@ -163,21 +164,19 @@ router
                         "images/post"
                     );
 
-                    await db("posts").insert({
+                    await db(postsTable).insert({
                         description: description,
                         userId: userId,
                         available: available,
                         postImg: fileName,
-                        date: nowDate,
                     });
 
                     res.send("Your post added");
                 } else {
-                    await db("posts").insert({
+                    await db(postsTable).insert({
                         description: description,
                         userId: userId,
                         available: available,
-                        date: nowDate,
                     });
                     res.send("Your post added");
                 }

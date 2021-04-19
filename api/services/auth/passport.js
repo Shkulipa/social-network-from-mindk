@@ -65,6 +65,9 @@ passport.use(
                         "postPost",
                         "updateOwnProfile",
                         "addNewPost",
+                        "addComment",
+                        "updateOwnComment",
+                        "deleteOwnComment",
                     ],
                 })
                 .returning("userId");

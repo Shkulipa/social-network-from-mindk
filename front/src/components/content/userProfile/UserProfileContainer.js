@@ -13,7 +13,7 @@ function UserProfileContainer() {
 
 	// get data user
 	const { userId } = useParams();
-	const { data } = useQuery("user", () => {
+	const { data } = useQuery(`user ${userId}`, () => {
 		if (user) {
 			return callApiLogged({
 				url: `/profile/${parseInt(userId, 10)}`,

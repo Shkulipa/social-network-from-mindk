@@ -41,6 +41,16 @@ export default function useAuth() {
 						});
 						localStorage.removeItem("refreshToken");
 					});
+			} else {
+				dispatch({
+					type: "SET_AUTH",
+					payload: {
+						user: null,
+						accessToken: null,
+						refreshToken: null,
+					},
+				});
+				localStorage.removeItem("refreshToken");
 			}
 		}
 

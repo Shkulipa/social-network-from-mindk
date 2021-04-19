@@ -1,5 +1,5 @@
 import "./ArticlesListStyle.scss";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import CardContent from "@material-ui/core/CardContent";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
@@ -11,11 +11,20 @@ import Popover from "@material-ui/core/Popover";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Button from "@material-ui/core/Button";
-import { useMutation } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import Modal from "@material-ui/core/Modal";
 import notAvatar from "../../../images/user-astronaut-solid.svg";
 import PropTypes from "prop-types";
 import useApi from "../../../hooks/useApi";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Loader from "react-loader-spinner";
+import Comment from "../comment/Comment";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
+import { UiTextarea } from "../../Components-ui/ComponentsUi";
 
 SubComponentArticle.propTypes = {
 	available: PropTypes.string,
@@ -38,7 +47,7 @@ export default function SubComponentArticle({
 	postImg,
 	userId,
 }) {
-	const { callApiLogged } = useApi();
+	const { callApiLogged, callApiNotLogged } = useApi();
 
 	// login user
 	const { user } = useContext(Context)[0];
@@ -83,6 +92,76 @@ export default function SubComponentArticle({
 		setModalAnswer(false);
 		window.location.reload();
 	};
+
+	//comments
+	const queryClient = useQueryClient();
+	const [pageComments, setPageComments] = useState(1);
+	const [comments, setComments] = useState([]);
+	const [countComments, setCountComment] = useState(0);
+
+	async function fetchComments(pageComments = 1) {
+		const data = await callApiNotLogged(
+			`/comments?postId=${postId}&page=${pageComments}&limit=5`
+		);
+		setCountComment(Number(data.count));
+		setComments([...comments, data.data]);
+	}
+
+	const { data, isFetching, refetch } = useQuery(
+		[`comments ${postId}`, pageComments],
+		() => fetchComments(pageComments),
+		{
+			staleTime: Infinity,
+		}
+	);
+
+	useEffect(() => {
+		refetch();
+	}, [data, pageComments, queryClient]);
+
+	const countPageComments = () => {
+		let countComments = 0;
+		comments.forEach((el) => (countComments += el.length));
+		return countComments;
+	};
+
+	//add comment
+	const SignupSchema = Yup.object().shape({
+		comment: Yup.string().test(
+			"len",
+			"Must be max 255 characters",
+			(val) => val && val.toString().length < 255
+		),
+	});
+
+	const mutationComment = useMutation(callApiLogged);
+
+	const onSubmitComment = useCallback(
+		async (items, { resetForm }) => {
+			try {
+				await mutation.mutate({
+					url: "/comments",
+					method: "POST",
+					data: {
+						...items,
+						userId: user.userId,
+						postId: postId,
+						user: {
+							userToken: user.userToken,
+							permission: user.permission,
+						},
+					},
+				});
+				resetForm({});
+				refetch();
+			} catch (e) {
+				console.log(e);
+			}
+
+			refetch();
+		},
+		[mutationComment]
+	);
 
 	return (
 		<>
@@ -223,6 +302,125 @@ export default function SubComponentArticle({
 						alt=""
 					/>
 				)}
+
+				{/* Add comment */}
+				<Accordion>
+					<AccordionSummary
+						expandIcon={<ExpandMoreIcon />}
+						aria-controls="panel1a-content"
+						id="panel1a-header"
+					>
+						<Typography>Comments: {countComments}</Typography>
+					</AccordionSummary>
+					<AccordionDetails>
+						<div className="accordion-typography">
+							{user && (
+								<Formik
+									initialValues={{
+										comment: "",
+									}}
+									enableReinitialize={true}
+									validationSchema={SignupSchema}
+									onSubmit={onSubmitComment}
+								>
+									{({ errors, touched }) => (
+										<Form>
+											<div className="comment-block">
+												<img
+													src={
+														user.avatarImg
+															? `http://localhost:3000/images/avatars/${user.avatarImg}`
+															: notAvatar
+													}
+													alt="avatar"
+												/>
+												<div className="comment-block__item">
+													<div className="comment-block__item__content">
+														<Link
+															className="comment-block__item__content__name"
+															to={`/user/${user.userId}`}
+														>
+															{user.nameUser}
+														</Link>
+														<UiTextarea
+															className="comment-block__item__content__comment"
+															id="comment"
+															name="comment"
+															label="Your comment..."
+															multiline
+															placeholder="Your comment..."
+															rowsMax={15}
+														/>
+														{errors.comment && touched.comment ? (
+															<div className="Error">
+																{errors.comment}
+															</div>
+														) : null}
+													</div>
+
+													{/*Btns for edit/delete*/}
+													{user.userId === userId ? (
+														<div className="comment-block__item__btns">
+															<Button
+																className="comment-block__item__btns__btn"
+																variant="contained"
+																color="primary"
+																size="large"
+																type="submit"
+															>
+																<EditIcon className="icon" />
+																Add comment
+															</Button>
+														</div>
+													) : null}
+												</div>
+											</div>
+										</Form>
+									)}
+								</Formik>
+							)}
+
+							{comments.map((el) =>
+								el.map((el2) => (
+									<Comment
+										key={el2.commentId}
+										date={el2.date}
+										comment={el2.comment}
+										userId={el2.userId}
+										nameUser={el2.nameUser}
+										avatarImg={el2.avatarImg}
+										commentId={el2.commentId}
+										refetch={refetch}
+									/>
+								))
+							)}
+
+							{isFetching && (
+								<div className="loader">
+									<Loader
+										type="ThreeDots"
+										color="#00BFFF"
+										height={100}
+										width={100}
+									/>
+								</div>
+							)}
+
+							<Button
+								size="large"
+								variant="contained"
+								color="primary"
+								className="btn-load-more"
+								onClick={() => {
+									setPageComments(pageComments + 1);
+								}}
+								disabled={countComments === countPageComments()}
+							>
+								Load more...
+							</Button>
+						</div>
+					</AccordionDetails>
+				</Accordion>
 			</Card>
 		</>
 	);

@@ -31,7 +31,7 @@ function ArticlesListContainer() {
 
 	const countPagePosts = () => {
 		let countPosts = 0;
-		posts.forEach((el) => (countPosts = countPosts + el.length));
+		posts.forEach((el) => (countPosts += el.length));
 		return countPosts;
 	};
 

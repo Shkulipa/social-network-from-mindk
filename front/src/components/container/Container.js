@@ -1,6 +1,6 @@
 import "./Container.scss";
 import Footer from "../footer/Footer";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "../content/Content.scss";
 import ArticlesListContainer from "../content/articles/ArticlesListContainer";
@@ -12,23 +12,10 @@ import ProfileEditContainer from "../content/ProfileEdit/ProfileEditContainer";
 import LoginContainer from "../content/Login/Login";
 import useAuth from "../../hooks/useAuth";
 import UserProfileContainer from "../content/userProfile/UserProfileContainer";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Typography from "@material-ui/core/Typography";
+import Loader from "react-loader-spinner";
 
 function Container() {
-	const { user, refreshToken, refresh, logout } = useAuth();
-
-	// logout
-	const handleLogout = useCallback(
-		(event) => {
-			event.preventDefault();
-			logout();
-		},
-		[logout]
-	);
+	const { user, refreshToken, refresh } = useAuth();
 
 	useEffect(() => {
 		if (!user && refreshToken) {
@@ -39,23 +26,7 @@ function Container() {
 	if (!user && refreshToken) {
 		return (
 			<div className="re-log-page">
-				<Card variant="outlined">
-					<CardContent>
-						<Typography color="textPrimary" gutterBottom>
-							<b>Your session has expired, please re-login</b>
-						</Typography>
-					</CardContent>
-					<CardActions className="re-log-page__btn">
-						<Button
-							variant="contained"
-							color="primary"
-							size="large"
-							onClick={handleLogout}
-						>
-							Re-login
-						</Button>
-					</CardActions>
-				</Card>
+				<Loader type="ThreeDots" color="#00BFFF" height={100} width={100} />
 			</div>
 		);
 	}

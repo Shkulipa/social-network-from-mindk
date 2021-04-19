@@ -13,6 +13,7 @@ const login = require("./routes/login");
 const profile = require("./routes/profile");
 const logout = require("./routes/logout");
 const refreshTokens = require("./routes/refreshTokens");
+const comments = require("./routes/comments");
 
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(express.json({ limit: "10mb" }));
@@ -32,6 +33,7 @@ app.use(passport.initialize());
 app.use(cors());
 
 app.use("/posts", posts);
+app.use("/comments", comments);
 app.use("/registration", registration);
 app.use("/login", login);
 app.use("/profile", profile);
