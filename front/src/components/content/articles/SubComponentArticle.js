@@ -1,5 +1,5 @@
 import "./ArticlesListStyle.scss";
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import CardContent from "@material-ui/core/CardContent";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
@@ -169,13 +169,17 @@ export default function SubComponentArticle({
 					if (indexs) {
 						const { commentNumberArr, indexInThisArr } = indexs;
 						setComments([
-							...comments.splice(0, commentNumberArr),
-							...comments[commentNumberArr].splice(0, indexInThisArr),
-							...comments[commentNumberArr].splice(indexInThisArr + 1),
-							...comments.splice(commentNumberArr + 1),
+							...comments.slice(0, commentNumberArr),
+							[
+								...comments[commentNumberArr].slice(0, indexInThisArr),
+								...comments[commentNumberArr].slice(indexInThisArr + 1),
+							],
+							...comments.slice(commentNumberArr + 1),
 						]);
 					}
 				}
+			} else if (message.event === "accessDenied") {
+				console.log(`Access denied`);
 			} else {
 				console.log(`${message.event} doesn't exist`);
 			}
