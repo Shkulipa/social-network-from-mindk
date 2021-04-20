@@ -125,7 +125,7 @@ export default function SubComponentArticle({
 		return countComments;
 	};
 
-	//add comment
+	//WebSocket: Add and Del comments
 	const SignupSchema = Yup.object().shape({
 		comment: Yup.string().test(
 			"len",
@@ -137,6 +137,19 @@ export default function SubComponentArticle({
 	const [ws, setWs] = useState(null);
 	const [refresh, setRefresh] = useState(null);
 
+	const findObjInCommentArr = (id) => {
+		for (let i = 0; i < comments.length; i++) {
+			const findIndex = comments[i].findIndex((el) => el.commentId === id);
+
+			if (findIndex !== -1) {
+				return {
+					commentNumberArr: i,
+					indexInThisArr: findIndex,
+				};
+			}
+		}
+	};
+
 	useEffect(() => {
 		const socket = new WebSocket("ws://localhost:5000");
 
@@ -145,12 +158,26 @@ export default function SubComponentArticle({
 		};
 
 		socket.onmessage = (event) => {
-			//если пришло сообщение event.data.event === newMsg
 			const message = JSON.parse(event.data);
-			if (postId === message[0].postId) {
-				setComments([message, ...comments]);
-			} //иначе пришло сообщение event.data.event === deleteMsg
-			// удаляем коммент с нужного поста
+			if (message.event === "newMess") {
+				if (postId === message.data[0].postId) {
+					setComments([message.data, ...comments]);
+				}
+			} else if (message.event === "delMess") {
+				const indexs = findObjInCommentArr(message.data);
+				if (indexs) {
+					const { commentNumberArr, indexInThisArr } = indexs;
+
+					setComments([
+						...comments.splice(0, commentNumberArr),
+						...comments[commentNumberArr].splice(0, indexInThisArr),
+						...comments[commentNumberArr].splice(indexInThisArr + 1),
+						...comments.splice(commentNumberArr + 1),
+					]);
+				}
+			} else {
+				console.log(`${message.event} doesn't exist`);
+			}
 		};
 
 		socket.onclose = () => {
@@ -190,25 +217,8 @@ export default function SubComponentArticle({
 		}
 	};
 
-	/*const findObjInCommentArr = (id) => {
-		for (let i = 0; i < comments.length; i++) {
-			const findIndex = comments[i].findIndex((el) => el.commentId === id);
-
-			if (findIndex !== -1) {
-				return {
-					commentNumberArr: i,
-					indexInThisArr: findIndex,
-				};
-			}
-		}
-	};*/
-
 	const deleteComment = async (id) => {
 		try {
-			// const findEl = findObjInCommentArr(id);
-
-			// console.log("findIndexComment", findIndexComment);
-			// setComments([message, ...comments]);
 			const message = {
 				event: "deleteComm",
 				id: user.userToken,

@@ -74,28 +74,6 @@ export default function Comment({
 		[mutationCommentUpdate]
 	);
 
-	//delete
-	const mutationCommentDelete = useMutation(callApiLogged);
-	const onSubmitDelete = useCallback(async () => {
-		try {
-			await mutationCommentDelete.mutate({
-				url: `/comments/delete/${commentId}`,
-				method: "DELETE",
-				data: {
-					commentId: commentId,
-					userId: userId,
-					user: {
-						userToken: user[0].user.userToken,
-						permission: user[0].user.permission,
-					},
-				},
-			});
-			deleteComment(commentId);
-		} catch (e) {
-			console.log(e);
-		}
-	}, [mutationCommentDelete]);
-
 	return (
 		<>
 			{editMode === false ? (
@@ -138,7 +116,7 @@ export default function Comment({
 									variant="contained"
 									color="secondary"
 									size="large"
-									onClick={onSubmitDelete}
+									onClick={() => deleteComment(commentId)}
 								>
 									<DeleteForeverIcon className="icon" />
 									Delete

@@ -54,12 +54,12 @@ const wss = new ws.Server(
 wss.on("connection", function connection(ws) {
     ws.on("message", async function (message) {
         message = JSON.parse(message);
+        const commentTable = "commentsForPosts";
+        const commentTableCommentId = "commentId";
+
         switch (message.event) {
             case "message":
-                const commentTable = "commentsForPosts";
-                const commentTableCommentId = "commentId";
-                const { comment, userId, postId, user } = message.data;
-
+                const { comment, userId, postId } = message.data;
                 const addInBase = await db(commentTable)
                     .insert({
                         userId: userId,
@@ -69,35 +69,59 @@ wss.on("connection", function connection(ws) {
                     .returning(commentTableCommentId);
 
                 const idNewMess = addInBase[0];
-                broadcastMessage(idNewMess);
+
+                const mess = await db
+                    .select(
+                        "comment",
+                        "cfp.userId",
+                        "u.nameUser",
+                        "u.avatarImg",
+                        "commentId",
+                        "cfp.postId",
+                        db.raw(
+                            'to_char("date", \'YYYY-MM-DD hh:mm:ss\') as "date"'
+                        )
+                    )
+                    .from("commentsForPosts as cfp")
+                    .where("cfp.commentId", idNewMess)
+                    .join("users as u", function () {
+                        this.on("cfp.userId", "=", "u.userId");
+                    });
+                const resObjNewMess = {
+                    event: "newMess",
+                    data: mess,
+                };
+                sendComm(resObjNewMess);
                 break;
 
             case "deleteComm":
-                console.log(message.data);
+                const { commentId } = message.data;
+                await db(commentTable)
+                    .where(commentTableCommentId, commentId)
+                    .del();
+
+                const resObjDelMess = {
+                    event: "delMess",
+                    data: commentId,
+                };
+                delComm(resObjDelMess);
                 break;
         }
     });
 });
-const broadcastMessage = (id) => {
+const sendComm = (data) => {
     wss.clients.forEach(async (client) => {
         try {
-            const mess = await db
-                .select(
-                    "comment",
-                    "cfp.userId",
-                    "u.nameUser",
-                    "u.avatarImg",
-                    "commentId",
-                    "cfp.postId",
-                    db.raw('to_char("date", \'YYYY-MM-DD hh:mm:ss\') as "date"')
-                )
-                .from("commentsForPosts as cfp")
-                .where("cfp.commentId", id)
-                .join("users as u", function () {
-                    this.on("cfp.userId", "=", "u.userId");
-                });
-
-            client.send(JSON.stringify(mess.slice(0)));
+            client.send(JSON.stringify(data));
+        } catch (e) {
+            console.log(e);
+        }
+    });
+};
+const delComm = (data) => {
+    wss.clients.forEach(async (client) => {
+        try {
+            client.send(JSON.stringify(data));
         } catch (e) {
             console.log(e);
         }
