@@ -56,7 +56,7 @@ wss.on("connection", function connection(ws) {
         message = JSON.parse(message);
         const commentTable = "commentsForPosts";
         const commentTableCommentId = "commentId";
-
+        console.log("access");
         switch (message.event) {
             case "message":
                 const { comment, userId, postId } = message.data;
@@ -91,7 +91,7 @@ wss.on("connection", function connection(ws) {
                     event: "newMess",
                     data: mess,
                 };
-                sendComm(resObjNewMess);
+                broadcastComments(resObjNewMess);
                 break;
 
             case "deleteComm":
@@ -104,21 +104,12 @@ wss.on("connection", function connection(ws) {
                     event: "delMess",
                     data: commentId,
                 };
-                delComm(resObjDelMess);
+                broadcastComments(resObjDelMess);
                 break;
         }
     });
 });
-const sendComm = (data) => {
-    wss.clients.forEach(async (client) => {
-        try {
-            client.send(JSON.stringify(data));
-        } catch (e) {
-            console.log(e);
-        }
-    });
-};
-const delComm = (data) => {
+const broadcastComments = (data) => {
     wss.clients.forEach(async (client) => {
         try {
             client.send(JSON.stringify(data));
