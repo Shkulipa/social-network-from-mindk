@@ -85,31 +85,6 @@ router
                 console.error(err.message);
             }
         }
-    )
-
-    .delete("/delete/:id", [
-        checkACL([
-            {
-                permission: "deleteAnyComment",
-            },
-            {
-                permission: "deleteOwnComment",
-                checkAuthor: true,
-                table: commentTable,
-                column: commentTableCommentId,
-            },
-        ]),
-        async (req, res) => {
-            try {
-                console.log(req.body);
-                await db(commentTable)
-                    .where(commentTableCommentId, req.params.id)
-                    .del();
-                res.send("Comment deleted");
-            } catch (err) {
-                console.error(err.message);
-            }
-        },
-    ]);
+    );
 
 module.exports = router;

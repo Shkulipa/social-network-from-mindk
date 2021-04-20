@@ -21,9 +21,18 @@ Comment.propTypes = {
 	userId: PropTypes.number,
 	commentId: PropTypes.number,
 	refetch: PropTypes.func,
+	deleteComment: PropTypes.func,
 };
 
-export default function Comment({ avatarImg, comment, date, nameUser, userId, commentId }) {
+export default function Comment({
+	avatarImg,
+	comment,
+	date,
+	nameUser,
+	userId,
+	commentId,
+	deleteComment,
+}) {
 	const { callApiLogged } = useApi();
 
 	// login user
@@ -64,27 +73,6 @@ export default function Comment({ avatarImg, comment, date, nameUser, userId, co
 		},
 		[mutationCommentUpdate]
 	);
-
-	//delete
-	const mutationCommentDelete = useMutation(callApiLogged);
-	const onSubmitDelete = useCallback(async () => {
-		try {
-			await mutationCommentDelete.mutate({
-				url: `/comments/delete/${commentId}`,
-				method: "DELETE",
-				data: {
-					commentId: commentId,
-					userId: userId,
-					user: {
-						userToken: user[0].user.userToken,
-						permission: user[0].user.permission,
-					},
-				},
-			});
-		} catch (e) {
-			console.log(e);
-		}
-	}, [mutationCommentDelete]);
 
 	return (
 		<>
@@ -128,7 +116,7 @@ export default function Comment({ avatarImg, comment, date, nameUser, userId, co
 									variant="contained"
 									color="secondary"
 									size="large"
-									onClick={onSubmitDelete}
+									onClick={() => deleteComment(commentId)}
 								>
 									<DeleteForeverIcon className="icon" />
 									Delete

@@ -21,6 +21,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Loader from "react-loader-spinner";
+import Comment from "../comment/Comment";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { UiTextarea } from "../../Components-ui/ComponentsUi";
@@ -124,7 +125,7 @@ export default function SubComponentArticle({
 		return countComments;
 	};
 
-	//add comment
+	//WebSocket: Add and Del comments
 	const SignupSchema = Yup.object().shape({
 		comment: Yup.string().test(
 			"len",
@@ -133,56 +134,110 @@ export default function SubComponentArticle({
 		),
 	});
 
+	const [ws, setWs] = useState(null);
+	const [refresh, setRefresh] = useState(null);
+
+	const findObjInCommentArr = (id) => {
+		for (let i = 0; i < comments.length; i++) {
+			const findIndex = comments[i].findIndex((el) => el.commentId === id);
+
+			if (findIndex !== -1) {
+				return {
+					commentNumberArr: i,
+					indexInThisArr: findIndex,
+				};
+			}
+		}
+	};
+
 	useEffect(() => {
-		const socket = new WebSocket("ws://localhost:3000/subscribeWSComment");
+		const socket = new WebSocket("ws://localhost:5000");
 
 		socket.onopen = () => {
-			console.log("Connect to WebSocket is true");
+			console.log("Socket connected");
 		};
 
 		socket.onmessage = (event) => {
 			const message = JSON.parse(event.data);
-			console.log(message);
-			setComments((m) => [...m, message]);
+			if (message.event === "newMess") {
+				if (postId === message.data[0].postId) {
+					setComments([message.data, ...comments]);
+				}
+			} else if (message.event === "delMess") {
+				const indexs = findObjInCommentArr(message.data);
+				if (indexs) {
+					const { commentNumberArr, indexInThisArr } = indexs;
+
+					setComments([
+						...comments.splice(0, commentNumberArr),
+						...comments[commentNumberArr].splice(0, indexInThisArr),
+						...comments[commentNumberArr].splice(indexInThisArr + 1),
+						...comments.splice(commentNumberArr + 1),
+					]);
+				}
+			} else {
+				console.log(`${message.event} doesn't exist`);
+			}
 		};
 
 		socket.onclose = () => {
 			console.log("Socket close");
-		};
-
-		socket.onerror = () => {
-			console.log("Socket error");
-		};
-	}, []);
-
-	const [newMessage, setNewMessage] = useState("");
-	const [ws, setWs] = useState(null);
-	const [refresh, setRefresh] = useState(false);
-
-	useEffect(() => {
-		const socket = new WebSocket("ws://localhost:3000/subscribeWSComment");
-
-		socket.onmessage = (event) => {
-			setComments((coms) => [JSON.parse(event.data), ...coms]);
-		};
-		setWs(socket);
-		socket.onclose = () => {
 			setTimeout(() => {
 				setRefresh((r) => !r);
 			}, 2000);
 		};
-	}, [refresh]);
 
-	const onSubmitComment = useCallback(async (event) => {
-		console.log(event);
-		ws.send(
-			JSON.stringify({
-				comment: "newMessage",
-				postId: postId,
-				user: user,
-			})
-		);
-	});
+		socket.onerror = (e) => {
+			console.log("Socket error", e);
+		};
+
+		setWs(socket);
+	}, [comments, refresh]);
+
+	const onSubmitComment = async (items, { resetForm }) => {
+		try {
+			const message = {
+				event: "message",
+				id: user.userToken,
+				data: {
+					...items,
+					userId: user.userId,
+					postId: postId,
+					user: {
+						userToken: user.userToken,
+						permission: user.permission,
+					},
+				},
+			};
+
+			ws.send(JSON.stringify(message));
+			resetForm({});
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	const deleteComment = async (id) => {
+		try {
+			const message = {
+				event: "deleteComm",
+				id: user.userToken,
+				data: {
+					commentId: id,
+					userId: user.userId,
+					postId: postId,
+					user: {
+						userToken: user.userToken,
+						permission: user.permission,
+					},
+				},
+			};
+
+			ws.send(JSON.stringify(message));
+		} catch (e) {
+			console.log(e);
+		}
+	};
 
 	return (
 		<>
@@ -401,7 +456,7 @@ export default function SubComponentArticle({
 								</Formik>
 							)}
 
-							{/*{comments.map((el) =>
+							{comments.map((el) =>
 								el.map((el2) => (
 									<Comment
 										key={el2.commentId}
@@ -412,9 +467,10 @@ export default function SubComponentArticle({
 										avatarImg={el2.avatarImg}
 										commentId={el2.commentId}
 										refetch={refetch}
+										deleteComment={deleteComment}
 									/>
 								))
-							)}*/}
+							)}
 
 							{isFetching && (
 								<div className="loader">
