@@ -164,16 +164,17 @@ export default function SubComponentArticle({
 					setComments([message.data, ...comments]);
 				}
 			} else if (message.event === "delMess") {
-				const indexs = findObjInCommentArr(message.data);
-				if (indexs) {
-					const { commentNumberArr, indexInThisArr } = indexs;
-
-					setComments([
-						...comments.splice(0, commentNumberArr),
-						...comments[commentNumberArr].splice(0, indexInThisArr),
-						...comments[commentNumberArr].splice(indexInThisArr + 1),
-						...comments.splice(commentNumberArr + 1),
-					]);
+				if (postId === message.data.postId) {
+					const indexs = findObjInCommentArr(message.data.commentId);
+					if (indexs) {
+						const { commentNumberArr, indexInThisArr } = indexs;
+						setComments([
+							...comments.splice(0, commentNumberArr),
+							...comments[commentNumberArr].splice(0, indexInThisArr),
+							...comments[commentNumberArr].splice(indexInThisArr + 1),
+							...comments.splice(commentNumberArr + 1),
+						]);
+					}
 				}
 			} else {
 				console.log(`${message.event} doesn't exist`);

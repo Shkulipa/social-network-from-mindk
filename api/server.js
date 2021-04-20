@@ -66,11 +66,12 @@ wss.on("connection", function connection(ws) {
                     event: "newMess",
                     data: mess,
                 };
+
                 webSocketService.broadcastComments(wss, resObjNewMess);
                 break;
 
             case "deleteComm":
-                const { commentId } = message.data;
+                const { commentId, postId } = message.data;
 
                 await db(commentTable)
                     .where(commentTableCommentId, commentId)
@@ -78,8 +79,12 @@ wss.on("connection", function connection(ws) {
 
                 const resObjDelMess = {
                     event: "delMess",
-                    data: commentId,
+                    data: {
+                        commentId: commentId,
+                        postId: postId,
+                    },
                 };
+
                 webSocketService.broadcastComments(wss, resObjDelMess);
                 break;
         }
