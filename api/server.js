@@ -16,6 +16,7 @@ const comments = require("./routes/comments");
 const ws = require("ws");
 
 const app = express();
+const webSocketService = require("./services/webSocketsComments/commentsServices");
 
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(express.json({ limit: "10mb" }));
@@ -56,46 +57,21 @@ wss.on("connection", function connection(ws) {
         message = JSON.parse(message);
         const commentTable = "commentsForPosts";
         const commentTableCommentId = "commentId";
-        console.log("access");
+
         switch (message.event) {
             case "message":
-                const { comment, userId, postId } = message.data;
-                const addInBase = await db(commentTable)
-                    .insert({
-                        userId: userId,
-                        postId: postId,
-                        comment: comment,
-                    })
-                    .returning(commentTableCommentId);
+                const mess = await webSocketService.addInBase(message.data);
 
-                const idNewMess = addInBase[0];
-
-                const mess = await db
-                    .select(
-                        "comment",
-                        "cfp.userId",
-                        "u.nameUser",
-                        "u.avatarImg",
-                        "commentId",
-                        "cfp.postId",
-                        db.raw(
-                            'to_char("date", \'YYYY-MM-DD hh:mm:ss\') as "date"'
-                        )
-                    )
-                    .from("commentsForPosts as cfp")
-                    .where("cfp.commentId", idNewMess)
-                    .join("users as u", function () {
-                        this.on("cfp.userId", "=", "u.userId");
-                    });
                 const resObjNewMess = {
                     event: "newMess",
                     data: mess,
                 };
-                broadcastComments(resObjNewMess);
+                webSocketService.broadcastComments(wss, resObjNewMess);
                 break;
 
             case "deleteComm":
                 const { commentId } = message.data;
+
                 await db(commentTable)
                     .where(commentTableCommentId, commentId)
                     .del();
@@ -104,20 +80,11 @@ wss.on("connection", function connection(ws) {
                     event: "delMess",
                     data: commentId,
                 };
-                broadcastComments(resObjDelMess);
+                webSocketService.broadcastComments(wss, resObjDelMess);
                 break;
         }
     });
 });
-const broadcastComments = (data) => {
-    wss.clients.forEach(async (client) => {
-        try {
-            client.send(JSON.stringify(data));
-        } catch (e) {
-            console.log(e);
-        }
-    });
-};
 
 app.listen(port, () => {
     console.log(`Example app listening at http://${host}:${port}`);
