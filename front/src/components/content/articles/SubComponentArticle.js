@@ -134,91 +134,41 @@ export default function SubComponentArticle({
 		),
 	});
 
-	const socket = useRef();
+	const [ws, setWs] = useState(null);
+	const [refresh, setRefresh] = useState(null);
 
 	useEffect(() => {
-		socket.current = new WebSocket("ws://localhost:5000");
+		const socket = new WebSocket("ws://localhost:5000");
 
-		socket.current.onopen = () => {
-			console.log("Connect to WebSocket is true");
+		socket.onopen = () => {
+			console.log("Socket connected");
 		};
 
-		socket.current.onmessage = (event) => {
+		socket.onmessage = (event) => {
+			//если пришло сообщение event.data.event === newMsg
 			const message = JSON.parse(event.data);
-			console.log(message);
-			socket.current.send(JSON.stringify(message));
+			if (postId === message[0].postId) {
+				setComments([message, ...comments]);
+			} //иначе пришло сообщение event.data.event === deleteMsg
+			// удаляем коммент с нужного поста
 		};
 
-		socket.current.onclose = () => {
+		socket.onclose = () => {
 			console.log("Socket close");
+			setTimeout(() => {
+				setRefresh((r) => !r);
+			}, 2000);
 		};
 
-		socket.current.onerror = () => {
-			console.log("Socket error");
+		socket.onerror = (e) => {
+			console.log("Socket error", e);
 		};
-	}, []);
 
-	const mutationComment = useMutation(callApiLogged);
-
-	/*const onSubmitComment = useCallback(
-		async (items, { resetForm }) => {
-			try {
-				/!*await mutation.mutate({
-					url: "/comments",
-					method: "POST",
-					data: {
-						...items,
-						userId: user.userId,
-						postId: postId,
-						user: {
-							userToken: user.userToken,
-							permission: user.permission,
-						},
-					},
-				});
-				resetForm({});
-				refetch();*!/
-
-				const message = {
-					event: "message",
-					id: user.userToken,
-					data: {
-						...items,
-						userId: user.userId,
-						postId: postId,
-						user: {
-							userToken: user.userToken,
-							permission: user.permission,
-						},
-					},
-				};
-				socket.current.send(JSON.stringify(message));
-				resetForm({});
-			} catch (e) {
-				console.log(e);
-			}
-		},
-		[mutationComment]
-	);*/
+		setWs(socket);
+	}, [comments, refresh]);
 
 	const onSubmitComment = async (items, { resetForm }) => {
 		try {
-			/*await mutation.mutate({
-					url: "/comments",
-					method: "POST",
-					data: {
-						...items,
-						userId: user.userId,
-						postId: postId,
-						user: {
-							userToken: user.userToken,
-							permission: user.permission,
-						},
-					},
-				});
-				resetForm({});
-				refetch();*/
-
 			const message = {
 				event: "message",
 				id: user.userToken,
@@ -233,8 +183,47 @@ export default function SubComponentArticle({
 				},
 			};
 
-			socket.current.send(JSON.stringify(message));
+			ws.send(JSON.stringify(message));
 			resetForm({});
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	/*const findObjInCommentArr = (id) => {
+		for (let i = 0; i < comments.length; i++) {
+			const findIndex = comments[i].findIndex((el) => el.commentId === id);
+
+			if (findIndex !== -1) {
+				return {
+					commentNumberArr: i,
+					indexInThisArr: findIndex,
+				};
+			}
+		}
+	};*/
+
+	const deleteComment = async (id) => {
+		try {
+			// const findEl = findObjInCommentArr(id);
+
+			// console.log("findIndexComment", findIndexComment);
+			// setComments([message, ...comments]);
+			const message = {
+				event: "deleteComm",
+				id: user.userToken,
+				data: {
+					commentId: id,
+					userId: user.userId,
+					postId: postId,
+					user: {
+						userToken: user.userToken,
+						permission: user.permission,
+					},
+				},
+			};
+
+			ws.send(JSON.stringify(message));
 		} catch (e) {
 			console.log(e);
 		}
@@ -457,7 +446,7 @@ export default function SubComponentArticle({
 								</Formik>
 							)}
 
-							{/*{comments.map((el) =>
+							{comments.map((el) =>
 								el.map((el2) => (
 									<Comment
 										key={el2.commentId}
@@ -468,9 +457,10 @@ export default function SubComponentArticle({
 										avatarImg={el2.avatarImg}
 										commentId={el2.commentId}
 										refetch={refetch}
+										deleteComment={deleteComment}
 									/>
 								))
-							)}*/}
+							)}
 
 							{isFetching && (
 								<div className="loader">

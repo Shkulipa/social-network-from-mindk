@@ -4,6 +4,7 @@ const port = process.env.PORT;
 const express = require("express");
 const cors = require("cors");
 const passport = require("./services/auth/passport");
+const db = require("./db/db");
 
 const posts = require("./routes/posts");
 const registration = require("./routes/registration");
@@ -50,29 +51,56 @@ const wss = new ws.Server(
     }
 );
 
-let client = {};
-
 wss.on("connection", function connection(ws) {
-    let id = Math.random();
-    client[id] = ws;
-
-    ws.on("message", function (message) {
+    ws.on("message", async function (message) {
         message = JSON.parse(message);
         switch (message.event) {
             case "message":
-                broadcastMessage(message);
+                const commentTable = "commentsForPosts";
+                const commentTableCommentId = "commentId";
+                const { comment, userId, postId, user } = message.data;
+
+                const addInBase = await db(commentTable)
+                    .insert({
+                        userId: userId,
+                        postId: postId,
+                        comment: comment,
+                    })
+                    .returning(commentTableCommentId);
+
+                const idNewMess = addInBase[0];
+                broadcastMessage(idNewMess);
                 break;
-            case "connection":
-                broadcastMessage(message);
+
+            case "deleteComm":
+                console.log(message.data);
                 break;
         }
     });
-
-    ws.on("close", function)
 });
-const broadcastMessage = (mess) => {
-    wss.clients.forEach((client) => {
-        client.send(JSON.stringify(mess));
+const broadcastMessage = (id) => {
+    wss.clients.forEach(async (client) => {
+        try {
+            const mess = await db
+                .select(
+                    "comment",
+                    "cfp.userId",
+                    "u.nameUser",
+                    "u.avatarImg",
+                    "commentId",
+                    "cfp.postId",
+                    db.raw('to_char("date", \'YYYY-MM-DD hh:mm:ss\') as "date"')
+                )
+                .from("commentsForPosts as cfp")
+                .where("cfp.commentId", id)
+                .join("users as u", function () {
+                    this.on("cfp.userId", "=", "u.userId");
+                });
+
+            client.send(JSON.stringify(mess.slice(0)));
+        } catch (e) {
+            console.log(e);
+        }
     });
 };
 

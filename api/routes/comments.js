@@ -113,7 +113,6 @@ router
         ]),
         async (req, res) => {
             try {
-                console.log(req.body);
                 await db(commentTable)
                     .where(commentTableCommentId, req.params.id)
                     .del();

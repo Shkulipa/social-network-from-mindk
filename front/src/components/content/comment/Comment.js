@@ -21,9 +21,18 @@ Comment.propTypes = {
 	userId: PropTypes.number,
 	commentId: PropTypes.number,
 	refetch: PropTypes.func,
+	deleteComment: PropTypes.func,
 };
 
-export default function Comment({ avatarImg, comment, date, nameUser, userId, commentId }) {
+export default function Comment({
+	avatarImg,
+	comment,
+	date,
+	nameUser,
+	userId,
+	commentId,
+	deleteComment,
+}) {
 	const { callApiLogged } = useApi();
 
 	// login user
@@ -81,6 +90,7 @@ export default function Comment({ avatarImg, comment, date, nameUser, userId, co
 					},
 				},
 			});
+			deleteComment(commentId);
 		} catch (e) {
 			console.log(e);
 		}
