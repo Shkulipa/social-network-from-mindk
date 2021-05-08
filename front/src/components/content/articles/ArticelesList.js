@@ -1,53 +1,68 @@
-import './ArticlesListStyle.scss';
-import {Link} from "react-router-dom";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
+import "./ArticlesListStyle.scss";
 import React from "react";
-import Tooltip from "@material-ui/core/Tooltip";
 import Loader from "react-loader-spinner";
+import SubComponentArticle from "./SubComponentArticle";
+import PropTypes from "prop-types";
 
-function ArticlesListContainer({posts, isFetching}) {
-    return (
-        <div className="ContainerWrapper ArticleList">
-            <h2 className="title">Articles page</h2>
+ArticlesListContainer.propTypes = {
+	posts: PropTypes.arrayOf(
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				available: PropTypes.string,
+				avatarImg: PropTypes.string,
+				date: PropTypes.string,
+				description: PropTypes.string,
+				nameUser: PropTypes.string,
+				postImg: PropTypes.string,
+				postId: PropTypes.number,
+				userId: PropTypes.number,
+			})
+		)
+	),
+	isFetching: PropTypes.bool,
+	refetch: PropTypes.func,
+};
 
-            {posts.map(el =>
-                el.map( ({post_id, description}) =>
-                    <Card className="card" key={post_id}>
-                        <Tooltip title="Click here to view the article">
-                            <CardActionArea className="post-id">
-                                <Link to={`/posts/${post_id}`}>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                        Post id: {post_id}
-                                    </Typography>
-                                </Link>
-                            </CardActionArea>
-                        </Tooltip>
+function ArticlesListContainer({ posts, isFetching, refetch }) {
+	return (
+		<div className="ContainerWrapper ArticleList">
+			<h2 className="title">Articles page</h2>
 
-                        <CardContent className="post-content">
-                            <Typography gutterBottom variant="h5" component="h2">
-                                Description: {description.length > 25 ? description.slice(0, 25) + '...' : description}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                )
-            )}
+			{posts.map((el) =>
+				el.map(
+					({
+						available,
+						avatarImg,
+						date,
+						nameUser,
+						postId,
+						description,
+						postImg,
+						userId,
+					}) => (
+						<SubComponentArticle
+							key={postId}
+							available={available}
+							avatarImg={avatarImg || ""}
+							date={date}
+							nameUser={nameUser}
+							postId={postId}
+							description={description}
+							postImg={postImg}
+							userId={userId}
+							refetch={refetch}
+						/>
+					)
+				)
+			)}
 
-            {isFetching &&
-            <div className="loader">
-                <Loader
-                    type="ThreeDots"
-                    color="#00BFFF"
-                    height={100}
-                    width={100}
-                />
-            </div>
-            }
-        </div>
-
-    );
+			{isFetching && (
+				<div className="loader">
+					<Loader type="ThreeDots" color="#00BFFF" height={100} width={100} />
+				</div>
+			)}
+		</div>
+	);
 }
 
 export default ArticlesListContainer;

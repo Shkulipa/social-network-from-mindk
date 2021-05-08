@@ -1,26 +1,30 @@
-import './HeaderNav.scss';
-import PropTypes from 'prop-types';
+import React from "react";
+import "./HeaderNav.scss";
+import PropTypes from "prop-types";
+import notAvatar from "./../../../../images/user-astronaut-solid.svg";
 
-function HeaderNav({name}) {
-    return (
-        <div className="header__nav">
-            {name}
-            <img
-                className="header__nav__avatar"
-                src="https://via.placeholder.com/150"
-                alt=""
-            />
-        </div>
-    );
+function HeaderNav({ user }) {
+	const { nameUser, avatarImg } = user;
+
+	return (
+		<div className="header__nav">
+			{nameUser}
+
+			{avatarImg ? (
+				<img
+					className="header__nav__avatar"
+					src={`http://localhost:3000/images/avatars/${avatarImg}`}
+					alt=""
+				/>
+			) : (
+				<img className="header__nav__avatar" src={notAvatar} alt="" />
+			)}
+		</div>
+	);
 }
 
 HeaderNav.propTypes = {
-    name: PropTypes.string
-}
-
-HeaderNav.defaultProps = {
-    name: 'Not authorized'
-}
-
+	user: PropTypes.object,
+};
 
 export default HeaderNav;

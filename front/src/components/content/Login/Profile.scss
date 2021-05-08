@@ -1,0 +1,33 @@
+.Error {
+  color: red;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+
+.card__fields {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .field {
+    width: 400px;
+  }
+
+  .field:first-child {
+    margin-bottom: 15px;
+  }
+}
+
+.profile-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .title {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+}

@@ -1,0 +1,83 @@
+.edit-profile {
+  .answer {
+    text-align: center;
+    font-weight: bold;
+    font-size: 22px;
+
+    &.error{
+      color: red;
+    }
+
+    &.success {
+      color: green;
+    }
+  }
+
+  .edit-profile-form {
+    .profile {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+
+      .left-side {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 48%;
+
+        .two-fields {
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          margin: 0;
+
+          .field-and-err {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-right: 15px;
+            max-width: 45%;
+
+            .error {
+              color: red;
+              font-weight: bold;
+              font-size: 1.1rem;
+              margin: 10px 0;
+            }
+          }
+        }
+      }
+
+      .right-side {
+        width: 48%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .avatar-img {
+          width: 240px;
+          height: 240px;
+          border-radius: 50%;
+
+          margin-bottom: 25px;
+        }
+
+        .btn-upload-img {
+          margin: 15px;
+          border-radius: 8px;
+        }
+      }
+    }
+
+    .btns {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
+
+
+
+
+
